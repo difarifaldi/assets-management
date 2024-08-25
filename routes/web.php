@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ManufactureController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,4 +23,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
         return view('home');
     })->name('home');
+
+    Route::resource('manufacture', ManufactureController::class, ['except' => ['index', 'show']])->parameters(['manufacture' => 'id']);
 });

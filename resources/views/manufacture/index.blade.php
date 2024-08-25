@@ -44,7 +44,7 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.product.script')
+        @include('javascript.manufacture.script')
         <script>
             dataTable();
         </script>
