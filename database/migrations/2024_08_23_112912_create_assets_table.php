@@ -15,9 +15,12 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
             $table->integer('category_asset_id')->nullable();
+            $table->tinyInteger('type')->comment('1 as Physical Asset and 2 as non Physical Asset');
+            $table->string('barcode_code');
             $table->string('name');
             $table->integer('status');
-            $table->bigInteger('value');
+            $table->bigInteger('value')->nullable();
+            $table->date('exipired_at')->nullable();
             $table->text('description')->nullable();
             $table->json('attachment');
             $table->integer('assign_to')->nullable();
