@@ -11,23 +11,24 @@
                                 <a href="{{ route('manufacture.index') }}" class="btn btn-tool">
                                     <i class="fas fa-chevron-left"></i> Back
                                 </a>
-                                <h3 class="card-title">Add Manufacture</h3>
+                                <h3 class="card-title">Edit Manufacture | {{ $manufacture->name }}</h3>
                             </div>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('manufacture.store') }}">
+                        <form method="post" action="{{ route('manufacture.update', ['id' => $manufacture->id]) }}">
                             @csrf
+                            @method('patch')
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="name">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Name" value="{{ old('name') }}">
+                                        placeholder="Name" value="{{ $manufacture->name }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="address">Address </label>
+                                    <label for="address">Address <span class="text-danger">*</span></label>
                                     <textarea class="form-control" name="address" id="address" cols="10" rows="3"
-                                        placeholder="Location Address">{{ old('address') }}</textarea>
+                                        placeholder="Location Address">{{ $manufacture->address }}</textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>

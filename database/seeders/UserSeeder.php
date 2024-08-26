@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $user_admin = User::create([
             'username' => 'admin123',
             'nik' => '3274030904010001',
             'name' => 'admin',
@@ -23,5 +23,6 @@ class UserSeeder extends Seeder
             'address' => 'Depok 2 Tengah',
             'password' => Hash::make('password123')
         ]);
+        $user_admin->assignRole('admin');
     }
 }

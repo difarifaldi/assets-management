@@ -45,7 +45,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="/manufacture/create" class="nav-link">
+                    <a href="/manufacture" class="nav-link">
                         <i class="nav-icon fas fa-tools"></i>
                         <p>
                             Manufacture

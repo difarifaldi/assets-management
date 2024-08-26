@@ -41,3 +41,4 @@
 
 <script src="{{ asset('vendors/sweetalert2/sweetalert2.min.js') }}"></script>
 @include('javascript.sweetalert')
+@stack('javascript-bottom')

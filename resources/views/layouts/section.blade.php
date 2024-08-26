@@ -50,7 +50,7 @@
         </div>
         <!-- ./wrapper -->
 
-        @include('layouts.script')
+
 
 
     </body>

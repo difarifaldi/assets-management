@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('manufactures', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('address');
+            $table->text('address')->nullable();
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();
             $table->integer('updated_by');
