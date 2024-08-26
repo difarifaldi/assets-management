@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ManufactureController;
+use App\Http\Controllers\master\ManufactureController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,13 +25,24 @@ Route::group(['middleware' => 'auth'], function () {
     })->name('home');
 });
 
-Route::group(['middleware' => ['role:staff']], function () {
-    Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
-});
-Route::group(['middleware' => ['role:admin']], function () {
+// Route::group(['middleware' => ['role:staff']], function () {
+//     Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
+// });
 
-    Route::group(['controller' => ManufactureController::class, 'prefix' => 'manufacture', 'as' => 'manufacture.'], function () {
-        Route::get('datatable', 'dataTable')->name('dataTable');
+
+Route::group(['middleware' => ['role:admin']], function () {
+    Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
+
+        Route::resource('manufacture', ManufactureController::class, ['except' => ['index', 'show']])->parameters(['manufacture' => 'id']);
     });
-    Route::resource('manufacture', ManufactureController::class)->parameters(['manufacture' => 'id']);
+});
+
+Route::group(['middleware' => ['role:admin|staff']], function () {
+    Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
+
+        Route::group(['controller' => ManufactureController::class, 'prefix' => 'manufacture', 'as' => 'manufacture.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
+    });
 });

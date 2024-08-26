@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\master;
 
-use App\Models\Manufacture;
-use App\Http\Requests\StoreManufactureRequest;
-use App\Http\Requests\UpdateManufactureRequest;
-use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Models\master\Manufacture;
+use App\Models\master\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,12 +18,12 @@ class ManufactureController extends Controller
      */
     public function index()
     {
-        $datatable_route = route('manufacture.dataTable');
+        $datatable_route = route('master.manufacture.dataTable');
 
 
         $can_create = User::find(Auth::user()->id)->hasRole('admin');
 
-        return view('manufacture.index', compact('datatable_route', 'can_create'));
+        return view('master.manufacture.index', compact('datatable_route', 'can_create'));
     }
 
     public function dataTable()
@@ -41,7 +40,6 @@ class ManufactureController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 $btn_action = '<div align="center">';
-                $btn_action .= '<a href="' . route('manufacture.show', ['id' => $data->id]) . '" class="btn btn-sm btn-primary" title="Detail">Detail</a>';
 
                 /**
                  * Validation Role Has Access Edit and Delete
@@ -49,7 +47,7 @@ class ManufactureController extends Controller
 
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
 
-                    $btn_action .= '<a href="' . route('manufacture.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                    $btn_action .= '<a href="' . route('master.manufacture.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 }
                 $btn_action .= '</div>';
@@ -67,7 +65,7 @@ class ManufactureController extends Controller
      */
     public function create()
     {
-        return view('manufacture.create');
+        return view('master.manufacture.create');
     }
 
     /**
@@ -101,7 +99,7 @@ class ManufactureController extends Controller
             if ($manufacture) {
                 DB::commit();
                 return redirect()
-                    ->route('manufacture.index')
+                    ->route('master.manufacture.index')
                     ->with(['success' => 'Successfully Add Manufacture']);
             } else {
                 /**
@@ -126,27 +124,7 @@ class ManufactureController extends Controller
      */
     public function show(String $id)
     {
-        try {
-            /**
-             * Get Manufacture Record from id
-             */
-            $manufacture = Manufacture::find($id);
-
-            /**
-             * Validation Manufacture id
-             */
-            if (!is_null($manufacture)) {
-                return view('manufacture.detail', compact('manufacture'));
-            } else {
-                return redirect()
-                    ->back()
-                    ->with(['failed' => 'Invalid Request!']);
-            }
-        } catch (Exception $e) {
-            return redirect()
-                ->back()
-                ->with(['failed' => $e->getMessage()]);
-        }
+        //
     }
 
     /**
@@ -164,7 +142,7 @@ class ManufactureController extends Controller
              * Validation Manufacture id
              */
             if (!is_null($manufacture)) {
-                return view('manufacture.edit', compact('manufacture'));
+                return view('master.manufacture.edit', compact('manufacture'));
             } else {
                 return redirect()
                     ->back()
@@ -214,7 +192,7 @@ class ManufactureController extends Controller
                 if ($manufacture_update) {
                     DB::commit();
                     return redirect()
-                        ->route('manufacture.index')
+                        ->route('master.manufacture.index')
                         ->with(['success' => 'Successfully Update Manufacture']);
                 } else {
                     /**

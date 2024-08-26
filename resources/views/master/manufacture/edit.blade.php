@@ -8,7 +8,7 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
 
-                                <a href="{{ route('manufacture.index') }}" class="btn btn-tool">
+                                <a href="{{ route('master.manufacture.index') }}" class="btn btn-tool">
                                     <i class="fas fa-chevron-left"></i> Back
                                 </a>
                                 <h3 class="card-title">Edit Manufacture | {{ $manufacture->name }}</h3>
@@ -16,7 +16,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('manufacture.update', ['id' => $manufacture->id]) }}">
+                        <form method="post" action="{{ route('master.manufacture.update', ['id' => $manufacture->id]) }}">
                             @csrf
                             @method('patch')
                             <div class="card-body">
@@ -26,7 +26,7 @@
                                         placeholder="Name" value="{{ $manufacture->name }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="address">Address <span class="text-danger">*</span></label>
+                                    <label for="address">Address </label>
                                     <textarea class="form-control" name="address" id="address" cols="10" rows="3"
                                         placeholder="Location Address">{{ $manufacture->address }}</textarea>
                                 </div>
@@ -40,6 +40,6 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.manufacture.script')
+        @include('javascript.master.manufacture.script')
     @endpush
 @endsection

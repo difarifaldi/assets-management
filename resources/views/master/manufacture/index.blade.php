@@ -4,15 +4,18 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <div class="d-flex  align-items-center">
+
+                                <h3 class="card-title"> Manufacture</h3>
+                            </div>
+                        </div>
                         <div class="card-body p-5">
                             <div class="d-flex justify-content-between">
-                                <div class="p-2">
-                                    <h4 class="card-title">Manufacture</h4>
-                                </div>
                                 @if ($can_create)
-                                    <div class="p-2">
-                                        <a href="{{ route('manufacture.create') }}" class="btn btn-sm btn-primary">
+                                    <div>
+                                        <a href="{{ route('master.manufacture.create') }}" class="btn btn-sm btn-primary">
                                             Add Manufacture
                                         </a>
                                     </div>
@@ -46,7 +49,7 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.manufacture.script')
+        @include('javascript.master.manufacture.script')
         <script>
             dataTable();
         </script>

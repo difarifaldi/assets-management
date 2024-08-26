@@ -78,7 +78,7 @@
             if (result.isConfirmed) {
                 sweetAlertProcess();
                 $.ajax({
-                    url: '{{ url('manufacture') }}/' + id,
+                    url: '{{ url('master/manufacture') }}/' + id,
                     type: 'DELETE',
                     cache: false,
                     data: {

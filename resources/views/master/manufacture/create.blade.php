@@ -8,7 +8,7 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
 
-                                <a href="{{ route('manufacture.index') }}" class="btn btn-tool">
+                                <a href="{{ route('master.manufacture.index') }}" class="btn btn-tool">
                                     <i class="fas fa-chevron-left"></i> Back
                                 </a>
                                 <h3 class="card-title">Add Manufacture</h3>
@@ -16,7 +16,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('manufacture.store') }}">
+                        <form method="post" action="{{ route('master.manufacture.store') }}">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
@@ -39,6 +39,6 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.manufacture.script')
+        @include('javascript.master.manufacture.script')
     @endpush
 @endsection

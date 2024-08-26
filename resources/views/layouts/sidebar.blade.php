@@ -45,7 +45,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="/manufacture" class="nav-link">
+                    <a href="{{ route('master.manufacture.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-tools"></i>
                         <p>
                             Manufacture
