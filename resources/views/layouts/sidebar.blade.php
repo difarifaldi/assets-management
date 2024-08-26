@@ -53,6 +53,33 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ route('master.category.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-clipboard-list"></i>
+                        <p>
+                            Category
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('master.division.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sitemap"></i>
+                        <p>
+                            Division
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('master.user.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            User
+                        </p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\master;
 
 use App\Http\Controllers\Controller;
-use App\Models\master\CategoryAssets;
-
+use App\Models\master\Division;
 use App\Models\master\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -12,32 +11,32 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
-class CategoryAssetsController extends Controller
+class DivisionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $datatable_route = route('master.category.dataTable');
+        $datatable_route = route('master.division.dataTable');
 
 
         $can_create = User::find(Auth::user()->id)->hasRole('admin');
 
-        return view('master.category.index', compact('datatable_route', 'can_create'));
+        return view('master.division.index', compact('datatable_route', 'can_create'));
     }
 
     public function dataTable()
     {
         /**
-         * Get All CategoryAssets
+         * Get All Division
          */
-        $category = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->get();
+        $division = Division::whereNull('deleted_at')->get();
 
         /**
          * Datatable Configuration
          */
-        $dataTable = DataTables::of($category)
+        $dataTable = DataTables::of($division)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 $btn_action = '<div align="center">';
@@ -48,7 +47,7 @@ class CategoryAssetsController extends Controller
 
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
 
-                    $btn_action .= '<a href="' . route('master.category.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                    $btn_action .= '<a href="' . route('master.division.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 }
                 $btn_action .= '</div>';
@@ -66,7 +65,7 @@ class CategoryAssetsController extends Controller
      */
     public function create()
     {
-        return view('master.category.create');
+        return view('master.division.create');
     }
 
     /**
@@ -85,22 +84,20 @@ class CategoryAssetsController extends Controller
             DB::beginTransaction();
 
             /**
-             * Create CategoryAssets Record
+             * Create Division Record
              */
-            $category = CategoryAssets::lockforUpdate()->create([
+            $division = Division::lockforUpdate()->create([
                 'name' => $request->name,
-                'created_by' => Auth::user()->id,
-                'updated_by' => Auth::user()->id,
             ]);
 
             /**
-             * Validation Create CategoryAssets Record
+             * Validation Create Division Record
              */
-            if ($category) {
+            if ($division) {
                 DB::commit();
                 return redirect()
-                    ->route('master.category.index')
-                    ->with(['success' => 'Successfully Add CategoryAssets']);
+                    ->route('master.division.index')
+                    ->with(['success' => 'Successfully Add Division']);
             } else {
                 /**
                  * Failed Store Record
@@ -108,7 +105,7 @@ class CategoryAssetsController extends Controller
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add CategoryAssets'])
+                    ->with(['failed' => 'Failed Add Division'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -134,15 +131,15 @@ class CategoryAssetsController extends Controller
     {
         try {
             /**
-             * Get CategoryAssets Record from id
+             * Get Division Record from id
              */
-            $category = CategoryAssets::find($id);
+            $division = Division::find($id);
 
             /**
-             * Validation CategoryAssets id
+             * Validation Division id
              */
-            if (!is_null($category)) {
-                return view('master.category.edit', compact('category'));
+            if (!is_null($division)) {
+                return view('master.division.edit', compact('division'));
             } else {
                 return redirect()
                     ->back()
@@ -169,30 +166,29 @@ class CategoryAssetsController extends Controller
 
             ]);
 
-            $category = CategoryAssets::find($id);
+            $division = Division::find($id);
 
-            if (!is_null($category)) {
+            if (!is_null($division)) {
                 /**
                  * Begin Transaction
                  */
                 DB::beginTransaction();
 
                 /**
-                 * Update CategoryAssets Record
+                 * Update Division Record
                  */
-                $category_update = CategoryAssets::where('id', $id)->update([
+                $category_update = Division::where('id', $id)->update([
                     'name' => $request->name,
-                    'updated_by' => Auth::user()->id,
                 ]);
 
                 /**
-                 * Validation Update CategoryAssets Record
+                 * Validation Update Division Record
                  */
                 if ($category_update) {
                     DB::commit();
                     return redirect()
-                        ->route('master.category.index')
-                        ->with(['success' => 'Successfully Update CategoryAssets']);
+                        ->route('master.division.index')
+                        ->with(['success' => 'Successfully Update Division']);
                 } else {
                     /**
                      * Failed Store Record
@@ -200,7 +196,7 @@ class CategoryAssetsController extends Controller
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update CategoryAssets'])
+                        ->with(['failed' => 'Failed Update Division'])
                         ->withInput();
                 }
             } else {
@@ -227,25 +223,24 @@ class CategoryAssetsController extends Controller
             DB::beginTransaction();
 
             /**
-             * Update CategoryAssets Record
+             * Update Division Record
              */
-            $category_destroy = CategoryAssets::where('id', $id)->update([
-                'deleted_by' => Auth::user()->id,
+            $category_destroy = Division::where('id', $id)->update([
                 'deleted_at' => date('Y-m-d H:i:s'),
             ]);
 
             /**
-             * Validation Update CategoryAssets Record
+             * Validation Update Division Record
              */
             if ($category_destroy) {
                 DB::commit();
-                session()->flash('success', 'CategoryAssets Successfully Deleted');
+                session()->flash('success', 'Division Successfully Deleted');
             } else {
                 /**
                  * Failed Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete CategoryAssets');
+                session()->flash('failed', 'Failed Delete Division');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());
