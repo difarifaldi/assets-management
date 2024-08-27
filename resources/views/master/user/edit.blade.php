@@ -34,14 +34,17 @@
 
                                 <div class="form-group">
                                     <label for="division">Division <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="division_id" name="division_id" required>
-                                        <option disabled hidden selected>Choose Division</option>
+
+                                    <select class="form-control" name="division_id" id="division_id" required>
                                         @foreach ($division as $dv)
-                                            @if (!is_null(old('division_id')) && old('division_id') == $dv->id)
-                                                <option value="{{ $dv->id }}" selected>{{ $dv->name }}
+                                            @if ($user->division_id === $dv->id)
+                                                <option value="{{ $dv->id }}" selected>
+                                                    {{ $dv->name }}
                                                 </option>
                                             @else
-                                                <option value="{{ $dv->id }}">{{ $dv->name }}</option>
+                                                <option value="{{ $dv->id }}">
+                                                    {{ $dv->name }}
+                                                </option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -61,12 +64,12 @@
 
                                 <div class="form-group">
                                     <label for="roles">Role <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="roles" name="roles" required>
-                                        <option disabled hidden selected>Choose Role</option>
+                                    <select class="form-control" id="roles" name="roles" required
+                                        {{ $role_disabled }}>
+                                        <option hidden>Choose Role</option>
                                         @foreach ($roles as $role)
-                                            @if (!is_null(old('roles')) && old('roles') == $role->name)
-                                                <option value="{{ $role->name }}" selected>{{ $role->name }}
-                                                </option>
+                                            @if ($user->getRoleNames()[0] == $role->name)
+                                                <option value="{{ $role->name }}" selected>{{ $role->name }}</option>
                                             @else
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                             @endif
@@ -81,17 +84,15 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="password">Password <span class="text-danger">*</span></label>
+                                    <label for="password">Password</label>
                                     <input type="password" class="form-control" id="password" name="password"
-                                        placeholder="Password" value="{{ $user->password }}">
+                                        placeholder="Password">
                                 </div>
-
                                 <div class="form-group">
-                                    <label for="re_password">Re Password <span class="text-danger">*</span></label>
+                                    <label for="re_password">Re Password</label>
                                     <input type="password" class="form-control" id="re_password" name="re_password"
-                                        placeholder="Re Password" value="{{ old('re_password') }}">
+                                        placeholder="Re Password">
                                 </div>
-
 
                                 <div class="form-group">
                                     <label for="address">Address <span class="text-danger">*</span></label>

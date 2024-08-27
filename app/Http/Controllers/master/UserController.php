@@ -164,21 +164,25 @@ class UserController extends Controller
         }
     }
 
-    public function edit(string $id)
+    public function show(string $id)
     {
         try {
             /**
              * Get User Record from id
              */
-            $roles = Role::all();
-            $division = Division::whereNull('deleted_at')->get();
             $user = User::find($id);
 
             /**
              * Validation User id
              */
             if (!is_null($user)) {
-                return view('master.user.edit', compact('user', 'roles', 'division'));
+                /**
+                 * User Role Configuration
+                 */
+                $exploded_raw_role = explode('-', $user->getRoleNames()[0]);
+                $user_role = ucwords(implode(' ', $exploded_raw_role));
+
+                return view('user.detail', compact('user', 'user_role'));
             } else {
                 return redirect()
                     ->back()
@@ -188,6 +192,229 @@ class UserController extends Controller
             return redirect()
                 ->back()
                 ->with(['failed' => $e->getMessage()]);
+        }
+    }
+
+    public function edit(string $id)
+    {
+        try {
+            /**
+             * Get User Record from id
+             */
+            $user = User::find($id);
+
+            /**
+             * Validation User id
+             */
+            if (!is_null($user)) {
+                /**
+                 * Get All Role
+                 */
+                $roles = Role::all();
+                $division = Division::whereNull('deleted_at')->get();
+
+                /**
+                 * Disabled Edit Role with Same User Logged in
+                 */
+                $role_disabled = $id == Auth::user()->id ? 'disabled' : '';
+
+                return view('master.user.edit', compact('user', 'roles', 'division', 'role_disabled'));
+            } else {
+                return redirect()
+                    ->back()
+                    ->with(['failed' => 'Invalid Request!']);
+            }
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with(['failed' => $e->getMessage()]);
+        }
+    }
+
+    public function update(Request $request, string $id)
+    {
+        try {
+            /**
+             * Validation Request Body Variables
+             */
+            $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'username' => 'required',
+                'roles' => 'required',
+            ]);
+
+            /**
+             * Validation Unique Field Record
+             */
+            $username_check = User::whereNull('deleted_at')
+                ->where('username', $request->username)
+                ->where('id', '!=', $id)
+                ->first();
+            $email_check = User::whereNull('deleted_at')
+                ->where('email', $request->email)
+                ->where('id', '!=', $id)
+                ->first();
+
+            /**
+             * Validation Unique Field Record
+             */
+            if (is_null($username_check) && is_null($email_check)) {
+                /**
+                 * Get User Record from id
+                 */
+                $user = User::find($id);
+
+                /**
+                 * Validation User id
+                 */
+                if (!is_null($user)) {
+                    /**
+                     * Validation Password Request
+                     */
+                    if (isset($request->password)) {
+                        /**
+                         * Validation Request Body Variables
+                         */
+                        $request->validate([
+                            'password' => 'required',
+                            're_password' => 'required|same:password',
+                        ]);
+
+                        /**
+                         * Begin Transaction
+                         */
+                        DB::beginTransaction();
+
+                        /**
+                         * Update User Record
+                         */
+                        $user_update = User::where('id', $id)->update([
+                            'name' => $request->name,
+                            'email' => $request->email,
+                            'username' => $request->username,
+                            'password' => bcrypt($request->password),
+                        ]);
+                    } else {
+                        /**
+                         * Begin Transaction
+                         */
+                        DB::beginTransaction();
+
+                        /**
+                         * Update User Record
+                         */
+                        $user_update = User::where('id', $id)->update([
+                            'name' => $request->name,
+                            'email' => $request->email,
+                            'username' => $request->username,
+                        ]);
+                    }
+
+                    /**
+                     * Validation Update Role Equals Default
+                     */
+                    if ($user->getRoleNames()[0] != $request->roles) {
+                        /**
+                         * Assign Role of User Based on Requested
+                         */
+                        $model_has_role_delete = $user->removeRole($user->getRoleNames()[0]);
+
+                        /**
+                         * Assign Role of User Based on Requested
+                         */
+                        $model_has_role_update = $user->assignRole($request->roles);
+
+                        /**
+                         * Validation Update User Record and Update Assign Role User
+                         */
+                        if ($user_update && $model_has_role_delete && $model_has_role_update) {
+                            DB::commit();
+                            return redirect()
+                                ->route('user.index')
+                                ->with(['success' => 'Successfully Update User']);
+                        } else {
+                            /**
+                             * Failed Store Record
+                             */
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Update User'])
+                                ->withInput();
+                        }
+                    } else {
+                        /**
+                         * Validation Update User Record
+                         */
+                        if ($user_update) {
+                            DB::commit();
+                            return redirect()
+                                ->route('user.index')
+                                ->with(['success' => 'Successfully Update User']);
+                        } else {
+                            /**
+                             * Failed Store Record
+                             */
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Update User'])
+                                ->withInput();
+                        }
+                    }
+                } else {
+                    return redirect()
+                        ->back()
+                        ->with(['failed' => 'Invalid Request!']);
+                }
+            } else {
+                return redirect()
+                    ->back()
+                    ->with(['failed' => 'Email or Username Already Exist'])
+                    ->withInput();
+            }
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with(['failed' => $e->getMessage()])
+                ->withInput();
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        try {
+            /**
+             * Begin Transaction
+             */
+            DB::beginTransaction();
+
+            /**
+             * Update User Record
+             */
+            $user_destroy = User::where('id', $id)->update([
+                'deleted_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            /**
+             * Validation Update User Record
+             */
+            if ($user_destroy) {
+                DB::commit();
+                session()->flash('success', 'User Successfully Deleted');
+            } else {
+                /**
+                 * Failed Store Record
+                 */
+                DB::rollBack();
+                session()->flash('failed', 'Failed Delete User');
+            }
+        } catch (Exception $e) {
+            session()->flash('failed', $e->getMessage());
         }
     }
 }
