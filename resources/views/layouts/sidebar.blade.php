@@ -71,15 +71,16 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('master.user.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            User
-                        </p>
-                    </a>
-                </li>
-
+                @role('admin')
+                    <li class="nav-item">
+                        <a href="{{ route('master.user.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                User
+                            </p>
+                        </a>
+                    </li>
+                @endrole
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

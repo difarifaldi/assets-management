@@ -88,7 +88,7 @@ class UserController extends Controller
                 'name' => 'required|string',
                 'email' => 'required|email',
                 'phone' => 'required|numeric',
-                'address' => 'required',
+                'address' => 'nullable',
                 'roles' => 'required',
                 'password' => 'required',
                 're_password' => 'required|same:password',
@@ -182,7 +182,7 @@ class UserController extends Controller
                 $exploded_raw_role = explode('-', $user->getRoleNames()[0]);
                 $user_role = ucwords(implode(' ', $exploded_raw_role));
 
-                return view('user.detail', compact('user', 'user_role'));
+                return view('master.user.detail', compact('user', 'user_role'));
             } else {
                 return redirect()
                     ->back()
@@ -242,6 +242,14 @@ class UserController extends Controller
                 'email' => 'required|email',
                 'username' => 'required',
                 'roles' => 'required',
+                'username' => 'required',
+                'nik' => 'numeric|digits:16',
+                'division_id' => 'required',
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'phone' => 'required|numeric|min_digits:11',
+                'address' => 'nullable',
+                'roles' => 'required',
             ]);
 
             /**
@@ -290,9 +298,13 @@ class UserController extends Controller
                          * Update User Record
                          */
                         $user_update = User::where('id', $id)->update([
+                            'username' => $request->username,
+                            'nik' => $request->nik,
+                            'division_id' => $request->division_id,
                             'name' => $request->name,
                             'email' => $request->email,
-                            'username' => $request->username,
+                            'phone' => $request->phone,
+                            'address' => $request->address,
                             'password' => bcrypt($request->password),
                         ]);
                     } else {
@@ -305,9 +317,13 @@ class UserController extends Controller
                          * Update User Record
                          */
                         $user_update = User::where('id', $id)->update([
+                            'username' => $request->username,
+                            'nik' => $request->nik,
+                            'division_id' => $request->division_id,
                             'name' => $request->name,
                             'email' => $request->email,
-                            'username' => $request->username,
+                            'phone' => $request->phone,
+                            'address' => $request->address,
                         ]);
                     }
 
@@ -331,7 +347,7 @@ class UserController extends Controller
                         if ($user_update && $model_has_role_delete && $model_has_role_update) {
                             DB::commit();
                             return redirect()
-                                ->route('user.index')
+                                ->route('master.user.index')
                                 ->with(['success' => 'Successfully Update User']);
                         } else {
                             /**
@@ -350,7 +366,7 @@ class UserController extends Controller
                         if ($user_update) {
                             DB::commit();
                             return redirect()
-                                ->route('user.index')
+                                ->route('master.user.index')
                                 ->with(['success' => 'Successfully Update User']);
                         } else {
                             /**
