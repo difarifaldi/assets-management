@@ -22,7 +22,11 @@ return new class extends Migration
             $table->bigInteger('value')->nullable();
             $table->date('exipired_at')->nullable();
             $table->text('description')->nullable();
-            $table->json('attachment');
+            $table->json('attachment')->nullable();
+            $table->integer('merk_id');
+            $table->date('purchase_date')->nullable();
+            $table->date('warranty_end_date')->nullable();
+            $table->integer('warranty_duration')->nullable();
             $table->integer('assign_to')->nullable();
             $table->timestamp('assign_at')->nullable();
             $table->integer('check_in_by')->nullable();
@@ -44,6 +48,7 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');
+            $table->foreign('merk_id')->references('id')->on('merks');
         });
     }
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('assign_at');
             $table->integer('return_by');
             $table->timestamp('return_at')->nullable();
-            $table->json('attachment')->default(0);
+            $table->json('attachment');
             $table->tinyInteger('latest')->nullable();
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();

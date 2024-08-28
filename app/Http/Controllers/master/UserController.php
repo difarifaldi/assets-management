@@ -138,7 +138,7 @@ class UserController extends Controller
                 if ($user && $model_has_role) {
                     DB::commit();
                     return redirect()
-                        ->route('master.user.create')
+                        ->route('master.user.index')
                         ->with(['success' => 'Successfully Add User']);
                 } else {
                     /**

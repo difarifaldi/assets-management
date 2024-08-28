@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\asset\AssetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\master\CategoryAssetsController;
 use App\Http\Controllers\master\DivisionController;
 use App\Http\Controllers\master\ManufactureController;
+use App\Http\Controllers\master\MerkController;
 use App\Http\Controllers\master\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,8 @@ Route::group(['middleware' => ['role:admin']], function () {
 
         Route::resource('manufacture', ManufactureController::class, ['except' => ['index', 'show']])->parameters(['manufacture' => 'id']);
 
+        Route::resource('merk', MerkController::class, ['except' => ['index', 'show']])->parameters(['merk' => 'id']);
+
         Route::resource('category', CategoryAssetsController::class, ['except' => ['index', 'show']])->parameters(['category' => 'id']);
 
         Route::resource('division', DivisionController::class, ['except' => ['index', 'show']])->parameters(['division' => 'id']);
@@ -46,6 +50,11 @@ Route::group(['middleware' => ['role:admin']], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('user', UserController::class)->parameters(['user' => 'id']);
+    });
+
+    Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
+
+        Route::resource('physical', AssetController::class, ['except' => ['index', 'show']])->parameters(['physical' => 'id']);
     });
 });
 
@@ -58,6 +67,12 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
         Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
 
 
+        Route::group(['controller' => MerkController::class, 'prefix' => 'merk', 'as' => 'merk.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('merk', MerkController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['merk' => 'id']);
+
+
         Route::group(['controller' => CategoryAssetsController::class, 'prefix' => 'category', 'as' => 'category.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
@@ -68,5 +83,12 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('division', DivisionController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['division' => 'id']);
+    });
+
+    Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
+        Route::group(['controller' => AssetController::class, 'prefix' => 'physical', 'as' => 'physical.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('physical', AssetController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['physical' => 'id']);
     });
 });

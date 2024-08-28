@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('history_check_in_outs', function (Blueprint $table) {
+        Schema::create('merks', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('assets_id');
-            $table->integer('check_in_by');
-            $table->integer('check_in_at');
-            $table->integer('check_out_by')->nullable();
-            $table->timestamp('check_out_at');
-            $table->json('attachment');
-            $table->tinyInteger('latest')->nullable();
+            $table->integer('id')->autoIncrement();
+            $table->string('name');
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();
             $table->integer('updated_by');
@@ -27,9 +22,7 @@ return new class extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
 
-            $table->foreign('assets_id')->references('id')->on('assets');
-            $table->foreign('check_in_by')->references('id')->on('users');
-            $table->foreign('check_out_by')->references('id')->on('users');
+            // Foreign Key
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('deleted_by')->references('id')->on('users');
@@ -41,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('history_check_in_outs');
+        Schema::dropIfExists('merks');
     }
 };
