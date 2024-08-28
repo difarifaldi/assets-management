@@ -22,7 +22,7 @@
                 confirmButton: 'btn btn-primary mb-3',
             },
             buttonsStyling: false,
-            timer: 3000,
+            timer: 30000,
         });
     </script>
     @php

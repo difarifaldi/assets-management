@@ -10,6 +10,9 @@
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- ChartJS -->
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
+<!-- Select2 -->
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+
 <!-- Sparkline -->
 <script src="{{ asset('plugins/sparklines/sparkline.js') }}"></script>
 <!-- JQVMap -->
@@ -40,5 +43,16 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script src="{{ asset('vendors/sweetalert2/sweetalert2.min.js') }}"></script>
+
+<script>
+    $(function() {
+        $('.select2').select2()
+
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+    });
+    // DropzoneJS Demo Code End
+</script>
 @include('javascript.sweetalert')
 @stack('javascript-bottom')

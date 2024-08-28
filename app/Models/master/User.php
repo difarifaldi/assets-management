@@ -3,6 +3,8 @@
 namespace App\Models\master;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\asset\Asset;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,5 +45,10 @@ class User extends Authenticatable
     public function division()
     {
         return $this->belongsTo(Division::class, 'division_id');
+    }
+
+    public function asset()
+    {
+        return $this->hasMany(Asset::class, 'assign_to');
     }
 }

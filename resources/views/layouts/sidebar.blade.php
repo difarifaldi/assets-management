@@ -85,7 +85,7 @@
                     <ul class="nav nav-treeview">
 
                         <li class="nav-item">
-                            <a href="{{ route('asset.physical.create') }}" class="nav-link">
+                            <a href="{{ route('asset.physical.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>PHYSICAL ASSET</p>
                             </a>

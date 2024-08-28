@@ -10,4 +10,9 @@ class Merk extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function asset()
+    {
+        return $this->hasMany(Merk::class, 'merk_id');
+    }
 }

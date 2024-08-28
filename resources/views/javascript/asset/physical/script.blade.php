@@ -21,39 +21,52 @@
         })
     });
 
-    // function dataTable() {
-    //     console.log('dataTable function called');
-    //     const url = $('#url_dt').val();
-    //     $('#dt-category').DataTable({
-    //         autoWidth: false,
-    //         responsive: true,
-    //         processing: true,
-    //         serverSide: true,
-    //         ajax: {
-    //             url: url,
-    //             error: function(xhr, error, code) {
-    //                 sweetAlertError(xhr.statusText);
-    //             }
-    //         },
-    //         columns: [{
-    //                 data: 'DT_RowIndex',
-    //                 width: '5%',
-    //                 searchable: false
-    //             },
-    //             {
-    //                 data: 'name',
-    //                 defaultContent: '-',
-    //             },
-    //             {
-    //                 data: 'action',
-    //                 width: '20%',
-    //                 defaultContent: '-',
-    //                 orderable: false,
-    //                 searchable: false
-    //             },
-    //         ]
-    //     });
-    // }
+    function dataTable() {
+        console.log('dataTable function called');
+        const url = $('#url_dt').val();
+        $('#dt-physical').DataTable({
+            autoWidth: false,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: url,
+                error: function(xhr, error, code) {
+                    sweetAlertError(xhr.statusText);
+                }
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    width: '5%',
+                    searchable: false
+                },
+                {
+                    data: 'name',
+                    defaultContent: '-',
+                },
+
+                {
+                    data: 'merk',
+                    defaultContent: '-',
+                },
+                {
+                    data: 'category',
+                    defaultContent: '-',
+                },
+                {
+                    data: 'assignTo',
+                    defaultContent: '-',
+                },
+                {
+                    data: 'action',
+                    width: '20%',
+                    defaultContent: '-',
+                    orderable: false,
+                    searchable: false
+                },
+            ]
+        });
+    }
 
     // function destroyRecord(id) {
     //     let token = $('meta[name="csrf-token"]').attr('content');
@@ -74,7 +87,7 @@
     //         if (result.isConfirmed) {
     //             sweetAlertProcess();
     //             $.ajax({
-    //                 url: '{{ url('master/category') }}/' + id,
+    //                 url: '{{ url('master/physical') }}/' + id,
     //                 type: 'DELETE',
     //                 cache: false,
     //                 data: {

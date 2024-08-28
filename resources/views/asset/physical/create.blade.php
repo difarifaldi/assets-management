@@ -52,7 +52,7 @@
 
                                 <div class="form-group">
                                     <label for="type">Type <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="type_edit" name="type" required>
+                                    <select class="form-control " id="type_edit" name="type" required>
                                         <option disabled hidden selected>Choose Type</option>
                                         <option value="1">
                                             Physical Asset</option>
@@ -110,20 +110,40 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label>Assign To</label>
+                                    <select class="form-control select2bs4" style="width: 100%;" name="assign_to">
+                                        <option disabled hidden selected>Choose User</option>
+                                        @foreach ($users as $user)
+                                            @if (!is_null(old('assign_to')) && old('assign_to') == $user->id)
+                                                <option value="{{ $user->id }}" selected>{{ $user->name }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="assign_at">Assign At</label>
+                                    <input type="date" class="form-control" id="assign_at" name="assign_at"
+                                        placeholder="Expired" value="{{ old('assign_at') }}">
+                                </div>
+
+                                <div class="form-group">
                                     <label for="description">Description</label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
                                         placeholder="Description">{{ old('description') }}</textarea>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="attachment">Attachment</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="attachment"
-                                                name="attachment">
-                                            <label class="custom-file-label" for="attachment">Choose file</label>
-                                        </div>
-                                    </div>
+
+                                <div class="mb-3">
+                                    <label for="attachment">Attachment <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" name="attachment" id="documentInput"
+                                        accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" multiple="true" required>
+                                    <p class="text-danger py-1">* .pdf .docx .xlsx .pptx (Max 10 MB)</p>
+                                    <iframe id="documentPreview" class="w-100 mt-3 d-none"
+                                        style="height: 600px;"></iframe>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
