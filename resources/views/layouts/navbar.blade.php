@@ -17,7 +17,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('logout') }}" role="button" title="Log Out">
+            <a class="nav-link text-danger" href="{{ route('logout') }}" role="button" title="Log Out">
                 <i class="fas fa-power-off"></i>
             </a>
         </li>
