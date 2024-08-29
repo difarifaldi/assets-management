@@ -24,7 +24,7 @@
     function dataTable() {
         console.log('dataTable function called');
         const url = $('#url_dt').val();
-        $('#dt-merk').DataTable({
+        $('#dt-brand').DataTable({
             autoWidth: false,
             responsive: true,
             processing: true,
@@ -74,7 +74,7 @@
             if (result.isConfirmed) {
                 sweetAlertProcess();
                 $.ajax({
-                    url: '{{ url('master/merk') }}/' + id,
+                    url: '{{ url('master/brand') }}/' + id,
                     type: 'DELETE',
                     cache: false,
                     data: {

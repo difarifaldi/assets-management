@@ -8,22 +8,22 @@
                         <div class="card-header">
                             <div class="d-flex  align-items-center">
 
-                                <h3 class="card-title"> Merk</h3>
+                                <h3 class="card-title">Brand</h3>
                             </div>
                         </div>
-                        <div class="card-body p-5">
+                        <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
                                 @if ($can_create)
                                     <div>
-                                        <a href="{{ route('master.merk.create') }}" class="btn btn-sm btn-primary">
-                                            Add Merk
+                                        <a href="{{ route('master.brand.create') }}" class="btn btn-sm btn-primary">
+                                            Add Brand
                                         </a>
                                     </div>
                                 @endif
                             </div>
                             <div class="table-responsive pt-3">
                                 <input type="hidden" id="url_dt" value="{{ $datatable_route }}">
-                                <table class="table table-bordered datatable" id="dt-merk">
+                                <table class="table table-bordered datatable" id="dt-brand">
                                     <thead>
                                         <tr>
                                             <th>
@@ -46,7 +46,7 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.master.merk.script')
+        @include('javascript.master.brand.script')
         <script>
             dataTable();
         </script>

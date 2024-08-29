@@ -5,7 +5,7 @@ namespace App\Http\Controllers\asset;
 use App\Http\Controllers\Controller;
 use App\Models\asset\Asset;
 use App\Models\master\CategoryAssets;
-use App\Models\master\Merk;
+use App\Models\master\Brand;
 use App\Models\master\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -45,9 +45,9 @@ class AssetController extends Controller
 
                 return $data->category ? $data->category->name : '-';
             })
-            ->addColumn('merk', function ($data) {
+            ->addColumn('brand', function ($data) {
 
-                return $data->merk ? $data->merk->name : '-';
+                return $data->brand ? $data->brand->name : '-';
             })
 
             ->addColumn('assignTo', function ($data) {
@@ -71,7 +71,7 @@ class AssetController extends Controller
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'merk', 'category', 'assignTo', 'action'])
+            ->only(['name', 'brand', 'category', 'assignTo', 'action'])
             ->rawColumns(['action'])
             ->make(true);
 
@@ -84,9 +84,9 @@ class AssetController extends Controller
     public function create()
     {
         $categories = CategoryAssets::whereNull('deleted_at')->get();
-        $merks = Merk::whereNull('deleted_at')->get();
+        $brands = Brand::whereNull('deleted_at')->get();
         $users = User::whereNull('deleted_at')->role('staff')->get();
-        return view('asset.physical.create', compact('categories', 'merks', 'users'));
+        return view('asset.physical.create', compact('categories', 'brands', 'users'));
     }
 
     /**
@@ -110,7 +110,7 @@ class AssetController extends Controller
                 'attachment' => 'nullable',
                 'assign_to' => 'nullable',
                 'assign_at' => 'nullable',
-                'merk_id' => 'required|integer|exists:merks,id',
+                'brand_id' => 'required|integer|exists:brands,id',
                 'purchase_date' => 'nullable|date',
                 'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
                 'warranty_duration' => 'nullable|integer|min:0',
@@ -134,7 +134,7 @@ class AssetController extends Controller
                 'attachment' => $request->attachment,
                 'assign_to' => $request->assign_to,
                 'assign_at' => $request->assign_at,
-                'merk_id' => $request->merk_id,
+                'brand_id' => $request->brand_id,
                 'purchase_date' => $request->purchase_date,
                 'warranty_end_date' => $request->warranty_end_date,
                 'warranty_duration' => $request->warranty_duration,

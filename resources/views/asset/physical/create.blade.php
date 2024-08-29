@@ -36,15 +36,15 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="merks">Merk <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="merk_id" name="merk_id">
-                                        <option disabled hidden selected>Choose Merk</option>
-                                        @foreach ($merks as $merk)
-                                            @if (!is_null(old('merk_id')) && old('merk_id') == $merk->id)
-                                                <option value="{{ $merk->id }}" selected>{{ $merk->name }}
+                                    <label for="brand_id">Brand <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="brand_id" name="brand_id">
+                                        <option disabled hidden selected>Choose Brand</option>
+                                        @foreach ($brands as $brand)
+                                            @if (!is_null(old('brand_id')) && old('brand_id') == $brand->id)
+                                                <option value="{{ $brand->id }}" selected>{{ $brand->name }}
                                                 </option>
                                             @else
-                                                <option value="{{ $merk->id }}">{{ $merk->name }}</option>
+                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endif
                                         @endforeach
                                     </select>

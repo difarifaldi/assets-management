@@ -242,14 +242,10 @@ class UserController extends Controller
                 'email' => 'required|email',
                 'username' => 'required',
                 'roles' => 'required',
-                'username' => 'required',
                 'nik' => 'numeric|digits:16',
                 'division_id' => 'required',
-                'name' => 'required|string',
-                'email' => 'required|email',
                 'phone' => 'required|numeric|min_digits:11',
                 'address' => 'nullable',
-                'roles' => 'required',
             ]);
 
             /**

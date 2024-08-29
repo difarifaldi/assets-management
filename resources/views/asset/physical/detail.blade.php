@@ -22,11 +22,11 @@
                                 </div>
                             </div>
 
-                            <!-- Merk -->
+                            <!-- Brand -->
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Merk</label>
+                                <label class="col-sm-3 col-form-label">Brand</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ $asset->merk ? $asset->merk->name : '-' }}
+                                    {{ $asset->brand ? $asset->brand->name : '-' }}
                                 </div>
                             </div>
 

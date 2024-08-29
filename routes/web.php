@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\master\CategoryAssetsController;
 use App\Http\Controllers\master\DivisionController;
 use App\Http\Controllers\master\ManufactureController;
-use App\Http\Controllers\master\MerkController;
+use App\Http\Controllers\master\BrandController;
 use App\Http\Controllers\master\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,7 +40,7 @@ Route::group(['middleware' => ['role:admin']], function () {
 
         Route::resource('manufacture', ManufactureController::class, ['except' => ['index', 'show']])->parameters(['manufacture' => 'id']);
 
-        Route::resource('merk', MerkController::class, ['except' => ['index', 'show']])->parameters(['merk' => 'id']);
+        Route::resource('brand', BrandController::class, ['except' => ['index', 'show']])->parameters(['brand' => 'id']);
 
         Route::resource('category', CategoryAssetsController::class, ['except' => ['index', 'show']])->parameters(['category' => 'id']);
 
@@ -67,10 +67,10 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
         Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
 
 
-        Route::group(['controller' => MerkController::class, 'prefix' => 'merk', 'as' => 'merk.'], function () {
+        Route::group(['controller' => BrandController::class, 'prefix' => 'brand', 'as' => 'brand.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
-        Route::resource('merk', MerkController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['merk' => 'id']);
+        Route::resource('brand', BrandController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['brand' => 'id']);
 
 
         Route::group(['controller' => CategoryAssetsController::class, 'prefix' => 'category', 'as' => 'category.'], function () {

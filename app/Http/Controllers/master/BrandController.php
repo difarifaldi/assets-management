@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\master;
 
 use App\Http\Controllers\Controller;
-use App\Models\master\Merk;
-use App\Http\Requests\StoreMerkRequest;
-use App\Http\Requests\UpdateMerkRequest;
+use App\Models\master\Brand;
 use App\Models\master\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,32 +11,32 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
-class MerkController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $datatable_route = route('master.merk.dataTable');
+        $datatable_route = route('master.brand.dataTable');
 
 
         $can_create = User::find(Auth::user()->id)->hasRole('admin');
 
-        return view('master.merk.index', compact('datatable_route', 'can_create'));
+        return view('master.brand.index', compact('datatable_route', 'can_create'));
     }
 
     public function dataTable()
     {
         /**
-         * Get All Merk
+         * Get All brand
          */
-        $merk = Merk::whereNull('deleted_by')->whereNull('deleted_at')->get();
+        $brand = Brand::whereNull('deleted_by')->whereNull('deleted_at')->get();
 
         /**
          * Datatable Configuration
          */
-        $dataTable = DataTables::of($merk)
+        $dataTable = DataTables::of($brand)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 $btn_action = '<div align="center">';
@@ -49,7 +47,7 @@ class MerkController extends Controller
 
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
 
-                    $btn_action .= '<a href="' . route('master.merk.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                    $btn_action .= '<a href="' . route('master.brand.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 }
                 $btn_action .= '</div>';
@@ -67,7 +65,7 @@ class MerkController extends Controller
      */
     public function create()
     {
-        return view('master.merk.create');
+        return view('master.brand.create');
     }
 
     /**
@@ -86,22 +84,22 @@ class MerkController extends Controller
             DB::beginTransaction();
 
             /**
-             * Create Merk Record
+             * Create brand Record
              */
-            $merk = Merk::lockforUpdate()->create([
+            $brand = Brand::lockforUpdate()->create([
                 'name' => $request->name,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,
             ]);
 
             /**
-             * Validation Create Merk Record
+             * Validation Create brand Record
              */
-            if ($merk) {
+            if ($brand) {
                 DB::commit();
                 return redirect()
-                    ->route('master.merk.index')
-                    ->with(['success' => 'Successfully Add Merk']);
+                    ->route('master.brand.index')
+                    ->with(['success' => 'Successfully Add brand']);
             } else {
                 /**
                  * Failed Store Record
@@ -109,7 +107,7 @@ class MerkController extends Controller
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add Merk'])
+                    ->with(['failed' => 'Failed Add brand'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -135,15 +133,15 @@ class MerkController extends Controller
     {
         try {
             /**
-             * Get Merk Record from id
+             * Get brand Record from id
              */
-            $merk = Merk::find($id);
+            $brand = Brand::find($id);
 
             /**
-             * Validation Merk id
+             * Validation brand id
              */
-            if (!is_null($merk)) {
-                return view('master.merk.edit', compact('merk'));
+            if (!is_null($brand)) {
+                return view('master.brand.edit', compact('brand'));
             } else {
                 return redirect()
                     ->back()
@@ -170,30 +168,30 @@ class MerkController extends Controller
 
             ]);
 
-            $merk = Merk::find($id);
+            $brand = Brand::find($id);
 
-            if (!is_null($merk)) {
+            if (!is_null($brand)) {
                 /**
                  * Begin Transaction
                  */
                 DB::beginTransaction();
 
                 /**
-                 * Update Merk Record
+                 * Update brand Record
                  */
-                $merk_update = Merk::where('id', $id)->update([
+                $brand_update = Brand::where('id', $id)->update([
                     'name' => $request->name,
                     'updated_by' => Auth::user()->id,
                 ]);
 
                 /**
-                 * Validation Update Merk Record
+                 * Validation Update brand Record
                  */
-                if ($merk_update) {
+                if ($brand_update) {
                     DB::commit();
                     return redirect()
-                        ->route('master.merk.index')
-                        ->with(['success' => 'Successfully Update Merk']);
+                        ->route('master.brand.index')
+                        ->with(['success' => 'Successfully Update brand']);
                 } else {
                     /**
                      * Failed Store Record
@@ -201,7 +199,7 @@ class MerkController extends Controller
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update Merk'])
+                        ->with(['failed' => 'Failed Update brand'])
                         ->withInput();
                 }
             } else {
@@ -228,25 +226,25 @@ class MerkController extends Controller
             DB::beginTransaction();
 
             /**
-             * Update Merk Record
+             * Update brand Record
              */
-            $merk_destroy = Merk::where('id', $id)->update([
+            $brand_destroy = Brand::where('id', $id)->update([
                 'deleted_by' => Auth::user()->id,
                 'deleted_at' => date('Y-m-d H:i:s'),
             ]);
 
             /**
-             * Validation Update Merk Record
+             * Validation Update brand Record
              */
-            if ($merk_destroy) {
+            if ($brand_destroy) {
                 DB::commit();
-                session()->flash('success', 'Merk Successfully Deleted');
+                session()->flash('success', 'brand Successfully Deleted');
             } else {
                 /**
                  * Failed Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete Merk');
+                session()->flash('failed', 'Failed Delete brand');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

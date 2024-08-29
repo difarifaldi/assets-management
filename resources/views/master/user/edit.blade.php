@@ -6,13 +6,7 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between align-items-center">
-
-                                <a href="{{ route('master.user.index') }}" class="btn btn-tool">
-                                    <i class="fas fa-chevron-left"></i> Back
-                                </a>
-                                <h3 class="card-title">Edit User | {{ $user->name }}</h3>
-                            </div>
+                            <h3 class="card-title font-weight-bold">Edit User - {{ $user->name }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -99,7 +93,11 @@
                                     <textarea class="form-control" name="address" id="address" cols="10" rows="3"
                                         placeholder="Location Address">{{ $user->address }}</textarea>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                                <div class="pt-3 d-flex">
+                                    <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2"> Back</a>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </form>

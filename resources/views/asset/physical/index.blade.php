@@ -33,7 +33,7 @@
                                                 Name
                                             </th>
                                             <th>
-                                                Merk
+                                                Brand
                                             </th>
                                             <th>
                                                 Category

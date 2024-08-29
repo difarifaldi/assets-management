@@ -7,8 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-
-                                <h3 class="card-title">Detail User | {{ $user->name }}</h3>
+                                <h3 class="card-title font-weight-bold">Detail User - {{ $user->name }}</h3>
                             </div>
                         </div>
 
@@ -29,7 +28,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label" for="division">Division </label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ $user->division->name }}
+                                    {{ $user->division->name ?? '-' }}
                                 </div>
                             </div>
 
@@ -69,7 +68,9 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('master.user.index') }}" class="btn btn-primary"> Back</a>
+                            <div class="pt-3">
+                                <a href="{{ route('master.user.index') }}" class="btn btn-danger"> Back</a>
+                            </div>
                         </div>
                         <!-- /.card-body -->
 

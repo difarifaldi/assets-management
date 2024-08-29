@@ -46,7 +46,7 @@
                 },
 
                 {
-                    data: 'merk',
+                    data: 'brand',
                     defaultContent: '-',
                 },
                 {

@@ -5,12 +5,11 @@
         <div class="login-box">
             <!-- /.login-logo -->
             <div class="card card-outline card-primary">
-                <div class="card-header text-center">
+                {{-- <div class="card-header text-center">
                     <a href="#" class="h1"><b>Asset </b>Management</a>
-                </div>
+                </div> --}}
                 <div class="card-body">
-                    <p class="login-box-msg">Sign in to start your session</p>
-
+                    <label class="h5 pb-3"><i class="fas fa-list mr-2"></i>Asset Management System</label>
                     <form action="{{ route('authenticate') }}" method="post">
                         @csrf
                         <div class="input-group mb-3">
@@ -42,22 +41,22 @@
                                 </div>
                             @enderror
                         </div>
-                        <div class="row">
+                        <div class="row pt-3">
                             <div class="col-8">
                                 <div class="icheck-primary">
                                     <input type="checkbox" id="remember" name="remember">
-                                    <label for="remember">
+                                    <label for="remember" class="font-weight-normal">
                                         Remember Me
                                     </label>
                                 </div>
                             </div>
                             <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                                <button type="submit" class="btn btn-primary btn-block font-weight-bold">Log In</button>
                             </div>
                         </div>
                     </form>
 
-                    <div class="social-auth-links text-center mt-2 mb-3">
+                    {{-- <div class="social-auth-links text-center mt-2 mb-3">
                         <a href="#" class="btn btn-block btn-primary">
                             <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
                         </a>
@@ -72,7 +71,7 @@
                     </p>
                     <p class="mb-0">
                         <a href="register.html" class="text-center">Register a new membership</a>
-                    </p>
+                    </p> --}}
                 </div>
                 <!-- /.card-body -->
             </div>

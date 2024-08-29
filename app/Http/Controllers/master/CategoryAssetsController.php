@@ -100,7 +100,7 @@ class CategoryAssetsController extends Controller
                 DB::commit();
                 return redirect()
                     ->route('master.category.index')
-                    ->with(['success' => 'Successfully Add CategoryAssets']);
+                    ->with(['success' => 'Successfully Add Category Asset']);
             } else {
                 /**
                  * Failed Store Record
@@ -108,7 +108,7 @@ class CategoryAssetsController extends Controller
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add CategoryAssets'])
+                    ->with(['failed' => 'Failed Add Category Asset'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -192,7 +192,7 @@ class CategoryAssetsController extends Controller
                     DB::commit();
                     return redirect()
                         ->route('master.category.index')
-                        ->with(['success' => 'Successfully Update CategoryAssets']);
+                        ->with(['success' => 'Successfully Update Category Asset']);
                 } else {
                     /**
                      * Failed Store Record
@@ -200,7 +200,7 @@ class CategoryAssetsController extends Controller
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update CategoryAssets'])
+                        ->with(['failed' => 'Failed Update Category Asset'])
                         ->withInput();
                 }
             } else {
@@ -239,13 +239,13 @@ class CategoryAssetsController extends Controller
              */
             if ($category_destroy) {
                 DB::commit();
-                session()->flash('success', 'CategoryAssets Successfully Deleted');
+                session()->flash('success', 'Category Asset Successfully Deleted');
             } else {
                 /**
                  * Failed Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete CategoryAssets');
+                session()->flash('failed', 'Failed Delete Category Asset');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

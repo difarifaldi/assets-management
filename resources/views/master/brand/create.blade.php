@@ -8,15 +8,15 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
 
-                                <a href="{{ route('master.merk.index') }}" class="btn btn-tool">
+                                <a href="{{ route('master.brand.index') }}" class="btn btn-tool">
                                     <i class="fas fa-chevron-left"></i> Back
                                 </a>
-                                <h3 class="card-title">Add Merk</h3>
+                                <h3 class="card-title">Add Brand</h3>
                             </div>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('master.merk.store') }}">
+                        <form method="post" action="{{ route('master.brand.store') }}">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
@@ -34,6 +34,6 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.master.merk.script')
+        @include('javascript.master.brand.script')
     @endpush
 @endsection
