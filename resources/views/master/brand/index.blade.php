@@ -6,10 +6,7 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <div class="d-flex  align-items-center">
-
-                                <h3 class="card-title">Brand</h3>
-                            </div>
+                            <h3 class="card-title font-weight-bold">Brand</h3>
                         </div>
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
