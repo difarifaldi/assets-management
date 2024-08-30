@@ -133,16 +133,25 @@
                             </div>
 
                             <!-- Attachment -->
+                            <!-- Attachment -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Attachment</label>
                                 <div class="col-sm-9 col-form-label">
-                                    @if ($asset->attachment)
-                                        <a href="{{ asset($asset->attachment) }}" target="_blank">View Attachment</a>
+                                    @if ($asset->attachmentArray && count($asset->attachmentArray) > 0)
+                                        @foreach ($asset->attachmentArray as $attachment)
+                                            <div>
+                                                <a href="{{ asset($attachment) }}" target="_blank">
+                                                    <img src="{{ asset($attachment) }}" alt="Attachment Image"
+                                                        style="max-width: 100px; height: auto; margin: 5px;">
+                                                </a>
+                                            </div>
+                                        @endforeach
                                     @else
                                         No Attachment
                                     @endif
                                 </div>
                             </div>
+
                             <a href="{{ route('asset.physical.index') }}" class="btn btn-primary"> Back</a>
                         </div>
                         <!-- /.card-body -->

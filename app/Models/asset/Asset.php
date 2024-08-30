@@ -28,4 +28,9 @@ class Asset extends Model
     {
         return $this->belongsTo(User::class, 'assign_to');
     }
+
+    public function getAttachmentArrayAttribute()
+    {
+        return json_decode($this->attributes['attachment'], true);
+    }
 }

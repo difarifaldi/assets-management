@@ -95,9 +95,6 @@ class AssetController extends Controller
     public function store(Request $request)
     {
         try {
-            /**
-             * Validation Request Body Variables
-             */
             $request->validate([
                 'category_asset_id' => 'nullable|integer|exists:category_assets,id',
                 'type' => 'required',
@@ -107,7 +104,7 @@ class AssetController extends Controller
                 'value' => 'nullable|integer|min:0',
                 'exipired_at' => 'nullable|date',
                 'description' => 'nullable|string',
-                'attachment' => 'nullable',
+                'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'assign_to' => 'nullable',
                 'assign_at' => 'nullable',
                 'brand_id' => 'required|integer|exists:brands,id',
@@ -116,13 +113,9 @@ class AssetController extends Controller
                 'warranty_duration' => 'nullable|integer|min:0',
             ]);
 
-
             DB::beginTransaction();
 
-            /**
-             * Create Asset Record
-             */
-            $asset = Asset::lockforUpdate()->create([
+            $asset = Asset::lockForUpdate()->create([
                 'name' => $request->name,
                 'category_asset_id' => $request->category_asset_id,
                 'type' => $request->type,
@@ -131,7 +124,6 @@ class AssetController extends Controller
                 'value' => $request->value,
                 'exipired_at' => $request->exipired_at,
                 'description' => $request->description,
-                'attachment' => $request->attachment,
                 'assign_to' => $request->assign_to,
                 'assign_at' => $request->assign_at,
                 'brand_id' => $request->brand_id,
@@ -146,67 +138,42 @@ class AssetController extends Controller
                 $path = 'public/asset/physical';
                 $path_store = 'storage/asset/physical';
 
-                // Check Exsisting Path
                 if (!Storage::exists($path)) {
-                    // Create new Path Directory
                     Storage::makeDirectory($path);
                 }
 
-                $exploded_name = explode(' ', strtolower($request->name));
-                $file_name_config = implode('_', $exploded_name);
-                $file = $request->file('attachment');
-                $file_name = $asset->id . '_' . $file_name_config . '.' . $file->getClientOriginalExtension();
+                $attachments = [];
 
-                // Uploading File
-                $file->storePubliclyAs($path, $file_name);
-
-                // Check Upload Success
-                if (Storage::exists($path . '/' . $file_name)) {
-                    // Update Record for Attachment
-                    $asset_update = Asset::where('id', $asset->id)->update([
-                        'attachment' => $path_store . '/' . $file_name,
-                    ]);
-                    if ($asset_update) {
-                        DB::commit();
-                        return redirect()
-                            ->route('asset.physical.create')
-                            ->with(['success' => 'Successfully Add Physical Asset']);
-                    } else {
-                        /**
-                         * Failed Store Record
-                         */
-                        DB::rollBack();
-                        return redirect()
-                            ->back()
-                            ->with(['failed' => 'Failed Add Physical Asset'])
-                            ->withInput();
+                if ($request->hasFile('attachment')) {
+                    foreach ($request->file('attachment') as $file) {
+                        // Menggunakan nama file asli dengan uniqid untuk menghindari duplikasi nama
+                        $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                        $file->storePubliclyAs($path, $file_name);
+                        $attachments[] = $path_store . '/' . $file_name;
                     }
-                } else {
-                    // Failed and Rollback
-                    DB::rollBack();
-                    return redirect()
-                        ->back()
-                        ->with(['failed' => 'Gagal Upload Lampiran Surat Masuk'])
-                        ->withInput();
                 }
+
+                $asset->update([
+                    'attachment' => json_encode($attachments),
+                ]);
+
+                DB::commit();
+                return redirect()
+                    ->route('asset.physical.create')
+                    ->with(['success' => 'Successfully Add Physical Asset']);
             } else {
-                // Failed and Rollback
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Gagal Tambah Surat Masuk'])
+                    ->with(['failed' => 'Failed Add Physical Asset'])
                     ->withInput();
             }
-            /**
-             * Validation Create Asset Record
-             */
         } catch (Exception $e) {
-            return redirect()
-                ->back()
-                ->with(['failed' => $e->getMessage()])
-                ->withInput();
+            dd($e->getLine(), $e->getMessage(), $e->getFile());
         }
     }
+
+
 
     public function show(string $id)
     {
