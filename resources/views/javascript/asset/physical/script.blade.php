@@ -68,39 +68,39 @@
         });
     }
 
-    // function destroyRecord(id) {
-    //     let token = $('meta[name="csrf-token"]').attr('content');
+    function destroyRecord(id) {
+        let token = $('meta[name="csrf-token"]').attr('content');
 
-    //     Swal.fire({
-    //         title: 'Are You Sure Want To Delete Record?',
-    //         icon: 'question',
-    //         showCancelButton: true,
-    //         allowOutsideClick: false,
-    //         customClass: {
-    //             confirmButton: 'btn btn-primary mr-2 mb-3',
-    //             cancelButton: 'btn btn-danger mb-3',
-    //         },
-    //         buttonsStyling: false,
-    //         confirmButtonText: 'Yes',
-    //         cancelButtonText: 'Cancel'
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             sweetAlertProcess();
-    //             $.ajax({
-    //                 url: '{{ url('master/physical') }}/' + id,
-    //                 type: 'DELETE',
-    //                 cache: false,
-    //                 data: {
-    //                     _token: token
-    //                 },
-    //                 success: function(data) {
-    //                     location.reload();
-    //                 },
-    //                 error: function(xhr, error, code) {
-    //                     sweetAlertError(error);
-    //                 }
-    //             });
-    //         }
-    //     })
-    // }
+        Swal.fire({
+            title: 'Are You Sure Want To Delete Record?',
+            icon: 'question',
+            showCancelButton: true,
+            allowOutsideClick: false,
+            customClass: {
+                confirmButton: 'btn btn-primary mr-2 mb-3',
+                cancelButton: 'btn btn-danger mb-3',
+            },
+            buttonsStyling: false,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sweetAlertProcess();
+                $.ajax({
+                    url: '{{ url('asset/physical') }}/' + id,
+                    type: 'DELETE',
+                    cache: false,
+                    data: {
+                        _token: token
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(xhr, error, code) {
+                        sweetAlertError(error);
+                    }
+                });
+            }
+        })
+    }
 </script>
