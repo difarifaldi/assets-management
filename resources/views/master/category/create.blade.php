@@ -19,6 +19,18 @@
                                         placeholder="Name" value="{{ old('name') }}">
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="type">Type <span class="text-danger">*</span></label>
+                                    <select class="form-control " id="type_edit" name="type" required>
+                                        <option disabled hidden selected>Choose Type</option>
+                                        <option value="1">
+                                            Physical Asset</option>
+                                        <option value="2">License Asset
+                                        </option>
+                                    </select>
+                                </div>
+
+
                                 <div class="pt-3 d-flex">
                                     <a href="{{ route('master.category.index') }}" class="btn btn-danger mr-2"> Back</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>

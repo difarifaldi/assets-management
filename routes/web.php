@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\asset\AssetController;
+use App\Http\Controllers\asset\LicenseAssetController;
+use App\Http\Controllers\asset\PhysicalAssetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\master\CategoryAssetsController;
 use App\Http\Controllers\master\DivisionController;
@@ -54,7 +55,12 @@ Route::group(['middleware' => ['role:admin']], function () {
 
     Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
 
-        Route::resource('physical', AssetController::class, ['except' => ['index', 'show']])->parameters(['physical' => 'id']);
+        Route::resource('physical', PhysicalAssetController::class, ['except' => ['index', 'show']])->parameters(['physical' => 'id']);
+    });
+
+    Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
+
+        Route::resource('license', LicenseAssetController::class, ['except' => ['index', 'show']])->parameters(['license' => 'id']);
     });
 });
 
@@ -86,9 +92,16 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
     });
 
     Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
-        Route::group(['controller' => AssetController::class, 'prefix' => 'physical', 'as' => 'physical.'], function () {
+        Route::group(['controller' => PhysicalAssetController::class, 'prefix' => 'physical', 'as' => 'physical.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
-        Route::resource('physical', AssetController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['physical' => 'id']);
+        Route::resource('physical', PhysicalAssetController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['physical' => 'id']);
+    });
+
+    Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
+        Route::group(['controller' => LicenseAssetController::class, 'prefix' => 'license', 'as' => 'license.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('license', LicenseAssetController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['license' => 'id']);
     });
 });

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
             $table->string('name');
+            $table->tinyInteger('type')->comment('1 as Physical Asset and 2 as non Physical Asset');
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();
             $table->integer('updated_by');

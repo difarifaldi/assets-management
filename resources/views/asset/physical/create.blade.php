@@ -5,15 +5,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-info">
-                        <div class="card-header">
-                            <div class="d-flex justify-content-between align-items-center">
 
-                                <a href="{{ route('asset.physical.index') }}" class="btn btn-tool">
-                                    <i class="fas fa-chevron-left"></i> Back
-                                </a>
-                                <h3 class="card-title">Add Physical Asset</h3>
-                            </div>
+                        <div class="card-header">
+                            <h3 class="card-title font-weight-bold">Add Physical Asset</h3>
                         </div>
+
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form method="post" action="{{ route('asset.physical.store') }}" enctype="multipart/form-data">
@@ -22,7 +18,7 @@
 
                                 <div class="form-group">
                                     <label for="categories">Category </label>
-                                    <select class="form-control" id="category_asset_id" name="category_asset_id">
+                                    <select class="form-control select2bs4" id="category_asset_id" name="category_asset_id">
                                         <option disabled hidden selected>Choose Category</option>
                                         @foreach ($categories as $category)
                                             @if (!is_null(old('category_asset_id')) && old('category_asset_id') == $category->id)
@@ -37,7 +33,7 @@
 
                                 <div class="form-group">
                                     <label for="brand_id">Brand <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="brand_id" name="brand_id">
+                                    <select class="form-control select2bs4" id="brand_id" name="brand_id">
                                         <option disabled hidden selected>Choose Brand</option>
                                         @foreach ($brands as $brand)
                                             @if (!is_null(old('brand_id')) && old('brand_id') == $brand->id)
@@ -50,16 +46,6 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="type">Type <span class="text-danger">*</span></label>
-                                    <select class="form-control " id="type_edit" name="type" required>
-                                        <option disabled hidden selected>Choose Type</option>
-                                        <option value="1">
-                                            Physical Asset</option>
-                                        <option value="2">License Asset
-                                        </option>
-                                    </select>
-                                </div>
 
                                 <div class="form-group">
                                     <label for="barcode_code">Barcode <span class="text-danger">*</span></label>
@@ -71,21 +57,30 @@
                                     <input type="text" class="form-control" id="name" name="name"
                                         placeholder="Name" value="{{ old('name') }}">
                                 </div>
+
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="status" name="status"
-                                        placeholder="Status" value="{{ old('status') }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="value">Value</label>
-                                    <input type="text" class="form-control" id="value" name="value"
-                                        placeholder="Value" value="{{ old('value') }}">
+                                    <select class="form-control select2bs4" id="status" name="status" required>
+                                        <option disabled hidden selected>Choose Status</option>
+                                        <option value="1">
+                                            Good Condition</option>
+                                        <option value="2">Minor Damage
+                                        </option>
+                                        <option value="3">Major Damage
+                                        </option>
+
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exipired_at">Expired</label>
-                                    <input type="date" class="form-control" id="exipired_at" name="exipired_at"
-                                        placeholder="Expired" value="{{ old('exipired_at') }}">
+                                    <label for="value">Value</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" id="value" name="value"
+                                            placeholder="Value" value="{{ old('value') }}">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Rp</span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -104,9 +99,14 @@
                                 <div class="form-group">
                                     <label for="warranty_duration">Warranty Duration <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="warranty_duration"
-                                        name="warranty_duration" placeholder="Warranty Duration"
-                                        value="{{ old('warranty_duration') }}">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" id="warranty_duration"
+                                            name="warranty_duration" placeholder="Warranty Duration"
+                                            value="{{ old('warranty_duration') }}">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Month</span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -141,11 +141,16 @@
                                     <label for="attachment">Attachment <span class="text-danger">*</span></label>
                                     <input type="file" class="form-control" name="attachment[]" id="documentInput"
                                         accept="image/*" multiple="true" required>
-                                    <p class="text-danger py-1">* .pdf .docx .xlsx .pptx (Max 10 MB)</p>
+                                    <p class="text-danger py-1">* .jpg .jpeg .png (Max 10 MB)</p>
                                     <iframe id="documentPreview" class="w-100 mt-3 d-none"
                                         style="height: 600px;"></iframe>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                                <div class="pt-3 d-flex">
+                                    <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">
+                                        Back</a>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </form>

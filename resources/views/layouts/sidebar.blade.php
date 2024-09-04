@@ -32,7 +32,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
+                    <a href="{{ route('asset.license.index') }}" class="nav-link">
                         <i class="fas fa-list nav-icon"></i>
                         <p>License Asset</p>
                     </a>

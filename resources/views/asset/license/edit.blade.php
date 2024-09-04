@@ -6,11 +6,11 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Edit Physical Asset - {{ $physical->name }}</h3>
+                            <h3 class="card-title font-weight-bold">Edit License Asset - {{ $license->name }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('asset.physical.update', ['id' => $physical->id]) }}"
+                        <form method="post" action="{{ route('asset.license.update', ['id' => $license->id]) }}"
                             enctype="multipart/form-data">
                             @csrf
                             @method('patch')
@@ -20,7 +20,7 @@
                                     <label for="categories">Category </label>
                                     <select class="form-control" id="category_asset_id" name="category_asset_id">
                                         @foreach ($categories as $category)
-                                            @if ($physical->category->id == $category->id)
+                                            @if ($license->category->id == $category->id)
                                                 <option value="{{ $category->id }}" selected>{{ $category->name }}
                                                 </option>
                                             @else
@@ -34,7 +34,7 @@
                                     <label for="brand_id">Brand <span class="text-danger">*</span></label>
                                     <select class="form-control" id="brand_id" name="brand_id">
                                         @foreach ($brands as $brand)
-                                            @if ($physical->brand->id == $brand->id)
+                                            @if ($license->brand->id == $brand->id)
                                                 <option value="{{ $brand->id }}" selected>{{ $brand->name }}
                                                 </option>
                                             @else
@@ -48,23 +48,23 @@
                                 <div class="form-group">
                                     <label for="barcode_code">Barcode <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="barcode_code" name="barcode_code"
-                                        placeholder="Barcode" value="{{ $physical->barcode_code }}">
+                                        placeholder="Barcode" value="{{ $license->barcode_code }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Name" value="{{ $physical->name }}">
+                                        placeholder="Name" value="{{ $license->name }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="status" name="status" required>
                                         <option disabled hidden selected>Choose Status</option>
-                                        <option value="1" {{ $physical->status == 1 ? 'selected' : '' }}>
+                                        <option value="1" {{ $license->status == 1 ? 'selected' : '' }}>
                                             Good Condition</option>
-                                        <option value="2" {{ $physical->status == 2 ? 'selected' : '' }}>Minor Damage
+                                        <option value="2" {{ $license->status == 2 ? 'selected' : '' }}>Minor Damage
                                         </option>
-                                        <option value="3" {{ $physical->status == 3 ? 'selected' : '' }}>Major Damage
+                                        <option value="3" {{ $license->status == 3 ? 'selected' : '' }}>Major Damage
                                         </option>
 
                                     </select>
@@ -73,7 +73,7 @@
                                     <label for="value">Value</label>
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" id="value" name="value"
-                                            placeholder="Value" value="{{ $physical->value }}">
+                                            placeholder="Value" value="{{ $license->value }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text">Rp</span>
                                         </div>
@@ -83,20 +83,20 @@
                                 <div class="form-group">
                                     <label for="exipired_at">Expired</label>
                                     <input type="date" class="form-control" id="exipired_at" name="exipired_at"
-                                        placeholder="Expired" value="{{ $physical->exipired_at }}">
+                                        placeholder="Expired" value="{{ $license->exipired_at }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="purchase_date">Purchase Date</label>
                                     <input type="date" class="form-control" id="purchase_date" name="purchase_date"
-                                        placeholder="Purchase Date" value="{{ $physical->purchase_date }}">
+                                        placeholder="Purchase Date" value="{{ $license->purchase_date }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="warranty_end_date">Warranty End Date</label>
                                     <input type="date" class="form-control" id="warranty_end_date"
                                         name="warranty_end_date" placeholder="Expired"
-                                        value="{{ $physical->warranty_end_date }}">
+                                        value="{{ $license->warranty_end_date }}">
                                 </div>
 
                                 <div class="form-group">
@@ -105,7 +105,7 @@
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" id="warranty_duration"
                                             name="warranty_duration" placeholder="Warranty Duration"
-                                            value="{{ $physical->warranty_duration }}">
+                                            value="{{ $license->warranty_duration }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text">Month</span>
                                         </div>
@@ -117,7 +117,7 @@
                                     <select class="form-control select2bs4" style="width: 100%;" name="assign_to">
 
                                         @foreach ($users as $user)
-                                            @if ($physical->assignTo->id == $user->id)
+                                            @if ($license->assignTo->id == $user->id)
                                                 <option value="{{ $user->id }}" selected>{{ $user->name }}
                                                 </option>
                                             @else
@@ -130,13 +130,13 @@
                                 <div class="form-group">
                                     <label for="assign_at">Assign At</label>
                                     <input type="date" class="form-control" id="assign_at" name="assign_at"
-                                        placeholder="Expired" value="{{ $physical->assign_at }}">
+                                        placeholder="Expired" value="{{ $license->assign_at }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="description">Description</label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
-                                        placeholder="Description">{{ $physical->description }}</textarea>
+                                        placeholder="Description">{{ $license->description }}</textarea>
                                 </div>
 
 
@@ -149,7 +149,7 @@
                                         style="height: 600px;"></iframe>
                                 </div>
                                 <div class="pt-3 d-flex">
-                                    <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">
+                                    <a href="{{ route('asset.license.index') }}" class="btn btn-danger mr-2">
                                         Back</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
@@ -162,6 +162,6 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.asset.physical.script')
+        @include('javascript.asset.license.script')
     @endpush
 @endsection

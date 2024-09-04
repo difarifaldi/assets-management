@@ -19,6 +19,19 @@
                                     <input type="text" class="form-control" id="name" name="name"
                                         placeholder="Name" value="{{ $category->name }}">
                                 </div>
+                                <div class="form-group">
+                                    <label for="type">Type <span class="text-danger">*</span></label>
+                                    <select class="form-control " id="type_edit" name="type" required>
+
+                                        <option value="1" {{ $category->type == 1 ? 'selected' : '' }}>
+                                            Physical Asset</option>
+
+                                        <option value="2" {{ $category->type == 2 ? 'selected' : '' }}>License Asset
+                                        </option>
+
+
+                                    </select>
+                                </div>
 
                                 <div class="pt-3 d-flex">
                                     <a href="{{ route('master.category.index') }}" class="btn btn-danger mr-2"> Back</a>

@@ -39,6 +39,9 @@ class CategoryAssetsController extends Controller
          */
         $dataTable = DataTables::of($category)
             ->addIndexColumn()
+            ->addColumn('type', function ($data) {
+                return $data->type == 1 ? 'Physical Asset' : ($data->type == 2 ? 'License Asset' : '-');
+            })
             ->addColumn('action', function ($data) {
                 $btn_action = '<div align="center">';
 
@@ -54,7 +57,7 @@ class CategoryAssetsController extends Controller
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'address', 'action'])
+            ->only(['name', 'type', 'action'])
             ->rawColumns(['action'])
             ->make(true);
 
@@ -80,6 +83,7 @@ class CategoryAssetsController extends Controller
              */
             $request->validate([
                 'name' => 'required|string',
+                'type' => 'required',
             ]);
 
             DB::beginTransaction();
@@ -89,6 +93,7 @@ class CategoryAssetsController extends Controller
              */
             $category = CategoryAssets::lockforUpdate()->create([
                 'name' => $request->name,
+                'type' => $request->type,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,
             ]);
@@ -166,6 +171,7 @@ class CategoryAssetsController extends Controller
              */
             $request->validate([
                 'name' => 'required|string',
+                'type' => 'required',
 
             ]);
 
@@ -182,6 +188,7 @@ class CategoryAssetsController extends Controller
                  */
                 $category_update = CategoryAssets::where('id', $id)->update([
                     'name' => $request->name,
+                    'type' => $request->type,
                     'updated_by' => Auth::user()->id,
                 ]);
 

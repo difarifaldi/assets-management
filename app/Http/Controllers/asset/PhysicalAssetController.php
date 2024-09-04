@@ -14,11 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
-class AssetController extends Controller
+class PhysicalAssetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $datatable_route = route('asset.physical.dataTable');
@@ -34,7 +31,7 @@ class AssetController extends Controller
         /**
          * Get All Asset
          */
-        $asset = Asset::whereNull('deleted_by')->whereNull('deleted_at')->get();
+        $asset = Asset::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 1)->get();
 
         /**
          * Datatable Configuration
@@ -83,7 +80,7 @@ class AssetController extends Controller
      */
     public function create()
     {
-        $categories = CategoryAssets::whereNull('deleted_at')->get();
+        $categories = CategoryAssets::whereNull('deleted_at')->where('type', 1)->get();
         $brands = Brand::whereNull('deleted_at')->get();
         $users = User::whereNull('deleted_at')->role('staff')->get();
         return view('asset.physical.create', compact('categories', 'brands', 'users'));
@@ -97,12 +94,10 @@ class AssetController extends Controller
         try {
             $request->validate([
                 'category_asset_id' => 'nullable|integer|exists:category_assets,id',
-                'type' => 'required',
                 'barcode_code' => 'required|string',
                 'name' => 'required|string',
                 'status' => 'required|integer',
                 'value' => 'nullable|integer|min:0',
-                'exipired_at' => 'nullable|date',
                 'description' => 'nullable|string',
                 'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'assign_to' => 'nullable',
@@ -122,11 +117,10 @@ class AssetController extends Controller
                 $asset = Asset::lockForUpdate()->create([
                     'name' => $request->name,
                     'category_asset_id' => $request->category_asset_id,
-                    'type' => $request->type,
+                    'type' => 1,
                     'barcode_code' => $request->barcode_code,
                     'status' => $request->status,
                     'value' => $request->value,
-                    'exipired_at' => $request->exipired_at,
                     'description' => $request->description,
                     'assign_to' => $request->assign_to,
                     'assign_at' => $request->assign_at,
@@ -224,7 +218,7 @@ class AssetController extends Controller
 
 
             if (!is_null($physical)) {
-                $categories = CategoryAssets::whereNull('deleted_at')->get();
+                $categories = CategoryAssets::whereNull('deleted_at')->where('type', 1)->get();
                 $brands = Brand::whereNull('deleted_at')->get();
                 $users = User::whereNull('deleted_at')->role('staff')->get();
 
@@ -250,12 +244,10 @@ class AssetController extends Controller
              */
             $request->validate([
                 'category_asset_id' => 'nullable|integer|exists:category_assets,id',
-                'type' => 'required',
                 'barcode_code' => 'required|string',
                 'name' => 'required|string',
                 'status' => 'required|integer',
                 'value' => 'nullable|integer|min:0',
-                'exipired_at' => 'nullable|date',
                 'description' => 'nullable|string',
                 'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'assign_to' => 'nullable',
@@ -286,11 +278,10 @@ class AssetController extends Controller
                     $asset_update = Asset::where('id', $id)->update([
                         'name' => $request->name,
                         'category_asset_id' => $request->category_asset_id,
-                        'type' => $request->type,
+                        'type' => 1,
                         'barcode_code' => $request->barcode_code,
                         'status' => $request->status,
                         'value' => $request->value,
-                        'exipired_at' => $request->exipired_at,
                         'description' => $request->description,
                         'assign_to' => $request->assign_to,
                         'assign_at' => $request->assign_at,

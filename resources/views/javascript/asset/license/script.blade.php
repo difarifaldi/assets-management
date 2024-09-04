@@ -24,7 +24,7 @@
     function dataTable() {
         console.log('dataTable function called');
         const url = $('#url_dt').val();
-        $('#dt-category').DataTable({
+        $('#dt-license').DataTable({
             autoWidth: false,
             responsive: true,
             processing: true,
@@ -44,8 +44,17 @@
                     data: 'name',
                     defaultContent: '-',
                 },
+
                 {
-                    data: 'type',
+                    data: 'brand',
+                    defaultContent: '-',
+                },
+                {
+                    data: 'category',
+                    defaultContent: '-',
+                },
+                {
+                    data: 'assignTo',
                     defaultContent: '-',
                 },
                 {
@@ -78,7 +87,7 @@
             if (result.isConfirmed) {
                 sweetAlertProcess();
                 $.ajax({
-                    url: '{{ url('master/category') }}/' + id,
+                    url: '{{ url('asset/license') }}/' + id,
                     type: 'DELETE',
                     cache: false,
                     data: {
