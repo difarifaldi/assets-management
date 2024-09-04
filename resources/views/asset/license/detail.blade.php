@@ -8,7 +8,7 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
 
-                                <h3 class="card-title font-weight-bold">Detail Physical Asset - {{ $asset->name }}
+                                <h3 class="card-title font-weight-bold">Detail License Asset - {{ $asset->name }}
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -160,7 +160,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('asset.physical.index') }}" class="btn btn-danger"> Back</a>
+                            <a href="{{ route('asset.license.index') }}" class="btn btn-danger"> Back</a>
                         </div>
                         <!-- /.card-body -->
                     </div>
