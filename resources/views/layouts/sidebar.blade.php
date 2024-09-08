@@ -23,6 +23,12 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
 
+                <li class="nav-item">
+                    <a href="{{ route('submission.index') }}" class="nav-link">
+                        <i class="fas fa-file-alt nav-icon"></i>
+                        <p>Submission Form</p>
+                    </a>
+                </li>
                 <li class="nav-header">ASSET DATA</li>
                 <li class="nav-item">
                     <a href="{{ route('asset.physical.index') }}" class="nav-link">

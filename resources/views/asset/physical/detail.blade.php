@@ -159,8 +159,11 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="d-flex pt-3 ">
 
-                            <a href="{{ route('asset.physical.index') }}" class="btn btn-danger"> Back</a>
+                                <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2"> Back</a>
+                                <a href="{{ route('asset.physical.index') }}" class="btn btn-success"> Assign To</a>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

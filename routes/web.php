@@ -8,6 +8,7 @@ use App\Http\Controllers\master\DivisionController;
 use App\Http\Controllers\master\ManufactureController;
 use App\Http\Controllers\master\BrandController;
 use App\Http\Controllers\master\UserController;
+use App\Http\Controllers\SubmissionFormController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -103,5 +104,16 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('license', LicenseAssetController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['license' => 'id']);
+    });
+
+    Route::group(['prefix' => 'submission', 'as' => 'submission.'], function () {
+        Route::group(['controller' => SubmissionFormController::class, 'prefix' => 'submission', 'as' => 'submission.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+
+        Route::get('index', [SubmissionFormController::class, 'index'])->name('index');
+        Route::post('approve', [SubmissionFormController::class, 'approve'])->name('approve');
+        Route::get('{type}/{asset}', [SubmissionFormController::class, 'create'])->name('create');
+        Route::post('{type}/store', [SubmissionFormController::class, 'store'])->name('store');
     });
 });

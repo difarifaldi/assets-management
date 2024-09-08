@@ -5,6 +5,7 @@ namespace App\Models\master;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\asset\Asset;
+use App\Models\SubmissionForm;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,5 +51,10 @@ class User extends Authenticatable
     public function asset()
     {
         return $this->hasMany(Asset::class, 'assign_to');
+    }
+
+    public function submission()
+    {
+        return $this->hasMany(SubmissionForm::class, 'created_by');
     }
 }

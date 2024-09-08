@@ -6,41 +6,35 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <div class="d-flex  align-items-center">
-
-                                <h3 class="card-title"> Physical Asset</h3>
-                            </div>
+                            <h3 class="card-title font-weight-bold"> Submission Form</h3>
                         </div>
-                        <div class="card-body p-5">
+                        <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
-                                @hasrole('admin')
-                                    <div>
-                                        <a href="{{ route('asset.physical.create') }}" class="btn btn-sm btn-primary">
-                                            Add Physical Asset
-                                        </a>
-                                    </div>
-                                @endhasrole
+
+
                             </div>
                             <div class="table-responsive pt-3">
                                 <input type="hidden" id="url_dt" value="{{ $datatable_route }}">
-                                <table class="table table-bordered datatable" id="dt-physical">
+                                <table class="table table-bordered datatable" id="dt-submission">
                                     <thead>
                                         <tr>
                                             <th>
                                                 #
                                             </th>
                                             <th>
-                                                Name
+                                                Type
                                             </th>
                                             <th>
-                                                Brand
+                                                Deskripsi
                                             </th>
                                             <th>
-                                                Category
+                                                Status
                                             </th>
-                                            <th>
-                                                Assign To
-                                            </th>
+                                            @role('admin')
+                                                <th>
+                                                    Request By
+                                                </th>
+                                            @endrole
                                             <th>
                                                 Action
                                             </th>
@@ -55,9 +49,15 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.asset.physical.script')
-        <script>
-            dataTable();
-        </script>
+        @include('javascript.submission.script')
+        @role('admin')
+            <script>
+                dataTable();
+            </script>
+        @else
+            <script>
+                dataTableStaff();
+            </script>
+        @endrole
     @endpush
 @endsection

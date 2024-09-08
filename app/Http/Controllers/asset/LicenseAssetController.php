@@ -64,6 +64,9 @@ class LicenseAssetController extends Controller
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
                     $btn_action .= '<a href="' . route('asset.license.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
+                } else if (User::find(Auth::user()->id)->hasRole('staff')) {
+                    $btn_action .= '<a href="' . route('submission.create', ['type' => 'checkout', 'asset' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Check Out">Check Out</a>';
+                    $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger mt-1 ml-2" title="Assign To Me">Assign To Me</a>';
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
@@ -101,8 +104,6 @@ class LicenseAssetController extends Controller
                 'exipired_at' => 'nullable|date',
                 'description' => 'nullable|string',
                 'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-                'assign_to' => 'nullable',
-                'assign_at' => 'nullable',
                 'brand_id' => 'required|integer|exists:brands,id',
                 'purchase_date' => 'nullable|date',
                 'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
@@ -124,8 +125,6 @@ class LicenseAssetController extends Controller
                     'value' => $request->value,
                     'exipired_at' => $request->exipired_at,
                     'description' => $request->description,
-                    'assign_to' => $request->assign_to,
-                    'assign_at' => $request->assign_at,
                     'brand_id' => $request->brand_id,
                     'purchase_date' => $request->purchase_date,
                     'warranty_end_date' => $request->warranty_end_date,
