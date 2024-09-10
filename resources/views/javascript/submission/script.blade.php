@@ -59,7 +59,7 @@
                 },
                 {
                     data: 'action',
-                    width: '20%',
+                    width: '24%',
                     defaultContent: '-',
                     orderable: false,
                     searchable: false
@@ -102,7 +102,7 @@
                 },
                 {
                     data: 'action',
-                    width: '20%',
+                    width: '24%',
                     defaultContent: '-',
                     orderable: false,
                     searchable: false
@@ -136,6 +136,58 @@
                     data: {
                         _token: token,
                         id: id
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(xhr, error, code) {
+                        sweetAlertError(error);
+                    }
+                });
+            }
+        })
+    }
+
+    function rejectedRecord(id) {
+        let token = $('meta[name="csrf-token"]').attr('content');
+
+        Swal.fire({
+
+            input: "textarea",
+            inputLabel: "Reason",
+            inputPlaceholder: "Type your reason here...",
+            inputAttributes: {
+                "aria-label": "Type your reason here"
+            },
+            customClass: {
+                confirmButton: 'btn btn-primary mr-2 mb-3',
+                cancelButton: 'btn btn-danger mb-3',
+            },
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel',
+            preConfirm: () => {
+                const reason = Swal.getInput().value;
+                if (!reason) {
+                    Swal.showValidationMessage(`Please Enter Reason`)
+                }
+                return {
+                    reason: reason
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const reason = result.value.reason;
+                sweetAlertProcess();
+                $.ajax({
+                    url: '{{ route('submission.reject') }}',
+                    type: 'POST',
+                    cache: false,
+                    data: {
+                        _token: token,
+                        id: id,
+                        reason: reason
                     },
                     success: function(data) {
                         location.reload();

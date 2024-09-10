@@ -59,7 +59,7 @@
                 },
                 {
                     data: 'action',
-                    width: '20%',
+                    width: '30%',
                     defaultContent: '-',
                     orderable: false,
                     searchable: false

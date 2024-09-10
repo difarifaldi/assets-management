@@ -17,17 +17,17 @@ return new class extends Migration
             $table->text('description');
             $table->tinyInteger('type')->comment('1: submission assign, 2: submission check in asset');
             $table->text('attachment')->nullable();
-            $table->integer('aproved_by');
-            $table->integer('aproved_at');
+            $table->integer('aproved_by')->nullable();
+            $table->integer('aproved_at')->nullable();
             $table->integer('rejected_by')->nullable();
-            $table->timestamp('rejected_at');
-            $table->integer('created_by');
+            $table->timestamp('rejected_at')->nullable();
+            $table->text('reason')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->integer('updated_by');
+            $table->integer('updated_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->integer('deleted_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
-
 
             $table->foreign('aproved_by')->references('id')->on('users');
             $table->foreign('rejected_by')->references('id')->on('users');
