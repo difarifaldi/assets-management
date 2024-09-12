@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('description');
             $table->tinyInteger('type')->comment('1: submission assign, 2: submission check in asset');
             $table->text('attachment')->nullable();
-            $table->integer('aproved_by');
-            $table->integer('aproved_at');
+            $table->integer('approved_by');
+            $table->integer('approved_at');
             $table->integer('rejected_by')->nullable();
             $table->timestamp('rejected_at');
             $table->integer('created_by');
@@ -28,8 +28,7 @@ return new class extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
 
-
-            $table->foreign('aproved_by')->references('id')->on('users');
+            $table->foreign('approved_by')->references('id')->on('users');
             $table->foreign('rejected_by')->references('id')->on('users');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');

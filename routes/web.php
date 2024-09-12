@@ -36,10 +36,8 @@ Route::group(['middleware' => 'auth'], function () {
 //     Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
 // });
 
-
 Route::group(['middleware' => ['role:admin']], function () {
     Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
-
         Route::resource('manufacture', ManufactureController::class, ['except' => ['index', 'show']])->parameters(['manufacture' => 'id']);
 
         Route::resource('brand', BrandController::class, ['except' => ['index', 'show']])->parameters(['brand' => 'id']);
@@ -55,36 +53,37 @@ Route::group(['middleware' => ['role:admin']], function () {
     });
 
     Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
+        Route::group(['controller' => PhysicalAssetController::class, 'prefix' => 'physical', 'as' => 'physical.'], function () {
+            Route::match(['put', 'patch'], 'upload-image/{id}', 'uploadImage')->name('uploadImage');
+            Route::match(['put', 'patch'], 'destroy-image/{id}', 'destroyImage')->name('destroyImage');
+        });
 
         Route::resource('physical', PhysicalAssetController::class, ['except' => ['index', 'show']])->parameters(['physical' => 'id']);
-    });
 
-    Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
-
+        Route::group(['controller' => LicenseAssetController::class, 'prefix' => 'license', 'as' => 'license.'], function () {
+            Route::match(['put', 'patch'], 'upload-image/{id}', 'uploadImage')->name('uploadImage');
+            Route::match(['put', 'patch'], 'destroy-image/{id}', 'destroyImage')->name('destroyImage');
+        });
         Route::resource('license', LicenseAssetController::class, ['except' => ['index', 'show']])->parameters(['license' => 'id']);
     });
 });
 
 Route::group(['middleware' => ['role:admin|staff']], function () {
     Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
-
         Route::group(['controller' => ManufactureController::class, 'prefix' => 'manufacture', 'as' => 'manufacture.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
-
 
         Route::group(['controller' => BrandController::class, 'prefix' => 'brand', 'as' => 'brand.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('brand', BrandController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['brand' => 'id']);
 
-
         Route::group(['controller' => CategoryAssetsController::class, 'prefix' => 'category', 'as' => 'category.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('category', CategoryAssetsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['category' => 'id']);
-
 
         Route::group(['controller' => DivisionController::class, 'prefix' => 'division', 'as' => 'division.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');

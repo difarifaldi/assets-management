@@ -103,8 +103,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="warranty_duration">Warranty Duration <span
-                                            class="text-danger">*</span></label>
+                                    <label for="warranty_duration">Warranty Duration</label>
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" id="warranty_duration"
                                             name="warranty_duration" placeholder="Warranty Duration"

@@ -7,19 +7,18 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex  align-items-center">
-
-                                <h3 class="card-title"> Physical Asset</h3>
+                                <h3 class="card-title font-weight-bold">Physical Asset</h3>
                             </div>
                         </div>
-                        <div class="card-body p-5">
+                        <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
-                                @hasrole('admin')
+                                @role('admin')
                                     <div>
                                         <a href="{{ route('asset.physical.create') }}" class="btn btn-sm btn-primary">
                                             Add Physical Asset
                                         </a>
                                     </div>
-                                @endhasrole
+                                @endrole
                             </div>
                             <div class="table-responsive pt-3">
                                 <input type="hidden" id="url_dt" value="{{ $datatable_route }}">

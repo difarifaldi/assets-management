@@ -15,7 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->integer('assets_id');
             $table->integer('check_in_by');
-            $table->integer('check_in_at');
+            $table->timestamp('check_in_at');
             $table->integer('check_out_by')->nullable();
             $table->timestamp('check_out_at');
             $table->json('attachment');

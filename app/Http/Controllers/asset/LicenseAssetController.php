@@ -20,7 +20,6 @@ class LicenseAssetController extends Controller
     {
         $datatable_route = route('asset.license.dataTable');
 
-
         $can_create = User::find(Auth::user()->id)->hasRole('admin');
 
         return view('asset.license.index', compact('datatable_route', 'can_create'));
@@ -39,16 +38,13 @@ class LicenseAssetController extends Controller
         $dataTable = DataTables::of($asset)
             ->addIndexColumn()
             ->addColumn('category', function ($data) {
-
                 return $data->category ? $data->category->name : '-';
             })
             ->addColumn('brand', function ($data) {
-
                 return $data->brand ? $data->brand->name : '-';
             })
 
             ->addColumn('assignTo', function ($data) {
-
                 return $data->assignTo ? $data->assignTo->name : '-';
             })
             ->addColumn('action', function ($data) {
@@ -64,7 +60,7 @@ class LicenseAssetController extends Controller
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
                     $btn_action .= '<a href="' . route('asset.license.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
-                } else if (User::find(Auth::user()->id)->hasRole('staff')) {
+                } elseif (User::find(Auth::user()->id)->hasRole('staff')) {
                     $btn_action .= '<a href="' . route('submission.create', ['type' => 'checkout', 'asset' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Check Out">Check Out</a>';
                     $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger mt-1 ml-2" title="Assign To Me">Assign To Me</a>';
                 }
@@ -133,8 +129,6 @@ class LicenseAssetController extends Controller
                     'updated_by' => Auth::user()->id,
                 ]);
 
-
-
                 if ($asset) {
                     $path = 'public/asset/license';
                     $path_store = 'storage/asset/license';
@@ -180,8 +174,6 @@ class LicenseAssetController extends Controller
         }
     }
 
-
-
     public function show(string $id)
     {
         try {
@@ -214,9 +206,7 @@ class LicenseAssetController extends Controller
     public function edit(string $id)
     {
         try {
-
             $license = Asset::find($id);
-
 
             if (!is_null($license)) {
                 $categories = CategoryAssets::whereNull('deleted_at')->where('type', 2)->get();
@@ -238,7 +228,6 @@ class LicenseAssetController extends Controller
 
     public function update(Request $request, string $id)
     {
-
         try {
             /**
              * Validation Request Body Variables
@@ -258,7 +247,6 @@ class LicenseAssetController extends Controller
                 'purchase_date' => 'nullable|date',
                 'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
                 'warranty_duration' => 'nullable|integer|min:0',
-
             ]);
 
             $barcode_check = Asset::whereNull('deleted_at')
@@ -330,6 +318,164 @@ class LicenseAssetController extends Controller
                 ->back()
                 ->with(['failed' => $e->getMessage()])
                 ->withInput();
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function uploadImage(Request $request, string $id)
+    {
+        try {
+            // Request Validation
+            $request->validate([
+                'attachment' => 'required',
+            ]);
+
+            DB::beginTransaction();
+
+            $asset = Asset::find($id);
+
+            // Image Path
+            $path = 'public/asset/license';
+            $path_store = 'storage/asset/license';
+
+            if (!is_null($asset->attachment)) {
+                $attachment_collection = json_decode($asset->attachment);
+
+                foreach ($request->file('attachment') as $file) {
+                    // File Upload Configuration
+                    $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $file->storePubliclyAs($path, $file_name);
+
+                    // Check Upload Success
+                    if (Storage::exists($path . '/' . $file_name)) {
+                        array_push($attachment_collection, $path_store . '/' . $file_name);
+                    } else {
+                        // Failed and Rollback
+                        DB::rollBack();
+                        return redirect()
+                            ->back()
+                            ->with(['failed' => 'Failed Upload Attachment'])
+                            ->withInput();
+                    }
+                }
+            } else {
+                // Check Exsisting Path
+                if (!Storage::exists($path)) {
+                    // Create new Path Directory
+                    Storage::makeDirectory($path);
+                }
+
+                $attachment_collection = [];
+
+                foreach ($request->file('attachment') as $file) {
+                    // File Upload Configuration
+                    $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $file->storePubliclyAs($path, $file_name);
+
+                    // Uploading File
+                    $file->storePubliclyAs($path, $file_name);
+
+                    // Check Upload Success
+                    if (Storage::exists($path . '/' . $file_name)) {
+                        array_push($attachment_collection, $path_store . '/' . $file_name);
+                    } else {
+                        // Failed and Rollback
+                        DB::rollBack();
+                        return redirect()
+                            ->back()
+                            ->with(['failed' => 'Failed Upload Attachment'])
+                            ->withInput();
+                    }
+                }
+            }
+
+            // Update Record for Attachment
+            $asset_attachment = $asset->update([
+                'attachment' => json_encode($attachment_collection),
+            ]);
+
+            // Validation Update Attachment Asset Record
+            if ($asset_attachment) {
+                DB::commit();
+                return redirect()
+                    ->back()
+                    ->with(['success' => 'Successfully Add Attachment']);
+            } else {
+                // Failed and Rollback
+                DB::rollBack();
+                return redirect()
+                    ->back()
+                    ->with(['failed' => 'Failed Add Attachment'], 400);
+            }
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with(['failed' => $e->getMessage()])
+                ->withInput();
+        }
+    }
+
+    /**
+     * Remove the specified resource in storage.
+     */
+    public function destroyImage(Request $request, string $id)
+    {
+        try {
+            // Request Validation
+            $request->validate([
+                'file_name' => 'required',
+            ]);
+
+            DB::beginTransaction();
+
+            $asset = Asset::find($id);
+
+            // Image Path
+            $path = 'public/asset/license';
+            $path_store = 'storage/asset/license';
+
+            $attachment_collection = json_decode($asset->attachment);
+
+            $new_attachment_collection = [];
+
+            foreach ($attachment_collection as $attachment) {
+                if ($request->file_name != $attachment) {
+                    array_push($new_attachment_collection, $attachment);
+                } else {
+                    $file_name = explode($path_store . '/', $attachment)[count(explode($path_store . '/', $attachment)) - 1];
+                    Storage::delete($path . '/' . $file_name);
+
+                    if (Storage::exists($path . '/' . $file_name)) {
+                        return response()->json(['failed' => 'Failed Remove File'], 400);
+                    }
+                }
+            }
+
+            if (empty($new_attachment_collection)) {
+                // Update Record for Attachment
+                $asset_attachment = $asset->update([
+                    'attachment' => null,
+                ]);
+            } else {
+                // Update Record for Attachment
+                $asset_attachment = $asset->update([
+                    'attachment' => json_encode($new_attachment_collection),
+                ]);
+            }
+
+            // Validation Update Attachment Asset Record
+            if ($asset_attachment) {
+                DB::commit();
+                return response()->json(['success' => 'Successfully Updated Attachment'], 200);
+            } else {
+                // Failed and Rollback
+                DB::rollBack();
+                return response()->json(['failed' => 'Failed Updated Attachment'], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['failed' => $e->getMessage()], 400);
         }
     }
 

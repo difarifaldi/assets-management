@@ -139,15 +139,6 @@
                                         placeholder="Description">{{ $license->description }}</textarea>
                                 </div>
 
-
-                                <div class="mb-3">
-                                    <label for="attachment">Attachment <span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control" name="attachment[]" id="documentInput"
-                                        accept="image/*" multiple="true">
-                                    <p class="text-danger py-1">* .jpg .jpeg .png (Max 10 MB)</p>
-                                    <iframe id="documentPreview" class="w-100 mt-3 d-none"
-                                        style="height: 600px;"></iframe>
-                                </div>
                                 <div class="pt-3 d-flex">
                                     <a href="{{ route('asset.license.index') }}" class="btn btn-danger mr-2">
                                         Back</a>

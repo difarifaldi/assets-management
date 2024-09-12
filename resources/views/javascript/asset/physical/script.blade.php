@@ -68,6 +68,42 @@
         });
     }
 
+    function destroyFile(index, prefix) {
+        let token = $('meta[name="csrf-token"]').attr('content');
+
+        Swal.fire({
+            title: 'Are You Sure Want To Remove Attachment?',
+            icon: 'question',
+            showCancelButton: true,
+            allowOutsideClick: false,
+            customClass: {
+                confirmButton: 'btn btn-primary mr-2 mb-3',
+                cancelButton: 'btn btn-danger mb-3',
+            },
+            buttonsStyling: false,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sweetAlertProcess();
+                $.ajax({
+                    url: '{{ url('asset/') }}/' + prefix + '/destroy-image/' + $('#asset').val(),
+                    type: 'PUT',
+                    data: {
+                        _token: token,
+                        file_name: $('#file_name_' + index).val()
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(xhr, error, code) {
+                        sweetAlertError(error);
+                    }
+                });
+            }
+        })
+    }
+
     function destroyRecord(id) {
         let token = $('meta[name="csrf-token"]').attr('content');
 

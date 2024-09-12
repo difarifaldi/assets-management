@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('submission_forms', function (Blueprint $table) {
-            $table->integer('aproved_by')->nullable()->change();
-            $table->integer('aproved_at')->nullable()->change();
+            $table->integer('approved_by')->nullable()->change();
+            $table->integer('approved_at')->nullable()->change();
             $table->timestamp('rejected_at')->nullable()->change();
             $table->integer('created_by')->nullable()->change();
             $table->integer('updated_by')->nullable()->change();

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('submission_form_id');
             $table->integer('assets_id');
 
-
             $table->foreign('submission_form_id')->references('id')->on('submission_forms');
             $table->foreign('assets_id')->references('id')->on('assets');
         });
