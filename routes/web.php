@@ -112,6 +112,7 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
 
         Route::get('index', [SubmissionFormController::class, 'index'])->name('index');
         Route::post('approve', [SubmissionFormController::class, 'approve'])->name('approve');
+        Route::post('reject', [SubmissionFormController::class, 'reject'])->name('reject');
         Route::get('{type}/{asset}', [SubmissionFormController::class, 'create'])->name('create');
         Route::post('{type}/store', [SubmissionFormController::class, 'store'])->name('store');
     });

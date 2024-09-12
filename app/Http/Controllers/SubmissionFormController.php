@@ -75,7 +75,7 @@ class SubmissionFormController extends Controller
                 } else {
                     if (!isset($data->aproved_at) &&  !isset($data->rejected_at)) {
                         $btn_action .= '<button class="btn btn-sm btn-success ml-2" onclick="approvedRecord(' . $data->id . ')" title="Approve">Approve</button>';
-                        $btn_action .= '<a href="'  . '" class="btn btn-sm btn-danger ml-2" title="Rejected">Rejected</a>';
+                        $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="rejectedRecord(' . $data->id . ')"title="Rejected">Rejected</button>';
                     }
                     if (!is_null($data->attachment)) {
                         // Assuming $data->attachment is a file URL or path
@@ -255,6 +255,54 @@ class SubmissionFormController extends Controller
                      */
                     DB::rollBack();
                     session()->flash('failed', 'Submission Failed Approved');
+                    return response()->json(['message', 'Failed'], 400);
+                }
+            } else {
+                session()->flash('failed', 'Invalid Request!');
+                return response()->json(['message', 'Invalid Request!'], 404);
+            }
+        } catch (Exception $e) {
+            session()->flash('failed', $e->getMessage());
+            return response()->json(['message', 'Failed!'], 400);
+        }
+    }
+
+    public function reject(Request $request)
+    {
+
+        try {
+
+            $submission = SubmissionForm::find($request->id);
+
+            if (!is_null($submission)) {
+                /**
+                 * Begin Transaction
+                 */
+                DB::beginTransaction();
+
+                /**
+                 * Update SubmissionForm Record
+                 */
+                $rejected_submission = $submission->update([
+                    'rejected_by' => Auth::user()->id,
+                    'rejected_at' => now(),
+                    'reason' => $request->reason,
+                ]);
+
+                /**
+                 * Validation Update SubmissionForm Record
+                 */
+                if ($rejected_submission) {
+                    DB::commit();
+                    $submission_result = SubmissionForm::find($request->id);
+                    session()->flash('success', 'Submission Successfully Rejected');
+                    return response()->json(['data', $submission_result], 200);
+                } else {
+                    /**
+                     * Failed Store Record
+                     */
+                    DB::rollBack();
+                    session()->flash('failed', 'Submission Failed Rejected');
                     return response()->json(['message', 'Failed'], 400);
                 }
             } else {

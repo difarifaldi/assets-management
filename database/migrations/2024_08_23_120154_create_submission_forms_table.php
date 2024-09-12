@@ -20,10 +20,11 @@ return new class extends Migration
             $table->integer('approved_by');
             $table->integer('approved_at');
             $table->integer('rejected_by')->nullable();
-            $table->timestamp('rejected_at');
-            $table->integer('created_by');
+            $table->timestamp('rejected_at')->nullable();
+            $table->text('reason')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->integer('updated_by');
+            $table->integer('updated_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->integer('deleted_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
