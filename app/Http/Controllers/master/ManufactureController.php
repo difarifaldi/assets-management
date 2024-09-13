@@ -47,7 +47,7 @@ class ManufactureController extends Controller
 
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
 
-                    $btn_action .= '<a href="' . route('master.manufacture.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                    $btn_action .= '<button class="btn btn-sm btn-warning " onclick="updateRecord(' . $data->id . ')" title="Edit">Edit</button>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 }
                 $btn_action .= '</div>';
@@ -98,9 +98,11 @@ class ManufactureController extends Controller
              */
             if ($manufacture) {
                 DB::commit();
-                return redirect()
-                    ->route('master.manufacture.index')
-                    ->with(['success' => 'Successfully Add Manufacture']);
+                // return redirect()
+                //     ->route('master.manufacture.index')
+                //     ->with(['success' => 'Successfully Add Manufacture']);
+                session()->flash('success', 'Successfully Add Manufacture');
+                return response()->json(['data', $manufacture], 200);
             } else {
                 /**
                  * Failed Store Record
@@ -133,20 +135,12 @@ class ManufactureController extends Controller
     public function edit(string $id)
     {
         try {
-            /**
-             * Get Manufacture Record from id
-             */
-            $manufacture = Manufacture::find($id);
+            $manufacture = Manufacture::find($id); // Pastikan ini sesuai dengan model Anda
 
-            /**
-             * Validation Manufacture id
-             */
-            if (!is_null($manufacture)) {
-                return view('master.manufacture.edit', compact('manufacture'));
+            if ($manufacture) {
+                return response()->json($manufacture); // Mengembalikan data dalam bentuk JSON
             } else {
-                return redirect()
-                    ->back()
-                    ->with(['failed' => 'Invalid Request!']);
+                return response()->json(['error' => 'Data not found'], 404); // Kembalikan error jika 
             }
         } catch (Exception $e) {
             return redirect()
@@ -191,18 +185,15 @@ class ManufactureController extends Controller
                  */
                 if ($manufacture_update) {
                     DB::commit();
-                    return redirect()
-                        ->route('master.manufacture.index')
-                        ->with(['success' => 'Successfully Update Manufacture']);
+                    session()->flash('success', 'Successfully Edit Manufacture');
+                    return response()->json(['data', $manufacture], 200);
                 } else {
                     /**
-                     * Failed Store Record
+                     * Failed Store Record  
                      */
                     DB::rollBack();
-                    return redirect()
-                        ->back()
-                        ->with(['failed' => 'Failed Update Manufacture'])
-                        ->withInput();
+                    session()->flash('failed', 'Failed Add Manufacture');
+                    return response()->json(['message', 'Failed'], 400);
                 }
             } else {
                 return redirect()

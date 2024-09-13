@@ -12,9 +12,9 @@
                             <div class="d-flex justify-content-between">
                                 @if ($can_create)
                                     <div>
-                                        <a href="{{ route('master.manufacture.create') }}" class="btn btn-sm btn-primary">
+                                        <button onclick="addRecord()" class="btn btn-sm btn-primary">
                                             Add Manufacture
-                                        </a>
+                                        </button>
                                     </div>
                                 @endif
                             </div>
