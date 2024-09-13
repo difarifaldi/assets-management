@@ -14,18 +14,18 @@
                         <div class="card-body">
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                    <button class="nav-link active" data-toggle="tab"
-                                        data-target="#nav-detail" type="button" role="tab"
-                                        aria-controls="nav-detail" aria-selected="true">Detail</button>
-                                    <button class="nav-link" data-toggle="tab"
-                                        data-target="#nav-maintence" type="button" role="tab"
-                                        aria-controls="nav-maintence" aria-selected="false">History Maintence</button>
-                                    <button class="nav-link" data-toggle="tab"
-                                        data-target="#nav-assign" type="button" role="tab"
-                                        aria-controls="nav-assign" aria-selected="false">History Assign</button>
-                                    <button class="nav-link" data-toggle="tab"
-                                        data-target="#nav-check" type="button" role="tab" aria-controls="nav-check"
-                                        aria-selected="false">History Check Out</button>
+                                    <button class="nav-link active" data-toggle="tab" data-target="#nav-detail"
+                                        type="button" role="tab" aria-controls="nav-detail"
+                                        aria-selected="true">Detail</button>
+                                    <button class="nav-link" data-toggle="tab" data-target="#nav-maintence" type="button"
+                                        role="tab" aria-controls="nav-maintence" aria-selected="false">History
+                                        Maintence</button>
+                                    <button class="nav-link" data-toggle="tab" data-target="#nav-assign" type="button"
+                                        role="tab" aria-controls="nav-assign" aria-selected="false">History
+                                        Assign</button>
+                                    <button class="nav-link" data-toggle="tab" data-target="#nav-check" type="button"
+                                        role="tab" aria-controls="nav-check" aria-selected="false">History Check
+                                        Out</button>
                                 </div>
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
@@ -211,8 +211,11 @@
                             </div>
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
-                                <a href="{{ route('asset.physical.index') }}" class="btn btn-primary mr-2">Maintence</a>
-                                <a href="{{ route('asset.physical.index') }}" class="btn btn-primary">Assign To</a>
+                                <a href="{{ route('asset.physical.index') }}" class="btn btn-warning mr-2">Maintence</a>
+                                @if (is_null($asset->assign_to))
+                                    <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
+                                        To</button>
+                                @endif
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -237,6 +240,37 @@
                             <input type="file" class="form-control" name="attachment[]" id="documentInput"
                                 accept="image/*" multiple="true" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg (Max 10 MB)</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-sm btn-primary mx-2">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Assign TO --}}
+    <div class="modal fade" id="assignTo">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('asset.physical.assignTo', ['id' => $asset->id]) }}"
+                    class="forms-control">
+                    @csrf
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLongTitle">Add Assign</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="assign">Asign To <span class="text-danger">*</span></label>
+                            <select class="form-control select2bs4" id="assign_to" name="assign_to">
+                                <option disabled hidden selected>Choose Staff</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">

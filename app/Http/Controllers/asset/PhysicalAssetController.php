@@ -62,7 +62,10 @@ class PhysicalAssetController extends Controller
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 } elseif (User::find(Auth::user()->id)->hasRole('staff')) {
                     $btn_action .= '<a href="' . route('submission.create', ['type' => 'checkout', 'asset' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Check Out">Check Out</a>';
-                    $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger mt-1 ml-2" title="Assign To Me">Assign To Me</a>';
+                    if (is_null($data->assign_to)) {
+
+                        $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger mt-1 ml-2" title="Assign To Me">Assign To Me</a>';
+                    }
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
@@ -181,6 +184,7 @@ class PhysicalAssetController extends Controller
              * Get User Record from id
              */
             $asset = Asset::find($id);
+            $users = User::whereNull('deleted_at')->role('staff')->get();
 
             /**
              * Validation Asset id
@@ -190,7 +194,7 @@ class PhysicalAssetController extends Controller
                  * Asset Role Configuration
                  */
 
-                return view('asset.physical.detail', compact('asset'));
+                return view('asset.physical.detail', compact('asset', 'users'));
             } else {
                 return redirect()
                     ->back()
@@ -444,7 +448,7 @@ class PhysicalAssetController extends Controller
                 if ($request->file_name != $attachment) {
                     array_push($new_attachment_collection, $attachment);
                 } else {
-                    $file_name = explode($path_store.'/', $attachment)[count(explode($path_store.'/', $attachment)) - 1];
+                    $file_name = explode($path_store . '/', $attachment)[count(explode($path_store . '/', $attachment)) - 1];
                     Storage::delete($path . '/' . $file_name);
 
                     if (Storage::exists($path . '/' . $file_name)) {
@@ -473,6 +477,50 @@ class PhysicalAssetController extends Controller
                 // Failed and Rollback
                 DB::rollBack();
                 return response()->json(['failed' => 'Failed Updated Attachment'], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['failed' => $e->getMessage()], 400);
+        }
+    }
+
+    public function assignTo(Request $request, string $id)
+    {
+        try {
+
+            $physical = Asset::find($request->id);
+
+            if (!is_null($physical)) {
+                /**
+                 * Begin Transaction
+                 */
+                DB::beginTransaction();
+
+                /**
+                 * Update Asset Record
+                 */
+                $add_assign = $physical->update([
+                    'assign_to' => $request->assign_to,
+                    'assign_at' => now(),
+                ]);
+
+                /**
+                 * Validation Update Asset Record
+                 */
+                if ($add_assign) {
+                    DB::commit();
+                    session()->flash('success', 'Assign Successfully Add');
+                    return redirect()->route('asset.physical.index')->with('success', 'Assign Successfully Add');
+                } else {
+                    /**
+                     * Failed Store Record
+                     */
+                    DB::rollBack();
+                    session()->flash('failed', 'Failed Add Assign');
+                    return response()->json(['message', 'Failed'], 400);
+                }
+            } else {
+                session()->flash('failed', 'Invalid Request!');
+                return response()->json(['message', 'Invalid Request!'], 404);
             }
         } catch (\Exception $e) {
             return response()->json(['failed' => $e->getMessage()], 400);
