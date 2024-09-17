@@ -329,7 +329,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="assign_to">Asign To <span class="text-danger">*</span></label>
+                            <label for="assign_to">Assign To <span class="text-danger">*</span></label>
                             <select class="form-control select2bs4" id="assign_to" name="assign_to">
                                 <option hidden disabled selected>Choose Staff</option>
                                 @foreach ($users as $user)

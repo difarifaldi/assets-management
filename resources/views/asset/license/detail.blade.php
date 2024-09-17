@@ -13,7 +13,6 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <div class="card-body">
-
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                     <button class="nav-link active" data-toggle="tab" data-target="#nav-detail"
@@ -199,7 +198,58 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">...</div>
+                                <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">
+                                    <div class="table-responsive py-3">
+                                        <table class="table table-bordered datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        #
+                                                    </th>
+                                                    <th>
+                                                        Assigned At
+                                                    </th>
+                                                    <th>
+                                                        Assigned To
+                                                    </th>
+                                                    <th>
+                                                        Received At
+                                                    </th>
+                                                    <th>
+                                                        Received By
+                                                    </th>
+                                                    <th>
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($asset->historyAssign as $index => $history_assign)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $index + 1 }}
+                                                        </td>
+                                                        <td>
+                                                            {{ date('d F Y H:i:s', strtotime($history_assign->assign_at)) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $history_assign->assignTo->name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ !is_null($history_assign->return_at) ? date('d F Y H:i:s', strtotime($history_assign->return_at)) : '-' }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $history_assign->returnBy->name ?? '-' }}
+                                                        </td>
+                                                        <td align="center">
+                                                            <button class="btn btn-sm btn-primary">Detail</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.license.index') }}" class="btn btn-danger mr-2">Back</a>
@@ -251,20 +301,28 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form method="POST" id="assign-form"
-                    action="{{ route('asset.license.assignTo', ['id' => $asset->id]) }}" class="forms-control">
+                    action="{{ route('asset.license.assignTo', ['id' => $asset->id]) }}" class="forms-control"
+                    enctype="multipart/form-data">
                     @csrf
+                    @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Add Assign</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Add Assign and Proof Assign</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="assign">Asign To <span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <label for="assign_to">Assign To <span class="text-danger">*</span></label>
                             <select class="form-control select2bs4" id="assign_to" name="assign_to">
-                                <option disabled hidden selected>Choose Staff</option>
+                                <option hidden disabled selected>Choose Staff</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="attachment">Proof Assign <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                accept="image/*;capture=camera" multiple="true" required>
+                            <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -277,12 +335,13 @@
         </div>
     </div>
 
-     {{-- Return Asset --}}
-     <div class="modal fade" id="returnAsset">
+    {{-- Return Asset --}}
+    <div class="modal fade" id="returnAsset">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="POST" id="return-asset" action="{{ route('asset.license.returnAsset', ['id' => $asset->id]) }}"
-                    class="forms-control" enctype="multipart/form-data">
+                <form method="POST" id="return-asset"
+                    action="{{ route('asset.license.returnAsset', ['id' => $asset->id]) }}" class="forms-control"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('patch')
                     <div class="modal-header">
