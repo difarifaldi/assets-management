@@ -115,7 +115,7 @@
         let token = $('meta[name="csrf-token"]').attr('content');
 
         Swal.fire({
-            title: 'Are You Sure Want To Aprove Record?',
+            title: 'Are You Sure Want To Approve Record?',
             icon: 'question',
             showCancelButton: true,
             allowOutsideClick: false,

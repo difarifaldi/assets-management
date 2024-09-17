@@ -205,16 +205,76 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="tab-pane pt-3 maintence" id="nav-maintence" role="tabpanel">...</div>
-                                <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">...</div>
+                                <div class="tab-pane pt-3 maintence" id="nav-maintence" role="tabpanel">
+                                </div>
+                                <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">
+                                    <div class="table-responsive py-3">
+                                        <table class="table table-bordered datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        #
+                                                    </th>
+                                                    <th>
+                                                        Assigned At
+                                                    </th>
+                                                    <th>
+                                                        Assigned To
+                                                    </th>
+                                                    <th>
+                                                        Received At
+                                                    </th>
+                                                    <th>
+                                                        Received By
+                                                    </th>
+                                                    <th>
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($asset->historyAssign as $index => $history_assign)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $index + 1 }}
+                                                        </td>
+                                                        <td>
+                                                            {{ date('d F Y H:i:s', strtotime($history_assign->assign_at)) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $history_assign->assignTo->name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ !is_null($history_assign->return_at) ? date('d F Y H:i:s', strtotime($history_assign->return_at)) : '-' }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $history_assign->returnBy->name ?? '-' }}
+                                                        </td>
+                                                        <td align="center">
+                                                            <button class="btn btn-sm btn-primary">Detail</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="tab-pane pt-3 fade" id="nav-check" role="tabpanel">...</div>
                             </div>
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-warning mr-2">Maintence</a>
-                                @if (is_null($asset->assign_to))
+                                @if (is_null($asset->assign_to) &&
+                                        is_null($asset->assign_at) &&
+                                        (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
                                     <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
                                         To</button>
+                                @elseif(
+                                    !is_null($asset->assign_to) &&
+                                        !is_null($asset->assign_at) &&
+                                        (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                    <button data-toggle="modal" data-target="#returnAsset" class="btn btn-primary">Return
+                                        Asset</button>
                                 @endif
                             </div>
                         </div>
@@ -224,11 +284,14 @@
             </div>
         </div>
     </div>
+
+    {{-- Add Attachment Asset --}}
     <div class="modal fade" id="addAttachment">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="post" action="{{ route('asset.physical.uploadImage', ['id' => $asset->id]) }}"
-                    class="forms-upload" enctype="multipart/form-data">
+                <form method="post" id="add-attachment"
+                    action="{{ route('asset.physical.uploadImage', ['id' => $asset->id]) }}" class="forms-upload"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('patch')
                     <div class="modal-header">
@@ -239,7 +302,7 @@
                             <label for="date">Attachment <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="attachment[]" id="documentInput"
                                 accept="image/*" multiple="true" multiple="true" required>
-                            <p class="text-danger py-1">* .png .jpg .jpeg (Max 10 MB)</p>
+                            <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -252,25 +315,63 @@
         </div>
     </div>
 
-    {{-- Assign TO --}}
+    {{-- Assign To --}}
     <div class="modal fade" id="assignTo">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('asset.physical.assignTo', ['id' => $asset->id]) }}"
-                    class="forms-control">
+                <form method="POST" id="assign-form"
+                    action="{{ route('asset.physical.assignTo', ['id' => $asset->id]) }}" class="forms-control"
+                    enctype="multipart/form-data">
                     @csrf
+                    @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Add Assign</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Add Assign and Proof Assign</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="assign">Asign To <span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <label for="assign_to">Asign To <span class="text-danger">*</span></label>
                             <select class="form-control select2bs4" id="assign_to" name="assign_to">
-                                <option disabled hidden selected>Choose Staff</option>
+                                <option hidden disabled selected>Choose Staff</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="attachment">Proof Assign <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                accept="image/*;capture=camera" multiple="true" required>
+                            <p class="text-danger py-1">* .png .jpg .jpeg</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-sm btn-primary mx-2">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Return Asset --}}
+    <div class="modal fade" id="returnAsset">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="POST" id="return-asset"
+                    action="{{ route('asset.physical.returnAsset', ['id' => $asset->id]) }}" class="forms-control"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('patch')
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLongTitle">Return and Proof Asset</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="attachment">Proof Return <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                accept="image/*;capture=camera" multiple="true" required>
+                            <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
                     </div>
                     <div class="modal-footer">

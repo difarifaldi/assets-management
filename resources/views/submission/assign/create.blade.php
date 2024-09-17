@@ -47,7 +47,6 @@
                                 <div class="mb-3">
                                     <label for="attachment">Attachment </label>
                                     <input type="file" class="form-control" name="attachment" id="documentInput">
-                                    <p class="text-danger py-1">* (Max 10 MB)</p>
                                 </div>
                                 <div class="pt-3 d-flex">
                                     <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2"> Back</a>

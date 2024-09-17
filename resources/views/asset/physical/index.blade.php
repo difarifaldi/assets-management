@@ -38,7 +38,7 @@
                                                 Category
                                             </th>
                                             <th>
-                                                Assign To
+                                                Status
                                             </th>
                                             <th>
                                                 Action

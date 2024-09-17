@@ -215,11 +215,14 @@
             </div>
         </div>
     </div>
+
+    {{-- Add Attachment Asset --}}
     <div class="modal fade" id="addAttachment">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="post" action="{{ route('asset.license.uploadImage', ['id' => $asset->id]) }}"
-                    class="forms-upload" enctype="multipart/form-data">
+                <form method="post" id="add-attachment"
+                    action="{{ route('asset.license.uploadImage', ['id' => $asset->id]) }}" class="forms-upload"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('patch')
                     <div class="modal-header">
@@ -230,7 +233,7 @@
                             <label for="date">Attachment <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="attachment[]" id="documentInput"
                                 accept="image/*" multiple="true" multiple="true" required>
-                            <p class="text-danger py-1">* .png .jpg .jpeg (Max 10 MB)</p>
+                            <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -242,12 +245,13 @@
             </div>
         </div>
     </div>
-    {{-- Assign TO --}}
+
+    {{-- Assign To --}}
     <div class="modal fade" id="assignTo">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('asset.license.assignTo', ['id' => $asset->id]) }}"
-                    class="forms-control">
+                <form method="POST" id="assign-form"
+                    action="{{ route('asset.license.assignTo', ['id' => $asset->id]) }}" class="forms-control">
                     @csrf
                     <div class="modal-header">
                         <h4 class="modal-title" id="exampleModalLongTitle">Add Assign</h4>
@@ -261,6 +265,35 @@
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-sm btn-primary mx-2">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+     {{-- Return Asset --}}
+     <div class="modal fade" id="returnAsset">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="POST" id="return-asset" action="{{ route('asset.license.returnAsset', ['id' => $asset->id]) }}"
+                    class="forms-control" enctype="multipart/form-data">
+                    @csrf
+                    @method('patch')
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLongTitle">Return and Proof Asset</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="attachment">Proof Return <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                accept="image/*;capture=camera" multiple="true" required>
+                            <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
                     </div>
                     <div class="modal-footer">

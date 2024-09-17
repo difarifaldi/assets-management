@@ -12,7 +12,7 @@
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('asset.physical.store') }}" enctype="multipart/form-data">
+                        <form method="post" id="create-form" action="{{ route('asset.physical.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
 
@@ -119,7 +119,7 @@
                                     <label for="attachment">Attachment <span class="text-danger">*</span></label>
                                     <input type="file" class="form-control" name="attachment[]" id="documentInput"
                                         accept="image/*" multiple="true" required>
-                                    <p class="text-danger py-1">* .jpg .jpeg .png (Max 10 MB)</p>
+                                    <p class="text-danger py-1">* .jpg .jpeg .png</p>
                                     <iframe id="documentPreview" class="w-100 mt-3 d-none"
                                         style="height: 600px;"></iframe>
                                 </div>

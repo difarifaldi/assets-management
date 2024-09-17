@@ -4,6 +4,7 @@ namespace App\Http\Controllers\asset;
 
 use App\Http\Controllers\Controller;
 use App\Models\asset\Asset;
+use App\Models\HistoryAssign;
 use App\Models\master\CategoryAssets;
 use App\Models\master\Brand;
 use App\Models\master\User;
@@ -44,8 +45,14 @@ class PhysicalAssetController extends Controller
                 return $data->brand ? $data->brand->name : '-';
             })
 
-            ->addColumn('assignTo', function ($data) {
-                return $data->assignTo ? $data->assignTo->name : '-';
+            ->addColumn('status', function ($data) {
+                if (!is_null($data->assign_to)) {
+                    return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
+                } elseif (!is_null($data->check_out_by)) {
+                    return ' <span class="badge badge-danger">Check Out By .' . $data->checkOutBy->name . '</span>';
+                } else {
+                    return '<span class="badge badge-success">Available</span>';
+                }
             })
             ->addColumn('action', function ($data) {
                 $btn_action = '<div align="center">';
@@ -70,8 +77,8 @@ class PhysicalAssetController extends Controller
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'brand', 'category', 'assignTo', 'action'])
-            ->rawColumns(['action'])
+            ->only(['name', 'brand', 'category', 'status', 'action'])
+            ->rawColumns(['status', 'action'])
             ->make(true);
 
         return $dataTable;
@@ -184,6 +191,7 @@ class PhysicalAssetController extends Controller
              * Get User Record from id
              */
             $asset = Asset::find($id);
+
             $users = User::whereNull('deleted_at')->role('staff')->get();
 
             /**
@@ -350,6 +358,8 @@ class PhysicalAssetController extends Controller
                 foreach ($request->file('attachment') as $file) {
                     // File Upload Configuration
                     $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
+
+                    // Uploading File
                     $file->storePubliclyAs($path, $file_name);
 
                     // Check Upload Success
@@ -376,7 +386,6 @@ class PhysicalAssetController extends Controller
                 foreach ($request->file('attachment') as $file) {
                     // File Upload Configuration
                     $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
-                    $file->storePubliclyAs($path, $file_name);
 
                     // Uploading File
                     $file->storePubliclyAs($path, $file_name);
@@ -487,7 +496,7 @@ class PhysicalAssetController extends Controller
     {
         try {
 
-            $physical = Asset::find($request->id);
+            $physical = Asset::find($id);
 
             if (!is_null($physical)) {
                 /**
@@ -507,23 +516,186 @@ class PhysicalAssetController extends Controller
                  * Validation Update Asset Record
                  */
                 if ($add_assign) {
-                    DB::commit();
-                    session()->flash('success', 'Assign Successfully Add');
-                    return redirect()->route('asset.physical.index')->with('success', 'Assign Successfully Add');
+
+                    $path = 'public/asset/physical/proof_assign';
+                    $path_store = 'storage/asset/physical/proof_assign';
+
+                    // Check Exsisting Path
+                    if (!Storage::exists($path)) {
+                        // Create new Path Directory
+                        Storage::makeDirectory($path);
+                    }
+
+                    $proof_assign_attachment = [];
+
+                    foreach ($request->file('attachment') as $file) {
+
+                        // File Upload Configuration
+                        $file_name = $physical->id . '_proof_assign_' . uniqid() . '_' . $file->getClientOriginalName();
+
+                        // Uploading File
+                        $file->storePubliclyAs($path, $file_name);
+
+                        // Check Upload Success
+                        if (Storage::exists($path . '/' . $file_name)) {
+                            $proof_assign_attachment['proof_assign'][] = $path_store . '/' . $file_name;
+                        } else {
+                            // Failed and Rollback
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->withInput();
+                        }
+                    }
+
+                    if (empty($proof_assign_attachment)) {
+                        // Update Record for Attachment
+                        $proof_assign_attachment = null;
+                    } else {
+                        // Update Record for Attachment
+                        $proof_assign_attachment =  json_encode($proof_assign_attachment);
+                    }
+
+                    $history_assign = HistoryAssign::create([
+                        'assets_id' => $id,
+                        'assign_to' => $request->assign_to,
+                        'assign_at' => now(),
+                        'latest' => true,
+                        'attachment' => $proof_assign_attachment,
+                        'created_by' => Auth::user()->id,
+                        'updated_by' => Auth::user()->id,
+                    ]);
+
+                    /**
+                     * Validation Add history Record
+                     */
+                    if ($history_assign) {
+                        DB::commit();
+                        return redirect()->back()->with('success', 'Assign Successfully Add');
+                    } else {
+                        /**
+                         * Failed Store Record
+                         */
+                        DB::rollBack();
+                        return redirect()->back()->with('failed', 'Failed Add Assign');
+                    }
                 } else {
                     /**
                      * Failed Store Record
                      */
                     DB::rollBack();
-                    session()->flash('failed', 'Failed Add Assign');
-                    return response()->json(['message', 'Failed'], 400);
+                    return redirect()->back()->with('failed', 'Failed Add Assign');
                 }
             } else {
-                session()->flash('failed', 'Invalid Request!');
-                return response()->json(['message', 'Invalid Request!'], 404);
+                /**
+                 * Failed Store Record
+                 */
+                DB::rollBack();
+                return redirect()->back()->with('failed', 'Invalid Request!');
             }
         } catch (\Exception $e) {
-            return response()->json(['failed' => $e->getMessage()], 400);
+            return redirect()->back()->with('failed', $e->getMessage());
+        }
+    }
+
+    public function returnAsset(Request $request, string $id)
+    {
+        try {
+
+            $physical = Asset::find($id);
+
+            if (!is_null($physical)) {
+
+                $last_assign = HistoryAssign::where('assets_id', $id)->whereNull('deleted_by')->whereNull('return_by')->whereNull('return_at')->whereNull('deleted_by')->whereNotNull('latest')->first();
+                /**
+                 * Begin Transaction
+                 */
+                DB::beginTransaction();
+
+                /**
+                 * Update Asset Record
+                 */
+                $remove_assign = $physical->update([
+                    'assign_to' => null,
+                    'assign_at' => null,
+                ]);
+
+                /**
+                 * Validation Update Asset Record
+                 */
+                if ($remove_assign) {
+
+                    $path = 'public/asset/physical/proof_return_assign';
+                    $path_store = 'storage/asset/physical/proof_return_assign';
+
+                    // Check Exsisting Path
+                    if (!Storage::exists($path)) {
+                        // Create new Path Directory
+                        Storage::makeDirectory($path);
+                    }
+
+                    $proof_return_assign_attachment['proof_assign'] = json_decode($last_assign->attachment)->proof_assign;
+
+                    foreach ($request->file('attachment') as $file) {
+                        // File Upload Configuration
+                        $file_name = $physical->id . '_proof_return_assign_' . uniqid() . '_' . $file->getClientOriginalName();
+
+                        // Uploading File
+                        $file->storePubliclyAs($path, $file_name);
+
+                        // Check Upload Success
+                        if (Storage::exists($path . '/' . $file_name)) {
+                            $proof_return_assign_attachment['proof_return_assign'][] = $path_store . '/' . $file_name;
+                        } else {
+                            // Failed and Rollback
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->withInput();
+                        }
+                    }
+
+                    $proof_return_assign_attachment = json_encode($proof_return_assign_attachment);
+
+                    $history_assign = HistoryAssign::where('assets_id', $id)->whereNull('deleted_by')->whereNull('return_by')->whereNull('return_at')->whereNull('deleted_by')->whereNotNull('latest')->update([
+                        'return_by' => Auth::user()->id,
+                        'return_at' => now(),
+                        'latest' => null,
+                        'attachment' => $proof_return_assign_attachment,
+                        'updated_by' => Auth::user()->id,
+                    ]);
+
+                    /**
+                     * Validation Add history Record
+                     */
+                    if ($history_assign) {
+                        DB::commit();
+                        return redirect()->back()->with('success', 'Return Asset Successfully Add');
+                    } else {
+                        /**
+                         * Failed Store Record
+                         */
+                        DB::rollBack();
+                        return redirect()->back()->with('failed', 'Failed Add Return Asset');
+                    }
+                } else {
+                    /**
+                     * Failed Store Record
+                     */
+                    DB::rollBack();
+                    return redirect()->back()->with('failed', 'Failed Add Return Asset');
+                }
+            } else {
+                /**
+                 * Failed Store Record
+                 */
+                DB::rollBack();
+                return redirect()->back()->with('failed', 'Invalid Request!');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', $e->getMessage());
         }
     }
 

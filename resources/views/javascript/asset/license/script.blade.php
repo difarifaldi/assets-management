@@ -1,6 +1,5 @@
 <script type="text/javascript">
     $("form").submit(function(e) {
-        e.preventDefault();
         Swal.fire({
             title: 'Are You Sure Want To Save Record?',
             icon: 'question',
@@ -16,7 +15,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 sweetAlertProcess();
-                $('form').unbind('submit').submit();
+                $('#'.concat(e.currentTarget.id)).unbind('submit').submit();
             }
         })
     });

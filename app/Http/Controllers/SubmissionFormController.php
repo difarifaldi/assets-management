@@ -50,7 +50,7 @@ class SubmissionFormController extends Controller
                 return $data->type == 1 ? 'Checkout' : ($data->type == 2 ? 'Assign ' : '-');
             })
             ->addColumn('status', function ($data) {
-                if ($data->aproved_by != null && $data->aproved_at != null) {
+                if ($data->approved_by != null && $data->approved_at != null) {
                     return '<div class="badge badge-success">Approved</div>';
                 } elseif ($data->rejected_by != null && $data->rejected_at != null) {
                     return '<div class="badge badge-danger">Rejected</div>';
@@ -69,11 +69,11 @@ class SubmissionFormController extends Controller
                  * Validation Role Has Access Edit and Delete
                  */
                 if (User::find(Auth::user()->id)->hasRole('staff')) {
-                    if (!isset($data->aproved_at) &&  !isset($data->rejected_at)) {
+                    if (!isset($data->approved_at) &&  !isset($data->rejected_at)) {
                         $btn_action .= '<a href="'  . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     }
                 } else {
-                    if (!isset($data->aproved_at) &&  !isset($data->rejected_at)) {
+                    if (!isset($data->approved_at) &&  !isset($data->rejected_at)) {
                         $btn_action .= '<button class="btn btn-sm btn-success ml-2" onclick="approvedRecord(' . $data->id . ')" title="Approve">Approve</button>';
                         $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="rejectedRecord(' . $data->id . ')"title="Rejected">Rejected</button>';
                     }
@@ -237,8 +237,8 @@ class SubmissionFormController extends Controller
                  * Update SubmissionForm Record
                  */
                 $approved_submission = $submission->update([
-                    'aproved_by' => Auth::user()->id,
-                    'aproved_at' => now(),
+                    'approved_by' => Auth::user()->id,
+                    'approved_at' => now(),
                 ]);
 
                 /**

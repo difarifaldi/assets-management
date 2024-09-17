@@ -16,7 +16,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 sweetAlertProcess();
-                $('form').unbind('submit').submit();
+                $('#'.concat(e.currentTarget.id)).unbind('submit').submit();
             }
         })
     });
@@ -54,7 +54,7 @@
                     defaultContent: '-',
                 },
                 {
-                    data: 'assignTo',
+                    data: 'status',
                     defaultContent: '-',
                 },
                 {
