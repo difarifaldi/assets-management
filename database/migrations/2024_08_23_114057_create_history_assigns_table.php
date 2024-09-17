@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('assets_id');
             $table->integer('assign_to');
             $table->timestamp('assign_at');
-            $table->integer('return_by');
+            $table->integer('return_by')->nullable();
             $table->timestamp('return_at')->nullable();
             $table->json('attachment');
             $table->tinyInteger('latest')->nullable();
