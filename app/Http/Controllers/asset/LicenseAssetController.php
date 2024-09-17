@@ -113,6 +113,7 @@ class LicenseAssetController extends Controller
             $barcode_check = Asset::whereNull('deleted_at')
                 ->where('barcode_code', $request->barcode_code)
                 ->first();
+                
             if (is_null($barcode_check)) {
                 DB::beginTransaction();
 

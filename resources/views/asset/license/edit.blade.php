@@ -10,7 +10,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('asset.license.update', ['id' => $license->id]) }}"
+                        <form method="post" id="edit-form" action="{{ route('asset.license.update', ['id' => $license->id]) }}"
                             enctype="multipart/form-data">
                             @csrf
                             @method('patch')

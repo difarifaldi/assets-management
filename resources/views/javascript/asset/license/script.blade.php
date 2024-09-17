@@ -1,5 +1,6 @@
 <script type="text/javascript">
     $("form").submit(function(e) {
+        e.preventDefault();
         Swal.fire({
             title: 'Are You Sure Want To Save Record?',
             icon: 'question',
