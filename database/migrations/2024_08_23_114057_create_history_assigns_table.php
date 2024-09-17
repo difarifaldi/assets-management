@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('history_assigns', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('assets_id');
-            $table->integer('assign_to');
-            $table->timestamp('assign_at');
+            $table->integer('assign_to')->nullable();
+            $table->timestamp('assign_at')->nullable();
             $table->integer('return_by')->nullable();
             $table->timestamp('return_at')->nullable();
             $table->json('attachment');

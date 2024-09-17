@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('history_check_in_outs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('assets_id');
-            $table->integer('check_in_by');
-            $table->timestamp('check_in_at');
+            $table->integer('check_in_by')->nullable();
+            $table->timestamp('check_in_at')->nullable();
             $table->integer('check_out_by')->nullable();
-            $table->timestamp('check_out_at');
+            $table->timestamp('check_out_at')->nullable();
             $table->json('attachment');
             $table->tinyInteger('latest')->nullable();
             $table->integer('created_by');
