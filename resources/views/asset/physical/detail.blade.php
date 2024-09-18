@@ -264,18 +264,21 @@
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-warning mr-2">Maintence</a>
-                                @if (is_null($asset->assign_to) &&
-                                        is_null($asset->assign_at) &&
-                                        (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
-                                    <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
-                                        To</button>
-                                @elseif(
-                                    !is_null($asset->assign_to) &&
-                                        !is_null($asset->assign_at) &&
-                                        (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
-                                    <button data-toggle="modal" data-target="#returnAsset" class="btn btn-primary">Return
-                                        Asset</button>
-                                @endif
+
+                                @hasrole('admin')
+                                    @if (is_null($asset->assign_to) &&
+                                            is_null($asset->assign_at) &&
+                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                        <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
+                                            To</button>
+                                    @elseif(
+                                        !is_null($asset->assign_to) &&
+                                            !is_null($asset->assign_at) &&
+                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                        <button data-toggle="modal" data-target="#returnAsset" class="btn btn-primary">Return
+                                            Asset</button>
+                                    @endif
+                                @endhasrole
                             </div>
                         </div>
                         <!-- /.card-body -->

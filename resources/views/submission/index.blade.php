@@ -10,8 +10,13 @@
                         </div>
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
-
-
+                                @role('staff')
+                                    <div>
+                                        <a type="button" onclick="openOptions()" class="btn btn-sm btn-primary">
+                                            Add Submission
+                                        </a>
+                                    </div>
+                                @endrole
                             </div>
                             <div class="table-responsive pt-3">
                                 <input type="hidden" id="url_dt" value="{{ $datatable_route }}">
@@ -57,6 +62,22 @@
         @else
             <script>
                 dataTableStaff();
+
+                function openOptions() {
+                    Swal.fire({
+                        title: "Choose Submission",
+                        icon: "question",
+                        showConfirmButton: false,
+                        showCancelButton: false,
+                        showCloseButton: false,
+                        allowOutsideClick: false,
+                        html: `<div class="d-flex justify-content-center my-2">
+                <a href='{{ route('submission.form.checkouts.create') }}' class="btn btn-primary mr-2">Assign To Me</a>
+                <a href='{{ route('submission.form.checkouts.create') }}' class="btn btn-primary mr-2">Checkout</a>
+                </div>
+            `
+                    });
+                }
             </script>
         @endrole
     @endpush

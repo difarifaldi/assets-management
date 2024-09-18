@@ -22,7 +22,7 @@ class SubmissionFormController extends Controller
      */
     public function index()
     {
-        $datatable_route = route('submission.submission.dataTable');
+        $datatable_route = route('submission.dataTable');
 
 
         $can_create = User::find(Auth::user()->id)->hasRole('admin');
@@ -71,6 +71,7 @@ class SubmissionFormController extends Controller
                 if (User::find(Auth::user()->id)->hasRole('staff')) {
                     if (!isset($data->approved_at) &&  !isset($data->rejected_at)) {
                         $btn_action .= '<a href="'  . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                        $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                     }
                 } else {
                     if (!isset($data->approved_at) &&  !isset($data->rejected_at)) {

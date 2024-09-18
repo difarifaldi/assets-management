@@ -54,7 +54,7 @@
                     defaultContent: '-',
                 },
                 {
-                    data: 'assignTo',
+                    data: 'status',
                     defaultContent: '-',
                 },
                 {

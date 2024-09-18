@@ -10,7 +10,8 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" id="edit-form" action="{{ route('asset.physical.update', ['id' => $physical->id]) }}"
+                        <form method="post" id="edit-form"
+                            action="{{ route('asset.physical.update', ['id' => $physical->id]) }}"
                             enctype="multipart/form-data">
                             @csrf
                             @method('patch')
@@ -112,25 +113,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Assign To</label>
-                                    <select class="form-control select2bs4" style="width: 100%;" name="assign_to">
-                                        @foreach ($users as $user)
-                                            @if ($physical->assignTo->id == $user->id)
-                                                <option value="{{ $user->id }}" selected>{{ $user->name }}
-                                                </option>
-                                            @else
-                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="assign_at">Assign At</label>
-                                    <input type="date" class="form-control" id="assign_at" name="assign_at"
-                                        placeholder="Expired" value="{{ $physical->assign_at }}">
-                                </div>
 
                                 <div class="form-group">
                                     <label for="description">Description</label>

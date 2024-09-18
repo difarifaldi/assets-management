@@ -184,7 +184,7 @@ class PhysicalAssetController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function show(request $request, string $id)
     {
         try {
             /**
@@ -202,13 +202,28 @@ class PhysicalAssetController extends Controller
                  * Asset Role Configuration
                  */
 
+                if ($request->ajax()) {
+                    $asset = Asset::with('category')->find($id);
+                    return response()->json(['success' => true, 'data' => $asset], 200);
+                }
+
                 return view('asset.physical.detail', compact('asset', 'users'));
             } else {
+
+                if ($request->ajax()) {
+                    return response()->json(['success' => false, 'message' => 'Invalid Request!'], 400);
+                }
+
                 return redirect()
                     ->back()
                     ->with(['failed' => 'Invalid Request!']);
             }
         } catch (Exception $e) {
+
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            }
+
             return redirect()
                 ->back()
                 ->with(['failed' => $e->getMessage()]);

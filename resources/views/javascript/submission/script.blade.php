@@ -22,7 +22,7 @@
     });
 
     function dataTable() {
-        console.log('dataTable function called');
+        // console.log('dataTable function called');
         const url = $('#url_dt').val();
         $('#dt-submission').DataTable({
             autoWidth: false,
@@ -152,7 +152,6 @@
         let token = $('meta[name="csrf-token"]').attr('content');
 
         Swal.fire({
-
             input: "textarea",
             inputLabel: "Reason",
             inputPlaceholder: "Type your reason here...",

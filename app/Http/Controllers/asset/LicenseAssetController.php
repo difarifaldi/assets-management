@@ -45,8 +45,14 @@ class LicenseAssetController extends Controller
                 return $data->brand ? $data->brand->name : '-';
             })
 
-            ->addColumn('assignTo', function ($data) {
-                return $data->assignTo ? $data->assignTo->name : '-';
+            ->addColumn('status', function ($data) {
+                if (!is_null($data->assign_to)) {
+                    return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
+                } elseif (!is_null($data->check_out_by)) {
+                    return ' <span class="badge badge-danger">Check Out By .' . $data->checkOutBy->name . '</span>';
+                } else {
+                    return '<span class="badge badge-success">Available</span>';
+                }
             })
             ->addColumn('action', function ($data) {
                 $btn_action = '<div align="center">';
@@ -71,8 +77,8 @@ class LicenseAssetController extends Controller
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'brand', 'category', 'assignTo', 'action'])
-            ->rawColumns(['action'])
+            ->only(['name', 'brand', 'category', 'status', 'action'])
+            ->rawColumns(['action', 'status'])
             ->make(true);
 
         return $dataTable;
@@ -113,7 +119,7 @@ class LicenseAssetController extends Controller
             $barcode_check = Asset::whereNull('deleted_at')
                 ->where('barcode_code', $request->barcode_code)
                 ->first();
-                
+
             if (is_null($barcode_check)) {
                 DB::beginTransaction();
 
@@ -179,7 +185,7 @@ class LicenseAssetController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
         try {
             /**
@@ -196,13 +202,27 @@ class LicenseAssetController extends Controller
                  * Asset Role Configuration
                  */
 
+                if ($request->ajax()) {
+                    return response()->json(['success' => true, 'data' => $asset], 200);
+                }
+
                 return view('asset.license.detail', compact('asset', 'users'));
             } else {
+
+                if ($request->ajax()) {
+                    return response()->json(['success' => false, 'message' => 'Invalid Request!'], 400);
+                }
+
                 return redirect()
                     ->back()
                     ->with(['failed' => 'Invalid Request!']);
             }
         } catch (Exception $e) {
+
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            }
+
             return redirect()
                 ->back()
                 ->with(['failed' => $e->getMessage()]);

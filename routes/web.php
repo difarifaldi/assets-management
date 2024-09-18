@@ -9,6 +9,7 @@ use App\Http\Controllers\master\ManufactureController;
 use App\Http\Controllers\master\BrandController;
 use App\Http\Controllers\master\UserController;
 use App\Http\Controllers\SubmissionFormController;
+use App\Http\Controllers\SubmissionFormsCheckoutDateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,14 +111,16 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
     });
 
     Route::group(['prefix' => 'submission', 'as' => 'submission.'], function () {
-        Route::group(['controller' => SubmissionFormController::class, 'prefix' => 'submission', 'as' => 'submission.'], function () {
-            Route::get('datatable', 'dataTable')->name('dataTable');
-        });
 
         Route::get('index', [SubmissionFormController::class, 'index'])->name('index');
+        Route::get('datatable', [SubmissionFormController::class, 'datatable'])->name('dataTable');
         Route::post('approve', [SubmissionFormController::class, 'approve'])->name('approve');
         Route::post('reject', [SubmissionFormController::class, 'reject'])->name('reject');
         Route::get('{type}/{asset}', [SubmissionFormController::class, 'create'])->name('create');
         Route::post('{type}/store', [SubmissionFormController::class, 'store'])->name('store');
+
+        Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
+            Route::resource('checkouts', SubmissionFormsCheckoutDateController::class, ['except' => ['index']])->parameters(['checkouts', 'id']);
+        });
     });
 });
