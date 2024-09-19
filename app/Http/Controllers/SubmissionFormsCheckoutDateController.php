@@ -48,7 +48,7 @@ class SubmissionFormsCheckoutDateController extends Controller
             if ($request->return_asset_date < $request->loan_application_asset_date) {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Tanggal Return Salah '])
+                    ->with(['failed' => 'The Return Asset  date must be after the Loan Application Asset Date'])
                     ->withInput();
             }
             $submission = SubmissionForm::lockforUpdate()->create([
