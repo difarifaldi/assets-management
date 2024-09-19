@@ -28,17 +28,19 @@
         let category = $('#category').val();
         let status = $('#status').val();
         let barcode = $('#barcode').val();
-        let value = $('#value').val();
-
         let index = $("#physical_asset tbody tr").length - 1;
 
-        if (asset != '' && category != '' && status != '' && barcode != '' && value != '') {
+        if (asset != '' && category != '' && status != '' && barcode != '') {
 
             let form_asset = $("#form_physical_asset");
             let tr = $("<tr></tr>");
             let td_asset = $("<td>" +
-                "<input type='text' class='form-control' name='physical_asset[" + index + "][asset]' value='" +
+                "<input type='hidden' class='form-control' name='physical_asset[" + index + "][id]' value='" +
                 asset +
+                "'>" +
+
+                "<input type='text' class='form-control' name='physical_asset[" + index + "][asset]' value='" +
+                assetName +
                 "' readonly>" +
                 "</td>");
 
@@ -61,16 +63,6 @@
                 "' readonly>" +
                 "</td>");
 
-
-            let td_value = $("<td>" +
-                "<div class='d-flex'>" +
-                "<span class='input-group-text bg-default p-2'>Rp.</span>" +
-                "<input type='number' class='form-control' name='product_size[" + index +
-                "][value]'  value='" +
-                value +
-                "' readonly>" +
-                "</div>" +
-                "</td>");
             let td_del = $(
                 "<td align='center'>" +
                 "<button type='button' class='delete-row btn btn-sm btn-danger' value='Delete'>Delete</button>" +
@@ -81,7 +73,7 @@
             );
 
             // Append Tr Element
-            (tr.append(td_asset).append(td_category).append(td_status).append(td_barcode).append(td_value).append(
+            (tr.append(td_asset).append(td_category).append(td_status).append(td_barcode).append(
                 td_del)).insertAfter(form_asset)
 
             // Append To Table
@@ -92,7 +84,7 @@
             $('#category').val('');
             $('#status').val('');
             $('#barcode').val('');
-            $('#value').val('');
+
 
         } else {
             sweetAlertWarning('Please Complete The Record!');
@@ -117,7 +109,6 @@
                     success: function(response) {
                         if (response.success) {
                             var asset = response.data;
-                            let value = asset.value || '-';
                             if (asset.status == 1) {
                                 status = 'Good Condition'
                             } else if (asset.status == 2) {
@@ -134,8 +125,6 @@
                             $('#barcode').val(asset
                                 .barcode_code
                             );
-                            $('#value').val(
-                                value);
                         } else {
                             alert('Invalid Request!');
                         }
@@ -149,7 +138,6 @@
                 $('#category').val('');
                 $('#status').val('');
                 $('#barcode').val('');
-                $('#value').val('');
             }
         });
     });

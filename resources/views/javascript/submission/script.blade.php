@@ -111,6 +111,42 @@
         });
     }
 
+    function destroyRecord(id) {
+        let token = $('meta[name="csrf-token"]').attr('content');
+
+        Swal.fire({
+            title: 'Are You Sure Want To Delete Record?',
+            icon: 'question',
+            showCancelButton: true,
+            allowOutsideClick: false,
+            customClass: {
+                confirmButton: 'btn btn-primary mr-2 mb-3',
+                cancelButton: 'btn btn-danger mb-3',
+            },
+            buttonsStyling: false,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sweetAlertProcess();
+                $.ajax({
+                    url: '{{ url('submission/destroy') }}/' + id,
+                    type: 'DELETE',
+                    cache: false,
+                    data: {
+                        _token: token
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(xhr, error, code) {
+                        sweetAlertError(error);
+                    }
+                });
+            }
+        })
+    }
+
     function approvedRecord(id) {
         let token = $('meta[name="csrf-token"]').attr('content');
 

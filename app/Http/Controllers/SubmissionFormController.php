@@ -315,4 +315,31 @@ class SubmissionFormController extends Controller
             return response()->json(['message', 'Failed!'], 400);
         }
     }
+
+    public function destroy(String $id)
+    {
+        try {
+            DB::beginTransaction();
+            $submission_destroy = SubmissionForm::where('id', $id)->update([
+                'deleted_by' => Auth::user()->id,
+                'deleted_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            /**
+             * Validation Update brand Record
+             */
+            if ($submission_destroy) {
+                DB::commit();
+                session()->flash('success', 'brand Successfully Deleted');
+            } else {
+                /**
+                 * Failed Store Record
+                 */
+                DB::rollBack();
+                session()->flash('failed', 'Failed Delete brand');
+            }
+        } catch (Exception $e) {
+            session()->flash('failed', $e->getMessage());
+        }
+    }
 }

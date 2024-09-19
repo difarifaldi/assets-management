@@ -114,6 +114,7 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
 
         Route::get('index', [SubmissionFormController::class, 'index'])->name('index');
         Route::get('datatable', [SubmissionFormController::class, 'datatable'])->name('dataTable');
+        Route::delete('destroy/{id}', [SubmissionFormController::class, 'destroy'])->name('destroy');
         Route::post('approve', [SubmissionFormController::class, 'approve'])->name('approve');
         Route::post('reject', [SubmissionFormController::class, 'reject'])->name('reject');
         Route::get('{type}/{asset}', [SubmissionFormController::class, 'create'])->name('create');

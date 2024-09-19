@@ -41,7 +41,7 @@
                                     <table class="table table-bordered datatable" id="physical_asset">
                                         <thead>
                                             <tr>
-                                                <th width="20%">
+                                                <th>
                                                     Asset
                                                 </th>
                                                 <th>
@@ -53,9 +53,6 @@
                                                 <th>
                                                     Barcode
                                                 </th>
-                                                <th>
-                                                    Value
-                                                </th>
 
                                                 <th width="5%">
                                                     Action
@@ -65,14 +62,12 @@
                                         <tbody id="table_body">
                                             <tr id="form_physical_asset">
                                                 <td>
-
                                                     <select class="form-control select2bs4" id="asset_id" name="asset_id">
                                                         <option value="" disabled hidden selected>Choose Asset
                                                         </option>
                                                         @foreach ($assets as $asset)
                                                             <option value="{{ $asset->id }}">{{ $asset->name }}</option>
                                                         @endforeach
-
                                                     </select>
                                                 </td>
                                                 <td>
@@ -91,12 +86,6 @@
                                                     <div class="d-flex">
 
                                                         <input type="text" class="form-control" readonly id="barcode">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex">
-                                                        <span class="input-group-text bg-default p-2">Rp.</span>
-                                                        <input type="text" class="form-control" readonly id="value">
                                                     </div>
                                                 </td>
 
@@ -136,17 +125,9 @@
                                                                     required>
                                                             </div>
                                                         </td>
-                                                        <td>
-                                                            <div class='d-flex'>
-                                                                <span class='input-group-text bg-default p-2'>Rp.</span>
-                                                                <input type='number' class='form-control'
-                                                                    name='physical_asset[][value]' value='' required>
-                                                            </div>
-                                                        </td>
 
                                                         <td align='center'>
-                                                            <button type='button'
-                                                                class='delete-row btn btn-sm btn-danger'
+                                                            <button type='button' class='delete-row btn btn-sm btn-danger'
                                                                 value='Delete'>Delete</button>
                                                             <input type='hidden' class='form-control'
                                                                 name='asset_item_check[]'

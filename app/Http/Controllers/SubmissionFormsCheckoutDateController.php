@@ -45,6 +45,12 @@ class SubmissionFormsCheckoutDateController extends Controller
                 'return_asset_date' => 'required',
             ]);
 
+            if ($request->return_asset_date < $request->loan_application_asset_date) {
+                return redirect()
+                    ->back()
+                    ->with(['failed' => 'Tanggal Return Salah '])
+                    ->withInput();
+            }
             $submission = SubmissionForm::lockforUpdate()->create([
                 'description' => $request->description,
                 'type' => 1,
@@ -77,7 +83,7 @@ class SubmissionFormsCheckoutDateController extends Controller
 
                         array_push($assets_request, [
                             'submission_form_id' => $submission->id,
-                            'assets_id' => $asset['asset'],
+                            'assets_id' => $asset['id'],
 
                         ]);
                     $submission_form_item_asssets = SubmisssionFormItemAsset::insert($assets_request);
@@ -121,11 +127,11 @@ class SubmissionFormsCheckoutDateController extends Controller
                 }
             }
         } catch (Exception $e) {
-            dd([$e->getLine(), $e->getMessage(), $e->getFile()]);
-            // return redirect()
-            //     ->back()
-            //     ->with(['failed' => $e->getMessage()])
-            //     ->withInput();
+
+            return redirect()
+                ->back()
+                ->with(['failed' => $e->getMessage()])
+                ->withInput();
         }
     }
 
