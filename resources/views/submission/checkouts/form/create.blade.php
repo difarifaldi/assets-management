@@ -14,17 +14,23 @@
                             enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="loan_application_asset_date">Loan Application Asset Date</label>
-                                    <input type="date" class="form-control" id="loan_application_asset_date"
-                                        name="loan_application_asset_date" placeholder="Purchase Date"
-                                        value="{{ old('loan_application_asset_date') }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="return_asset_date">Return Asset Date </label>
-                                    <input type="date" class="form-control" id="return_asset_date"
-                                        name="return_asset_date" placeholder="Purchase Date"
-                                        value="{{ old('return_asset_date') }}">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="loan_application_asset_date">Loan Application Asset Date <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" id="loan_application_asset_date"
+                                                name="loan_application_asset_date" min="{{ date('Y-m-d') }}"
+                                                value="{{ old('loan_application_asset_date') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="return_asset_date">Return Asset Date <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" id="return_asset_date"
+                                                name="return_asset_date" min="{{ date('Y-m-d') }}"
+                                                value="{{ old('return_asset_date') }}">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
@@ -38,11 +44,14 @@
                                 </div>
 
                                 <div class="table-responsive mt-5">
-                                    <table class="table table-bordered datatable" id="physical_asset">
+                                    <table class="table table-bordered datatable" id="asset">
                                         <thead>
                                             <tr>
                                                 <th>
                                                     Asset
+                                                </th>
+                                                <th>
+                                                    Barcode
                                                 </th>
                                                 <th>
                                                     Category
@@ -50,17 +59,13 @@
                                                 <th>
                                                     Status
                                                 </th>
-                                                <th>
-                                                    Barcode
-                                                </th>
-
                                                 <th width="5%">
                                                     Action
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody id="table_body">
-                                            <tr id="form_physical_asset">
+                                            <tr id="form_asset">
                                                 <td>
                                                     <select class="form-control select2bs4" id="asset_id" name="asset_id">
                                                         <option value="" disabled hidden selected>Choose Asset
@@ -71,67 +76,53 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <div class="d-flex">
-                                                        <input type="text" class="form-control" readonly id="category">
-
-                                                    </div>
+                                                    <input type="text" class="form-control" readonly id="barcode">
                                                 </td>
                                                 <td>
-                                                    <div class="d-flex">
-                                                        <input type="text" class="form-control" readonly id="status">
-
-                                                    </div>
+                                                    <input type="text" class="form-control" readonly id="category">
                                                 </td>
                                                 <td>
-                                                    <div class="d-flex">
-
-                                                        <input type="text" class="form-control" readonly id="barcode">
-                                                    </div>
+                                                    <input type="text" class="form-control" readonly id="status">
                                                 </td>
-
                                                 <td align="center">
                                                     <button type="button" class="btn btn-sm btn-primary"
                                                         onclick="addPhysicalAsset()">Add</button>
                                                 </td>
                                             </tr>
 
-                                            @if (!is_null(old('physical_asset')))
-                                                @foreach (old('physical_asset') as $index => $physical_asset)
-                                                    <tr>
+                                            @if (!is_null(old('assets')))
+                                                @foreach (old('assets') as $index => $list_asset)
+                                                    <tr id='asset_tr_{{ $index }}'>
                                                         <td>
+                                                            <input type='hidden' class='form-control'
+                                                                name='assets[{{ $index }}][id]'
+                                                                id='asset_id_{{ $index }}'
+                                                                value='{{ $list_asset['id'] }}'>
                                                             <input type='text' class='form-control'
-                                                                name='physical_asset[][asset]' value='' required>
+                                                                name='assets[{{ $index }}][asset]'
+                                                                id='asset_name_{{ $index }}'
+                                                                value='{{ $list_asset['asset'] }}' readonly>
                                                         </td>
                                                         <td>
-                                                            <div class='d-flex'>
-                                                                <input type='number' class='form-control'
-                                                                    name='physical_asset[][category]' value=''
-                                                                    required>
-
-                                                            </div>
+                                                            <input type='number' class='form-control'
+                                                                name='assets[{{ $index }}][barcode]'
+                                                                value='{{ $list_asset['barcode'] }}' readonly>
                                                         </td>
                                                         <td>
-                                                            <div class='d-flex'>
-                                                                <input type='number' class='form-control'
-                                                                    name='physical_asset[][status]' value='' required>
-
-                                                            </div>
+                                                            <input type='number' class='form-control'
+                                                                name='assets[{{ $index }}][category]'
+                                                                value='{{ $list_asset['category'] }}' readonly>
                                                         </td>
                                                         <td>
-                                                            <div class='d-flex'>
-
-                                                                <input type='number' class='form-control'
-                                                                    name='physical_asset[][barcode]' value=''
-                                                                    required>
-                                                            </div>
+                                                            <input type='number' class='form-control'
+                                                                name='assets[{{ $index }}][status]'
+                                                                value='{{ $list_asset['status'] }}' readonly>
                                                         </td>
-
                                                         <td align='center'>
                                                             <button type='button' class='delete-row btn btn-sm btn-danger'
                                                                 value='Delete'>Delete</button>
                                                             <input type='hidden' class='form-control'
-                                                                name='asset_item_check[]'
-                                                                value='{{ $physical_asset['asset'] }}'>
+                                                                name='asset_item_check[]' value='{{ $list_asset['id'] }}'>
                                                         </td>
                                                     </tr>
                                                 @endforeach

@@ -22,7 +22,6 @@
     });
 
     function dataTable() {
-        console.log('dataTable function called');
         const url = $('#url_dt').val();
         $('#dt-manufacture').DataTable({
             autoWidth: false,
@@ -159,7 +158,6 @@
             type: 'GET',
             cache: false,
             success: function(response) {
-                console.log(response);
                 const name = response.name || '-';
                 const address = response.address || '-';
                 Swal.fire({

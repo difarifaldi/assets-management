@@ -38,4 +38,28 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .input-group>.select2-container {
+            position: relative !important;
+            -ms-flex: 1 1 auto !important;
+            flex: 1 1 auto !important;
+            width: 1% !important;
+            min-width: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: calc(2.25rem + 2px) !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 6px !important;
+            right: 3px !important;
+        }
+    </style>
 </head>

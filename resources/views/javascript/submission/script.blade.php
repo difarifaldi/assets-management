@@ -22,7 +22,6 @@
     });
 
     function dataTable() {
-        // console.log('dataTable function called');
         const url = $('#url_dt').val();
         $('#dt-submission').DataTable({
             autoWidth: false,
@@ -69,7 +68,6 @@
     }
 
     function dataTableStaff() {
-        console.log('dataTable function called');
         const url = $('#url_dt').val();
         $('#dt-submission').DataTable({
             autoWidth: false,

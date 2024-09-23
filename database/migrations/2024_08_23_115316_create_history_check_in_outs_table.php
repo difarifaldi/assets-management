@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('history_check_in_outs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
+            $table->integer('id')->autoIncrement();
             $table->integer('assets_id');
             $table->integer('check_in_by')->nullable();
             $table->timestamp('check_in_at')->nullable();

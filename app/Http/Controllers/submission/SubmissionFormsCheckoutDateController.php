@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Submission;
 
+use App\Http\Controllers\Controller;
 use App\Models\submissionFormsCheckoutDate;
-use App\Http\Requests\StoresubmissionFormsCheckoutDateRequest;
 use App\Http\Requests\UpdatesubmissionFormsCheckoutDateRequest;
 use App\Models\asset\Asset;
 use App\Models\SubmissionForm;
@@ -16,23 +16,6 @@ use Illuminate\Support\Facades\Storage;
 
 class SubmissionFormsCheckoutDateController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $assets = Asset::whereNull('deleted_at')->whereNull('check_out_by')->where('type', 1)->get();
-        return view('submission.checkouts.create', compact('assets'));
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -48,20 +31,21 @@ class SubmissionFormsCheckoutDateController extends Controller
             if ($request->return_asset_date < $request->loan_application_asset_date) {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'The Return Asset  date must be after the Loan Application Asset Date'])
+                    ->with(['failed' => 'The Return Date Must Be After The Loan Application Date'])
                     ->withInput();
             }
+
+            DB::beginTransaction();
+
             $submission = SubmissionForm::lockforUpdate()->create([
                 'description' => $request->description,
                 'type' => 1,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,
-
             ]);
-            if ($submission) {
-                $tesAttachment = $request->hasFile('attachment');
-                if ($tesAttachment) {
 
+            if ($submission) {
+                if ($request->hasFile('attachment')) {
                     $path = 'public/submission/' . $submission->id;
                     $path_store = 'storage/submission/' . $submission->id;
 
@@ -78,18 +62,16 @@ class SubmissionFormsCheckoutDateController extends Controller
                     ]);
 
                     $assets_request = [];
-
-                    foreach ($request->physical_asset as $asset)
-
+                    foreach ($request->assets as $asset) {
                         array_push($assets_request, [
                             'submission_form_id' => $submission->id,
                             'assets_id' => $asset['id'],
-
                         ]);
+                    }
+
                     $submission_form_item_asssets = SubmisssionFormItemAsset::insert($assets_request);
 
                     $date_request = [];
-
                     array_push($date_request, [
                         'submission_form_id' => $submission->id,
                         'loan_application_asset_date' => $request->loan_application_asset_date,
@@ -103,7 +85,7 @@ class SubmissionFormsCheckoutDateController extends Controller
                             DB::commit();
                             return redirect()
                                 ->route('submission.index')
-                                ->with(['success' => 'Successfully Checkout']);
+                                ->with(['success' => 'Successfully Added Submission Check Out']);
                         } else {
                             DB::rollBack();
                             return redirect()
@@ -115,55 +97,48 @@ class SubmissionFormsCheckoutDateController extends Controller
                         DB::rollBack();
                         return redirect()
                             ->back()
-                            ->with(['failed' => 'Failed Checkout '])
+                            ->with(['failed' => 'Failed Check Out'])
                             ->withInput();
                     }
                 } else {
-                    DB::rollBack();
-                    return redirect()
-                        ->back()
-                        ->with(['failed' => 'Failed Checkout '])
-                        ->withInput();
+                    $assets_request = [];
+                    foreach ($request->assets as $asset) {
+                        array_push($assets_request, [
+                            'submission_form_id' => $submission->id,
+                            'assets_id' => $asset['id'],
+                        ]);
+                    }
+
+                    $submission_form_item_asssets = SubmisssionFormItemAsset::insert($assets_request);
+
+                    $date_request = [];
+                    array_push($date_request, [
+                        'submission_form_id' => $submission->id,
+                        'loan_application_asset_date' => $request->loan_application_asset_date,
+                        'return_asset_date' => $request->loan_application_asset_date,
+                    ]);
+
+                    $submissionFormCheckoutDate = submissionFormsCheckoutDate::insert($date_request);
+
+                    if ($submission_form_item_asssets && $submissionFormCheckoutDate) {
+                        DB::commit();
+                        return redirect()
+                            ->route('submission.index')
+                            ->with(['success' => 'Successfully Added Submission Check Out']);
+                    } else {
+                        DB::rollBack();
+                        return redirect()
+                            ->back()
+                            ->with(['failed' => 'Failed Check Out'])
+                            ->withInput();
+                    }
                 }
             }
         } catch (Exception $e) {
-
             return redirect()
                 ->back()
                 ->with(['failed' => $e->getMessage()])
                 ->withInput();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(submissionFormsCheckoutDate $submissionFormsCheckoutDate)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(submissionFormsCheckoutDate $submissionFormsCheckoutDate)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatesubmissionFormsCheckoutDateRequest $request, submissionFormsCheckoutDate $submissionFormsCheckoutDate)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(submissionFormsCheckoutDate $submissionFormsCheckoutDate)
-    {
-        //
     }
 }

@@ -68,9 +68,7 @@ class LicenseAssetController extends Controller
                     $btn_action .= '<a href="' . route('asset.license.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 } elseif (User::find(Auth::user()->id)->hasRole('staff')) {
-                    $btn_action .= '<a href="' . route('submission.create', ['type' => 'checkout', 'asset' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Check Out">Check Out</a>';
                     if (is_null($data->assign_to)) {
-
                         $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger mt-1 ml-2" title="Assign To Me">Assign To Me</a>';
                     }
                 }
@@ -89,8 +87,8 @@ class LicenseAssetController extends Controller
      */
     public function create()
     {
-        $categories = CategoryAssets::whereNull('deleted_at')->where('type', 2)->get();
-        $brands = Brand::whereNull('deleted_at')->get();
+        $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 2)->get();
+        $brands = Brand::whereNull('deleted_by')->whereNull('deleted_at')->get();
         $users = User::whereNull('deleted_at')->role('staff')->get();
         return view('asset.license.create', compact('categories', 'brands', 'users'));
     }
@@ -116,7 +114,8 @@ class LicenseAssetController extends Controller
                 'warranty_duration' => 'nullable|integer|min:0',
             ]);
 
-            $barcode_check = Asset::whereNull('deleted_at')
+            $barcode_check = Asset::whereNull('deleted_by')
+                ->whereNull('deleted_at')
                 ->where('barcode_code', $request->barcode_code)
                 ->first();
 
@@ -208,7 +207,6 @@ class LicenseAssetController extends Controller
 
                 return view('asset.license.detail', compact('asset', 'users'));
             } else {
-
                 if ($request->ajax()) {
                     return response()->json(['success' => false, 'message' => 'Invalid Request!'], 400);
                 }
@@ -218,7 +216,6 @@ class LicenseAssetController extends Controller
                     ->with(['failed' => 'Invalid Request!']);
             }
         } catch (Exception $e) {
-
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
             }
@@ -235,8 +232,8 @@ class LicenseAssetController extends Controller
             $license = Asset::find($id);
 
             if (!is_null($license)) {
-                $categories = CategoryAssets::whereNull('deleted_at')->where('type', 2)->get();
-                $brands = Brand::whereNull('deleted_at')->get();
+                $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 2)->get();
+                $brands = Brand::whereNull('deleted_by')->whereNull('deleted_at')->get();
                 $users = User::whereNull('deleted_at')->role('staff')->get();
 
                 return view('asset.license.edit', compact('license', 'categories', 'brands', 'users'));
@@ -275,7 +272,8 @@ class LicenseAssetController extends Controller
                 'warranty_duration' => 'nullable|integer|min:0',
             ]);
 
-            $barcode_check = Asset::whereNull('deleted_at')
+            $barcode_check = Asset::whereNull('deleted_by')
+                ->whereNull('deleted_at')
                 ->where('barcode_code', $request->barcode_code)
                 ->where('id', '!=', $id)
                 ->first();
@@ -509,7 +507,6 @@ class LicenseAssetController extends Controller
     public function assignTo(Request $request, string $id)
     {
         try {
-
             $license = Asset::find($id);
 
             if (!is_null($license)) {
@@ -530,7 +527,6 @@ class LicenseAssetController extends Controller
                  * Validation Update Asset Record
                  */
                 if ($add_assign) {
-
                     $path = 'public/asset/license/proof_assign';
                     $path_store = 'storage/asset/license/proof_assign';
 
@@ -543,7 +539,6 @@ class LicenseAssetController extends Controller
                     $proof_assign_attachment = [];
 
                     foreach ($request->file('attachment') as $file) {
-
                         // File Upload Configuration
                         $file_name = $license->id . '_proof_assign_' . uniqid() . '_' . $file->getClientOriginalName();
 
@@ -568,7 +563,7 @@ class LicenseAssetController extends Controller
                         $proof_assign_attachment = null;
                     } else {
                         // Update Record for Attachment
-                        $proof_assign_attachment =  json_encode($proof_assign_attachment);
+                        $proof_assign_attachment = json_encode($proof_assign_attachment);
                     }
 
                     $history_assign = HistoryAssign::create([
@@ -616,11 +611,9 @@ class LicenseAssetController extends Controller
     public function returnAsset(Request $request, string $id)
     {
         try {
-
             $license = Asset::find($id);
 
             if (!is_null($license)) {
-
                 $last_assign = HistoryAssign::where('assets_id', $id)->whereNull('deleted_by')->whereNull('return_by')->whereNull('return_at')->whereNull('deleted_by')->whereNotNull('latest')->first();
                 /**
                  * Begin Transaction
@@ -639,7 +632,6 @@ class LicenseAssetController extends Controller
                  * Validation Update Asset Record
                  */
                 if ($remove_assign) {
-
                     $path = 'public/asset/license/proof_return_assign';
                     $path_store = 'storage/asset/license/proof_return_assign';
 
@@ -673,13 +665,19 @@ class LicenseAssetController extends Controller
 
                     $proof_return_assign_attachment = json_encode($proof_return_assign_attachment);
 
-                    $history_assign = HistoryAssign::where('assets_id', $id)->whereNull('deleted_by')->whereNull('return_by')->whereNull('return_at')->whereNull('deleted_by')->whereNotNull('latest')->update([
-                        'return_by' => Auth::user()->id,
-                        'return_at' => now(),
-                        'latest' => null,
-                        'attachment' => $proof_return_assign_attachment,
-                        'updated_by' => Auth::user()->id,
-                    ]);
+                    $history_assign = HistoryAssign::where('assets_id', $id)
+                        ->whereNull('deleted_by')
+                        ->whereNull('return_by')
+                        ->whereNull('return_at')
+                        ->whereNull('deleted_by')
+                        ->whereNotNull('latest')
+                        ->update([
+                            'return_by' => Auth::user()->id,
+                            'return_at' => now(),
+                            'latest' => null,
+                            'attachment' => $proof_return_assign_attachment,
+                            'updated_by' => Auth::user()->id,
+                        ]);
 
                     /**
                      * Validation Add history Record

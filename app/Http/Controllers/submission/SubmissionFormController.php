@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Submission;
 
+use App\Http\Controllers\Controller;
 use App\Models\SubmissionForm;
-
-
 use App\Models\asset\Asset;
 use App\Models\master\User;
 use App\Models\SubmisssionFormItemAsset;
@@ -103,7 +102,7 @@ class SubmissionFormController extends Controller
             if (!is_null($asset)) {
                 $users = User::whereNull('deleted_at')->role('staff')->get();
 
-                return view('submission.' . $type . '.create', compact('asset', 'users'));
+                return view('submission.' . $type . '.asset.create', compact('asset', 'users'));
             } else {
                 return redirect()
                     ->back()
@@ -122,6 +121,7 @@ class SubmissionFormController extends Controller
     public function store(int $type, Request $request)
     {
         try {
+
             /**
              * Validation Request Body Variables
              */
@@ -135,7 +135,7 @@ class SubmissionFormController extends Controller
              * Create SubmissionForm Record
              */
             $submission = SubmissionForm::lockforUpdate()->create([
-                'type' => $request->type,
+                'type' => $type,
                 'description' => $request->description,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,

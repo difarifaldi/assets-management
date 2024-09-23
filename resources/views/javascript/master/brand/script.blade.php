@@ -22,7 +22,6 @@
     });
 
     function dataTable() {
-        console.log('dataTable function called');
         const url = $('#url_dt').val();
         $('#dt-brand').DataTable({
             autoWidth: false,

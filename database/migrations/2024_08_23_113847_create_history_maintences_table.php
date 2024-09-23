@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('history_maintences', function (Blueprint $table) {
             $table->engine = 'InnoDB';
+            $table->integer('id')->autoIncrement();
             $table->integer('assets_id');
             $table->date('date');
             $table->integer('status');

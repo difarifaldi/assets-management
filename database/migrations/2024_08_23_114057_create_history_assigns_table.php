@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('history_assigns', function (Blueprint $table) {
             $table->engine = 'InnoDB';
+            $table->integer('id')->autoIncrement();
             $table->integer('assets_id');
             $table->integer('assign_to')->nullable();
             $table->timestamp('assign_at')->nullable();

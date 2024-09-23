@@ -28,56 +28,60 @@
         let category = $('#category').val();
         let status = $('#status').val();
         let barcode = $('#barcode').val();
-        let index = $("#physical_asset tbody tr").length - 1;
+        let index = $("#asset tbody tr").length - 1;
 
         if (asset != '' && category != '' && status != '' && barcode != '') {
 
-            let form_asset = $("#form_physical_asset");
-            let tr = $("<tr></tr>");
+            let form_asset = $("#form_asset");
+            let tr = $("<tr id='asset_tr_" + asset + "'></tr>");
             let td_asset = $("<td>" +
-                "<input type='hidden' class='form-control' name='physical_asset[" + index + "][id]' value='" +
+                "<input type='hidden' class='form-control' id='asset_id_" + asset + "' name='assets[" + asset +
+                "][id]' value='" +
                 asset +
                 "'>" +
 
-                "<input type='text' class='form-control' name='physical_asset[" + index + "][asset]' value='" +
+                "<input type='text' class='form-control' id='asset_name_" + asset + "' name='assets[" + asset +
+                "][asset]' value='" +
                 assetName +
                 "' readonly>" +
                 "</td>");
 
+            let td_barcode = $("<td>" +
+                "<input type='text' class='form-control' name='assets[" + asset + "][barcode]' value='" +
+                barcode +
+                "' readonly>" +
+                "</td>");
+
             let td_category = $("<td>" +
-                "<input type='text' class='form-control' name='physical_asset[" + index + "][category]' value='" +
+                "<input type='text' class='form-control' name='assets[" + asset + "][category]' value='" +
                 category +
                 "' readonly>" +
                 "</td>");
 
             let td_status = $("<td>" +
-                "<input type='text' class='form-control' name='physical_asset[" +
-                index + "][status]' value='" +
+                "<input type='text' class='form-control' name='assets[" +
+                asset + "][status]' value='" +
                 status +
-                "' readonly>" +
-                "</td>");
-
-            let td_barcode = $("<td>" +
-                "<input type='text' class='form-control' name='physical_asset[" + index + "][barcode]' value='" +
-                barcode +
                 "' readonly>" +
                 "</td>");
 
             let td_del = $(
                 "<td align='center'>" +
-                "<button type='button' class='delete-row btn btn-sm btn-danger' value='Delete'>Delete</button>" +
+                "<button type='button' class='btn btn-sm btn-danger' title='Delete' onclick='deleteRow(" +
+                asset +
+                ")'>Delete</button>" +
                 "<input type='hidden' class='form-control' name='asset_item_check[]' value='" +
-                status +
+                asset +
                 "'>" +
                 "</td>"
             );
 
             // Append Tr Element
-            (tr.append(td_asset).append(td_category).append(td_status).append(td_barcode).append(
+            (tr.append(td_asset).append(td_barcode).append(td_category).append(td_status).append(
                 td_del)).insertAfter(form_asset)
 
             // Append To Table
-            $("#physical_asset tbody").append(tr);
+            $("#asset tbody").append(tr);
 
             // Reset Field Value
             $('#asset_id').val('').trigger('change');
@@ -85,15 +89,24 @@
             $('#status').val('');
             $('#barcode').val('');
 
+            // Reset Field Value
+            $('#asset_id option[value=' + asset + ']').each(function() {
+                $(this).remove();
+            });
+            $('#asset_id').val('').trigger('change');
 
         } else {
             sweetAlertWarning('Please Complete The Record!');
         }
     }
-    // Find and remove selected table rows
-    $("table#physical_asset").on("click", ".delete-row", function(event) {
-        $(this).closest("tr").remove();
-    });
+
+    function deleteRow(id) {
+        $('#asset_id').append($('<option>', {
+            value: $('#asset_id_' + id).val(),
+            text: $('#asset_name_' + id).val()
+        }));
+        $('#asset_tr_' + id).remove();
+    }
 
     // kolom otomatis asset
     $(document).ready(function() {
