@@ -27,6 +27,9 @@
                                                 #
                                             </th>
                                             <th>
+                                                Created At
+                                            </th>
+                                            <th>
                                                 Type
                                             </th>
                                             <th>
@@ -70,8 +73,8 @@
                         showConfirmButton: false,
                         showCancelButton: false,
                         html: `<div class="d-flex justify-content-center my-2">
-                <a href='{{ route('submission.form.checkouts.create') }}' class="btn btn-primary mr-2">Assign To Me</a>
-                <a href='{{ route('submission.form.checkouts.create') }}' class="btn btn-primary mr-2">Checkout</a>
+                <a href='{{ route('submission.create', ['type' => 'assign']) }}' class="btn btn-primary mr-2">Assign To Me</a>
+                <a href='{{ route('submission.create', ['type' => 'checkouts']) }}' class="btn btn-primary mr-2">Checkout</a>
                 </div>
             `
                     });

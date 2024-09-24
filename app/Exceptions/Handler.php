@@ -37,7 +37,7 @@ class Handler extends ExceptionHandler
                 if (Auth::check()) {
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Anda Tidak Memiliki Akses']);
+                        ->with(['failed' => 'You Have Not Access']);
                 } else {
                     return redirect()->route('logout');
                 }
@@ -46,7 +46,7 @@ class Handler extends ExceptionHandler
             if ($exception->getStatusCode() == 404) {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'URL Tidak Ditemukan']);
+                    ->with(['failed' => 'URL Not Found']);
             }
 
             if ($exception->getStatusCode() == 419) {

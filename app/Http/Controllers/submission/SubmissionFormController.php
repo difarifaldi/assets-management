@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Submission;
 
 use App\Http\Controllers\Controller;
-use App\Models\SubmissionForm;
 use App\Models\asset\Asset;
 use App\Models\master\User;
-use App\Models\SubmisssionFormItemAsset;
+use App\Models\submission\SubmissionForm;
+use App\Models\submission\SubmissionFormItemAsset;
+use App\Models\submission\SubmissionFormsCheckoutDate;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,6 @@ class SubmissionFormController extends Controller
     {
         $datatable_route = route('submission.dataTable');
 
-
         $can_create = User::find(Auth::user()->id)->hasRole('admin');
 
         return view('submission.index', compact('datatable_route', 'can_create'));
@@ -35,9 +35,13 @@ class SubmissionFormController extends Controller
          * Get All submission
          */
         if (User::find(Auth::user()->id)->hasRole('staff')) {
-            $submission = SubmissionForm::whereNull('deleted_by')->whereNull('deleted_at')->where('created_by', Auth::user()->id)->get();
+            $submission = SubmissionForm::whereNull('deleted_by')
+                ->whereNull('deleted_at')
+                ->where('created_by', Auth::user()->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
         } else {
-            $submission = SubmissionForm::whereNull('deleted_by')->whereNull('deleted_at')->get();
+            $submission = SubmissionForm::whereNull('deleted_by')->whereNull('deleted_at')->orderBy('created_at', 'desc')->get();
         }
 
         /**
@@ -45,8 +49,11 @@ class SubmissionFormController extends Controller
          */
         $dataTable = DataTables::of($submission)
             ->addIndexColumn()
+            ->addColumn('created_at', function ($data) {
+                return date('d F Y H:i:s', strtotime($data->created_at));
+            })
             ->addColumn('type', function ($data) {
-                return $data->type == 1 ? 'Checkout' : ($data->type == 2 ? 'Assign ' : '-');
+                return $data->type == 1 ? 'Assign' : ($data->type == 2 ? 'Checkout ' : '-');
             })
             ->addColumn('status', function ($data) {
                 if ($data->approved_by != null && $data->approved_at != null) {
@@ -54,7 +61,7 @@ class SubmissionFormController extends Controller
                 } elseif ($data->rejected_by != null && $data->rejected_at != null) {
                     return '<div class="badge badge-danger">Rejected</div>';
                 } else {
-                    return  '<div class="badge badge-warning text-white">Process</div>';
+                    return '<div class="badge badge-warning text-white">Process</div>';
                 }
             })
             ->addColumn('created_by', function ($data) {
@@ -63,29 +70,26 @@ class SubmissionFormController extends Controller
 
             ->addColumn('action', function ($data) {
                 $btn_action = '<div align="center">';
+                $btn_action .= '<a href="' . route('submission.show', ['id' => $data->id]) . '" class="btn btn-sm btn-primary" title="Detail">Detail</a>';
 
                 /**
                  * Validation Role Has Access Edit and Delete
                  */
                 if (User::find(Auth::user()->id)->hasRole('staff')) {
-                    if (!isset($data->approved_at) &&  !isset($data->rejected_at)) {
-                        $btn_action .= '<a href="'  . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                    if (!isset($data->approved_at) && !isset($data->rejected_at)) {
+                        $btn_action .= '<a href="' . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                         $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                     }
                 } else {
-                    if (!isset($data->approved_at) &&  !isset($data->rejected_at)) {
+                    if (!isset($data->approved_at) && !isset($data->rejected_at)) {
                         $btn_action .= '<button class="btn btn-sm btn-success ml-2" onclick="approvedRecord(' . $data->id . ')" title="Approve">Approve</button>';
                         $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="rejectedRecord(' . $data->id . ')"title="Rejected">Rejected</button>';
-                    }
-                    if (!is_null($data->attachment)) {
-                        // Assuming $data->attachment is a file URL or path
-                        $btn_action .= '<a href="' . asset($data->attachment) . '" target="_blank" class="btn btn-sm btn-info ml-2" title="File">File</a>';
                     }
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['type', 'description', 'status', 'created_by', 'action'])
+            ->only(['type', 'description', 'status', 'created_at', 'created_by', 'action'])
             ->rawColumns(['status', 'action'])
             ->make(true);
 
@@ -95,14 +99,24 @@ class SubmissionFormController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(string $type, Asset $asset)
+    public function create(Request $request, string $type)
     {
         try {
+            if (in_array($type, ['assign', 'checkouts'])) {
+                if (isset($request->asset)) {
+                    $asset = Asset::find($request->asset);
 
-            if (!is_null($asset)) {
-                $users = User::whereNull('deleted_at')->role('staff')->get();
-
-                return view('submission.' . $type . '.asset.create', compact('asset', 'users'));
+                    if (!is_null($asset)) {
+                        return view('submission.' . $type . '.asset.create', compact('asset'));
+                    } else {
+                        return redirect()
+                            ->back()
+                            ->with(['failed' => 'Invalid Request!']);
+                    }
+                } else {
+                    $assets = Asset::whereNull('deleted_by')->whereNull('deleted_at')->whereNull('assign_to')->whereNull('assign_at')->whereNull('check_out_by')->whereNull('check_out_at')->get();
+                    return view('submission.' . $type . '.form.create', compact('assets'));
+                }
             } else {
                 return redirect()
                     ->back()
@@ -121,7 +135,6 @@ class SubmissionFormController extends Controller
     public function store(int $type, Request $request)
     {
         try {
-
             /**
              * Validation Request Body Variables
              */
@@ -129,88 +142,182 @@ class SubmissionFormController extends Controller
                 'description' => 'required',
             ]);
 
-            DB::beginTransaction();
-
             /**
-             * Create SubmissionForm Record
+             * Checking Type Requested
              */
-            $submission = SubmissionForm::lockforUpdate()->create([
-                'type' => $type,
-                'description' => $request->description,
-                'created_by' => Auth::user()->id,
-                'updated_by' => Auth::user()->id,
-            ]);
+            if (in_array($type, [1, 2])) {
+                DB::beginTransaction();
 
-            /**
-             * Validation Create SubmissionForm Record
-             */
+                /**
+                 * Create SubmissionForm Record
+                 */
+                $submission = SubmissionForm::lockforUpdate()->create([
+                    'type' => $type,
+                    'description' => $request->description,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id,
+                ]);
 
-            if ($submission) {
-                $tesAttachment = $request->hasFile('attachment');
-                if ($tesAttachment) {
+                /**
+                 * Validation Create SubmissionForm Record
+                 */
+                if ($submission) {
+                    /**
+                     * Has Attachment
+                     */
+                    if ($request->hasFile('attachment')) {
+                        $path = 'public/submission/' . $submission->id;
+                        $path_store = 'storage/submission/' . $submission->id;
 
-                    $path = 'public/submission/' . $submission->id;
-                    $path_store = 'storage/submission/' . $submission->id;
+                        if (!Storage::exists($path)) {
+                            Storage::makeDirectory($path);
+                        }
 
-                    if (!Storage::exists($path)) {
-                        Storage::makeDirectory($path);
-                    }
+                        $file_name = $submission->id . '_' . uniqid() . '_' . $request->file('attachment')->getClientOriginalName();
+                        $request->file('attachment')->storePubliclyAs($path, $file_name);
+                        $attachment = $path_store . '/' . $file_name;
 
-                    $file_name = $submission->id . '_' . uniqid() . '_' . $request->file('attachment')->getClientOriginalName();
-                    $request->file('attachment')->storePubliclyAs($path, $file_name);
-                    $attachment = $path_store . '/' . $file_name;
-
-                    $submision_attachment = $submission->update([
-                        'attachment' => $attachment,
-                    ]);
-
-                    $assets_request = [];
-                    foreach ($request->assets as $asset) {
-                        array_push($assets_request, [
-                            'submission_form_id' => $submission->id,
-                            'assets_id' => $asset
+                        $submision_attachment = $submission->update([
+                            'attachment' => $attachment,
                         ]);
-                    }
 
-                    $submission_form_item_asssets = SubmisssionFormItemAsset::insert($assets_request);
+                        $assets_request = [];
+                        foreach ($request->assets as $asset) {
+                            array_push($assets_request, [
+                                'submission_form_id' => $submission->id,
+                                'assets_id' => $asset['id'],
+                            ]);
+                        }
 
-                    if ($submision_attachment && $submission_form_item_asssets) {
-                        if (Storage::exists($path . '/' . $file_name)) {
-                            DB::commit();
-                            return redirect()
-                                ->route('submission.index')
-                                ->with(['success' => 'Successfully Checkout']);
+                        $submission_form_item_assets = SubmissionFormItemAsset::insert($assets_request);
+
+                        if ($submision_attachment && $submission_form_item_assets) {
+                            if (Storage::exists($path . '/' . $file_name)) {
+                                /**
+                                 * Form as Checkout
+                                 */
+                                if ($type == 2) {
+                                    $date_request = [];
+                                    array_push($date_request, [
+                                        'submission_form_id' => $submission->id,
+                                        'loan_application_asset_date' => $request->loan_application_asset_date,
+                                        'return_asset_date' => $request->loan_application_asset_date,
+                                    ]);
+
+                                    $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::insert($date_request);
+
+                                    if ($submissionFormCheckoutDate) {
+                                        DB::commit();
+                                        return redirect()
+                                            ->route('submission.index')
+                                            ->with(['success' => 'Successfully Added Submission Checkout']);
+                                    } else {
+                                        /**
+                                         * Failed Store Record
+                                         */
+                                        DB::rollBack();
+                                        return redirect()
+                                            ->back()
+                                            ->with(['failed' => 'Failed Added Submission Checkout'])
+                                            ->withInput();
+                                    }
+                                } else {
+                                    DB::commit();
+                                    return redirect()
+                                        ->route('submission.index')
+                                        ->with(['success' => 'Successfully Added Submission Assign']);
+                                }
+                            } else {
+                                /**
+                                 * Failed Store Record
+                                 */
+                                DB::rollBack();
+                                return redirect()
+                                    ->back()
+                                    ->with(['failed' => 'Failed Upload Attachment'])
+                                    ->withInput();
+                            }
                         } else {
+                            /**
+                             * Failed Store Record
+                             */
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->with(['failed' => 'Failed Added Submission'])
                                 ->withInput();
                         }
                     } else {
-                        /**
-                         * Failed Store Record
-                         */
-                        DB::rollBack();
-                        return redirect()
-                            ->back()
-                            ->with(['failed' => 'Failed Checkout'])
-                            ->withInput();
+                        $assets_request = [];
+                        foreach ($request->assets as $asset) {
+                            array_push($assets_request, [
+                                'submission_form_id' => $submission->id,
+                                'assets_id' => $asset['id'],
+                            ]);
+                        }
+
+                        $submission_form_item_assets = SubmissionFormItemAsset::insert($assets_request);
+
+                        if ($submission_form_item_assets) {
+                            /**
+                             * Form as Checkout
+                             */
+                            if ($type == 2) {
+                                $date_request = [];
+                                array_push($date_request, [
+                                    'submission_form_id' => $submission->id,
+                                    'loan_application_asset_date' => $request->loan_application_asset_date,
+                                    'return_asset_date' => $request->loan_application_asset_date,
+                                ]);
+
+                                $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::insert($date_request);
+
+                                if ($submissionFormCheckoutDate) {
+                                    DB::commit();
+                                    return redirect()
+                                        ->route('submission.index')
+                                        ->with(['success' => 'Successfully Added Submission Checkout']);
+                                } else {
+                                    /**
+                                     * Failed Store Record
+                                     */
+                                    DB::rollBack();
+                                    return redirect()
+                                        ->back()
+                                        ->with(['failed' => 'Failed Added Submission Checkout'])
+                                        ->withInput();
+                                }
+                            } else {
+                                DB::commit();
+                                return redirect()
+                                    ->route('submission.index')
+                                    ->with(['success' => 'Successfully Added Submission Assign']);
+                            }
+                        } else {
+                            /**
+                             * Failed Store Record
+                             */
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Added Submission'])
+                                ->withInput();
+                        }
                     }
                 } else {
-                    DB::commit();
+                    /**
+                     * Failed Store Record
+                     */
+                    DB::rollBack();
                     return redirect()
-                        ->route('submission.index')
-                        ->with(['success' => 'Successfully Checkout']);
+                        ->back()
+                        ->with(['failed' => 'Failed Added Submission'])
+                        ->withInput();
                 }
             } else {
-                /**
-                 * Failed Store Record
-                 */
-                DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Checkout'])
+                    ->with(['failed' => 'Invalid Request!'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -221,11 +328,38 @@ class SubmissionFormController extends Controller
         }
     }
 
+    public function show(request $request, string $id)
+    {
+        try {
+            /**
+             * Get Submission Record from id
+             */
+            $submission = SubmissionForm::find($id);
+
+            /**
+             * Validation Submission id
+             */
+            if (!is_null($submission)) {
+                if ($submission->type == 1) {
+                    return view('submission.assign.detail', compact('submission'));
+                } else {
+                    return view('submission.checkouts.detail', compact('submission'));
+                }
+            } else {
+                return redirect()
+                    ->back()
+                    ->with(['failed' => 'Invalid Request!']);
+            }
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with(['failed' => $e->getMessage()]);
+        }
+    }
+
     public function approve(Request $request)
     {
-
         try {
-
             $submission = SubmissionForm::find($request->id);
 
             if (!is_null($submission)) {
@@ -270,9 +404,7 @@ class SubmissionFormController extends Controller
 
     public function reject(Request $request)
     {
-
         try {
-
             $submission = SubmissionForm::find($request->id);
 
             if (!is_null($submission)) {
@@ -316,7 +448,7 @@ class SubmissionFormController extends Controller
         }
     }
 
-    public function destroy(String $id)
+    public function destroy(string $id)
     {
         try {
             DB::beginTransaction();

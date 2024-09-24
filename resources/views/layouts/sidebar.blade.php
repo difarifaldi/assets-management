@@ -23,12 +23,14 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
 
+                <li class="nav-header">SUBMISSION</li>
                 <li class="nav-item">
                     <a href="{{ route('submission.index') }}" class="nav-link">
                         <i class="fas fa-file-alt nav-icon"></i>
                         <p>Submission Form</p>
                     </a>
                 </li>
+
                 <li class="nav-header">ASSET DATA</li>
                 <li class="nav-item">
                     <a href="{{ route('asset.physical.index') }}" class="nav-link">
@@ -36,7 +38,6 @@
                         <p>Physical Asset</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('asset.license.index') }}" class="nav-link">
                         <i class="fas fa-list nav-icon"></i>
@@ -44,44 +45,59 @@
                     </a>
                 </li>
 
-                <li class="nav-header">MASTER DATA</li>
-                <li class="nav-item">
-                    <a href="{{ route('master.manufacture.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-tools"></i>
-                        <p>
-                            Manufacture
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('master.brand.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-tag"></i>
-                        <p>
-                            Brand
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('master.category.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-clipboard-list"></i>
-                        <p>
-                            Category Asset
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('master.division.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-sitemap"></i>
-                        <p>
-                            Division Staff
-                        </p>
-                    </a>
-                </li>
+                @role('staff')
+                    <li class="nav-header">ACCOUNT</li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <i class="fas fa-list nav-icon"></i>
+                            <p>My Asset</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <i class="fas fa-user nav-icon"></i>
+                            <p>My Account</p>
+                        </a>
+                    </li>
+                @endrole
 
                 @role('admin')
+                    <li class="nav-header">MASTER DATA</li>
+                    <li class="nav-item">
+                        <a href="{{ route('master.manufacture.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-tools"></i>
+                            <p>
+                                Manufacture
+                            </p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('master.brand.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-tag"></i>
+                            <p>
+                                Brand
+                            </p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('master.category.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-clipboard-list"></i>
+                            <p>
+                                Category Asset
+                            </p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('master.division.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-sitemap"></i>
+                            <p>
+                                Division Staff
+                            </p>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{ route('master.user.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-user"></i>

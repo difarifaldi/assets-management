@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\submission;
 
 use App\Models\master\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,5 +13,10 @@ class SubmissionForm extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function submissionFormItemAsset()
+    {
+        return $this->hasMany(SubmissionFormItemAsset::class, 'submission_form_id');
     }
 }

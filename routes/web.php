@@ -33,20 +33,27 @@ Route::group(['middleware' => 'auth'], function () {
     })->name('home');
 });
 
-// Route::group(['middleware' => ['role:staff']], function () {
-//     Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
-// });
-
 Route::group(['middleware' => ['role:admin']], function () {
     Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
-        Route::resource('manufacture', ManufactureController::class, ['except' => ['index', 'show']])->parameters(['manufacture' => 'id']);
+        Route::group(['controller' => ManufactureController::class, 'prefix' => 'manufacture', 'as' => 'manufacture.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('manufacture', ManufactureController::class)->parameters(['manufacture' => 'id']);
 
-        Route::resource('brand', BrandController::class, ['except' => ['index', 'show']])->parameters(['brand' => 'id']);
+        Route::group(['controller' => BrandController::class, 'prefix' => 'brand', 'as' => 'brand.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('brand', BrandController::class)->parameters(['brand' => 'id']);
 
-        Route::resource('category', CategoryAssetsController::class, ['except' => ['index', 'show']])->parameters(['category' => 'id']);
+        Route::group(['controller' => CategoryAssetsController::class, 'prefix' => 'category', 'as' => 'category.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('category', CategoryAssetsController::class)->parameters(['category' => 'id']);
 
-        Route::resource('division', DivisionController::class, ['except' => ['index', 'show']])->parameters(['division' => 'id']);
-
+        Route::group(['controller' => DivisionController::class, 'prefix' => 'division', 'as' => 'division.'], function () {
+            Route::get('datatable', 'dataTable')->name('dataTable');
+        });
+        Route::resource('division', DivisionController::class)->parameters(['division' => 'id']);
         Route::group(['controller' => UserController::class, 'prefix' => 'user', 'as' => 'user.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
@@ -60,7 +67,6 @@ Route::group(['middleware' => ['role:admin']], function () {
             Route::match(['put', 'patch'], 'assign-to/{id}', 'assignTo')->name('assignTo');
             Route::match(['put', 'patch'], 'return-asset/{id}', 'returnAsset')->name('returnAsset');
         });
-
         Route::resource('physical', PhysicalAssetController::class, ['except' => ['index', 'show']])->parameters(['physical' => 'id']);
 
         Route::group(['controller' => LicenseAssetController::class, 'prefix' => 'license', 'as' => 'license.'], function () {
@@ -71,57 +77,37 @@ Route::group(['middleware' => ['role:admin']], function () {
         });
         Route::resource('license', LicenseAssetController::class, ['except' => ['index', 'show']])->parameters(['license' => 'id']);
     });
+
+    Route::group(['controller' => SubmissionFormController::class, 'prefix' => 'submission', 'as' => 'submission.'], function () {
+        Route::post('approve', 'approve')->name('approve');
+        Route::post('reject', 'reject')->name('reject');
+    });
+});
+
+Route::group(['middleware' => ['role:staff']], function () {
+    Route::group(['controller' => SubmissionFormController::class, 'prefix' => 'submission', 'as' => 'submission.'], function () {
+        Route::get('datatable', 'dataTable')->name('dataTable');
+        Route::get('create/{type}', 'create')->name('create');
+        Route::post('store/{type}', 'store')->name('store');
+    });
+    Route::resource('submission', SubmissionFormController::class, ['except' => ['index', 'create', 'store']])->parameters(['submission' => 'id']);
 });
 
 Route::group(['middleware' => ['role:admin|staff']], function () {
-    Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
-        Route::group(['controller' => ManufactureController::class, 'prefix' => 'manufacture', 'as' => 'manufacture.'], function () {
-            Route::get('datatable', 'dataTable')->name('dataTable');
-        });
-        Route::resource('manufacture', ManufactureController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['manufacture' => 'id']);
-
-        Route::group(['controller' => BrandController::class, 'prefix' => 'brand', 'as' => 'brand.'], function () {
-            Route::get('datatable', 'dataTable')->name('dataTable');
-        });
-        Route::resource('brand', BrandController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['brand' => 'id']);
-
-        Route::group(['controller' => CategoryAssetsController::class, 'prefix' => 'category', 'as' => 'category.'], function () {
-            Route::get('datatable', 'dataTable')->name('dataTable');
-        });
-        Route::resource('category', CategoryAssetsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['category' => 'id']);
-
-        Route::group(['controller' => DivisionController::class, 'prefix' => 'division', 'as' => 'division.'], function () {
-            Route::get('datatable', 'dataTable')->name('dataTable');
-        });
-        Route::resource('division', DivisionController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['division' => 'id']);
-    });
-
     Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
         Route::group(['controller' => PhysicalAssetController::class, 'prefix' => 'physical', 'as' => 'physical.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('physical', PhysicalAssetController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['physical' => 'id']);
-    });
 
-    Route::group(['prefix' => 'asset', 'as' => 'asset.'], function () {
         Route::group(['controller' => LicenseAssetController::class, 'prefix' => 'license', 'as' => 'license.'], function () {
             Route::get('datatable', 'dataTable')->name('dataTable');
         });
         Route::resource('license', LicenseAssetController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['license' => 'id']);
     });
 
-    Route::group(['prefix' => 'submission', 'as' => 'submission.'], function () {
-
-        Route::get('index', [SubmissionFormController::class, 'index'])->name('index');
-        Route::get('datatable', [SubmissionFormController::class, 'datatable'])->name('dataTable');
-        Route::delete('destroy/{id}', [SubmissionFormController::class, 'destroy'])->name('destroy');
-        Route::post('approve', [SubmissionFormController::class, 'approve'])->name('approve');
-        Route::post('reject', [SubmissionFormController::class, 'reject'])->name('reject');
-        Route::get('{type}/{asset}', [SubmissionFormController::class, 'create'])->name('create');
-        Route::post('{type}/store', [SubmissionFormController::class, 'store'])->name('store');
-
-        Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
-            Route::resource('checkouts', SubmissionFormsCheckoutDateController::class, ['except' => ['index']])->parameters(['checkouts', 'id']);
-        });
+    Route::group(['controller' => SubmissionFormController::class, 'prefix' => 'submission', 'as' => 'submission.'], function () {
+        Route::get('datatable', 'dataTable')->name('dataTable');
     });
+    Route::resource('submission', SubmissionFormController::class, ['except' => ['create', 'store', 'update', 'destroy']])->parameters(['submission' => 'id']);
 });

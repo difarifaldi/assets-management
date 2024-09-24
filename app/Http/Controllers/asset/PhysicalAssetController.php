@@ -70,7 +70,7 @@ class PhysicalAssetController extends Controller
                 } elseif (User::find(Auth::user()->id)->hasRole('staff')) {
                     $btn_action .= '<a href="' . route('submission.create', ['type' => 'checkouts', 'asset' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Check Out">Check Out</a>';
                     if (is_null($data->assign_to)) {
-                        $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger mt-1 ml-2" title="Assign To Me">Assign To Me</a>';
+                        $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger ml-2" title="Assign To Me">Assign To Me</a>';
                     }
                 }
                 $btn_action .= '</div>';

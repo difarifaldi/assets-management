@@ -6,11 +6,11 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Submission Check Out </h3>
+                            <h3 class="card-title font-weight-bold">Submission Check Out Form</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('submission.form.checkouts.store') }}"
+                        <form method="post" action="{{ route('submission.store', ['type' => 1]) }}"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
@@ -33,16 +33,15 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="description">Description</label>
+                                    <label for="description">Description <span class="text-danger">*</span></label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
                                         placeholder="Description" required>{{ old('description') }}</textarea>
                                 </div>
-                                <div class="mb-3">
+                                <div class="form-group">
                                     <label for="attachment">Attachment </label>
                                     <input type="file" class="form-control" required name="attachment"
                                         id="documentInput">
                                 </div>
-
                                 <div class="table-responsive mt-5">
                                     <table class="table table-bordered datatable" id="asset">
                                         <thead>
@@ -131,7 +130,7 @@
                                     </table>
                                 </div>
                                 <div class="pt-3 d-flex">
-                                    <a href="#" class="btn btn-danger mr-2"> Back</a>
+                                    <a href="#" class="btn btn-danger mr-2">Back</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
@@ -143,6 +142,6 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.submission.checkouts.script')
+        @include('javascript.submission.script')
     @endpush
 @endsection

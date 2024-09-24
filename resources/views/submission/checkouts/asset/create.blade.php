@@ -6,14 +6,16 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Submission Check Out - {{ $asset->name }}</h3>
+                            <h3 class="card-title font-weight-bold">Submission Check Out Asset - {{ $asset->name }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('submission.form.checkouts.store') }}"
+                        <form method="post" action="{{ route('submission.store', ['type' => 1]) }}"
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="assets[{{ $asset->id }}][id]" value="{{ $asset->id }}">
+                            <input type='hidden' class='form-control' name='asset_item_check[]'
+                                value='{{ $asset->id }}'>
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="barcode">Barcode </label>
@@ -60,7 +62,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="description">Description</label>
+                                    <label for="description">Description <span class="text-danger">*</span></label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
                                         placeholder="Description" required>{{ old('description') }}</textarea>
                                 </div>
@@ -81,6 +83,6 @@
         </div>
     </div>
     @push('javascript-bottom')
-        @include('javascript.master.user.script')
+        @include('javascript.submission.script')
     @endpush
 @endsection

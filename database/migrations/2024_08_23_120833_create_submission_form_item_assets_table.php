@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('submisssion_form_item_assets', function (Blueprint $table) {
+        Schema::create('submission_form_item_assets', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('submission_form_id');
             $table->integer('assets_id');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submisssion_form_item_assets');
+        Schema::dropIfExists('submission_form_item_assets');
     }
 };
