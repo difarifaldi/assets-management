@@ -83,6 +83,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::group(['controller' => SubmissionFormController::class, 'prefix' => 'submission', 'as' => 'submission.'], function () {
         Route::post('approve', 'approve')->name('approve');
         Route::post('reject', 'reject')->name('reject');
+        Route::match(['put', 'patch'], 'assign-to/{id}', 'assignTo')->name('assignTo');
     });
 });
 

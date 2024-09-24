@@ -12,7 +12,8 @@
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" id="create-form" action="{{ route('asset.physical.store') }}" enctype="multipart/form-data">
+                        <form method="post" id="create-form" action="{{ route('asset.physical.store') }}"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
 
@@ -68,7 +69,8 @@
                                         </option>
                                         <option value="3">Major Damage
                                         </option>
-
+                                        <option value="4">On Maintence
+                                        </option>
                                     </select>
                                 </div>
 
@@ -118,7 +120,7 @@
                                 <div class="mb-3">
                                     <label for="attachment">Attachment <span class="text-danger">*</span></label>
                                     <input type="file" class="form-control" name="attachment[]" id="documentInput"
-                                        accept="image/*" multiple="true" required>
+                                        accept="image/*;capture=camera" multiple="true" required>
                                     <p class="text-danger py-1">* .jpg .jpeg .png</p>
                                     <iframe id="documentPreview" class="w-100 mt-3 d-none"
                                         style="height: 600px;"></iframe>

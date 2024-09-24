@@ -67,7 +67,8 @@
                                         </option>
                                         <option value="3" {{ $physical->status == 3 ? 'selected' : '' }}>Major Damage
                                         </option>
-
+                                        <option value="4" {{ $physical->status == 4 ? 'selected' : '' }}>On Maintence
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -82,9 +83,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exipired_at">Expired</label>
-                                    <input type="date" class="form-control" id="exipired_at" name="exipired_at"
-                                        placeholder="Expired" value="{{ $physical->exipired_at }}">
+                                    <label for="expired_at">Expired</label>
+                                    <input type="date" class="form-control" id="expired_at" name="expired_at"
+                                        placeholder="Expired" value="{{ $physical->expired_at }}">
                                 </div>
 
                                 <div class="form-group">

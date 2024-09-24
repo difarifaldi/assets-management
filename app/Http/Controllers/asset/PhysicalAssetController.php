@@ -51,9 +51,8 @@ class PhysicalAssetController extends Controller
                     return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
                 } elseif (!is_null($data->check_out_by)) {
                     return ' <span class="badge badge-danger">Check Out By .' . $data->checkOutBy->name . '</span>';
-                } elseif ($data->status === 5) {
-
-                    return '<span class="badge badge-danger">Maintenance</span>';
+                } elseif ($data->status == 4) {
+                    return '<span class="badge badge-danger">On Maintence</span>';
                 } else {
                     return '<span class="badge badge-success">Available</span>';
                 }
@@ -72,8 +71,8 @@ class PhysicalAssetController extends Controller
                     $btn_action .= '<a href="' . route('asset.physical.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 } elseif (User::find(Auth::user()->id)->hasRole('staff')) {
-                    $btn_action .= '<a href="' . route('submission.create', ['type' => 'checkouts', 'asset' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Check Out">Check Out</a>';
-                    if (is_null($data->assign_to)) {
+                    if (is_null($data->assign_to) && is_null($data->assign_at) && is_null($data->check_out_by) && is_null($data->check_out_at) && $data->status != 4) {
+                        $btn_action .= '<a href="' . route('submission.create', ['type' => 'checkouts', 'asset' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Check Out">Check Out</a>';
                         $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger ml-2" title="Assign To Me">Assign To Me</a>';
                     }
                 }
@@ -591,7 +590,7 @@ class PhysicalAssetController extends Controller
                          * Failed Store Record
                          */
                         DB::rollBack();
-                        return redirect()->back()->with('failed', 'Failed Add Assign');
+                        return redirect()->back()->with('failed', 'Failed Add Record Assign');
                     }
                 } else {
                     /**
@@ -619,74 +618,63 @@ class PhysicalAssetController extends Controller
 
             if (!is_null($physical)) {
                 DB::beginTransaction();
-                $add_maintence = $physical->update([
-                    'status' => 4
+
+                $path = 'public/asset/physical/proof_maintence';
+                $path_store = 'storage/asset/physical/proof_maintence';
+
+                // Check Exsisting Path
+                if (!Storage::exists($path)) {
+                    // Create new Path Directory
+                    Storage::makeDirectory($path);
+                }
+
+                $proof_maintence_attachment = [];
+
+                foreach ($request->file('attachment') as $file) {
+                    // File Upload Configuration
+                    $file_name = $physical->id . '-proof-maintence-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
+
+                    // Uploading File
+                    $file->storePubliclyAs($path, $file_name);
+
+                    // Check Upload Success
+                    if (Storage::exists($path . '/' . $file_name)) {
+                        $proof_maintence_attachment['proof_maintence'][] = $path_store . '/' . $file_name;
+                    } else {
+                        // Failed and Rollback
+                        DB::rollBack();
+                        return redirect()
+                            ->back()
+                            ->with(['failed' => 'Failed Upload Attachment'])
+                            ->withInput();
+                    }
+                }
+
+                if (empty($proof_maintence_attachment)) {
+                    // Update Record for Attachment
+                    $proof_maintence_attachment = null;
+                } else {
+                    // Update Record for Attachment
+                    $proof_maintence_attachment = json_encode($proof_maintence_attachment);
+                }
+
+                $history_maintence = HistoryMaintence::create([
+                    'assets_id' => $id,
+                    'description' => $request->description,
+                    'date' => $request->date,
+                    'status' => $request->status,
+                    'latest' => true,
+                    'attachment' => $proof_maintence_attachment,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id,
                 ]);
 
-                if ($add_maintence) {
-                    $path = 'public/asset/physical/proof_maintence';
-                    $path_store = 'storage/asset/physical/proof_maintence';
-
-                    // Check Exsisting Path
-                    if (!Storage::exists($path)) {
-                        // Create new Path Directory
-                        Storage::makeDirectory($path);
-                    }
-
-                    $proof_maintence_attachment = [];
-
-                    foreach ($request->file('attachment') as $file) {
-                        // File Upload Configuration
-                        $file_name = $physical->id . '-proof-maintence-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
-
-                        // Uploading File
-                        $file->storePubliclyAs($path, $file_name);
-
-                        // Check Upload Success
-                        if (Storage::exists($path . '/' . $file_name)) {
-                            $proof_maintence_attachment['proof_maintence'][] = $path_store . '/' . $file_name;
-                        } else {
-                            // Failed and Rollback
-                            DB::rollBack();
-                            return redirect()
-                                ->back()
-                                ->with(['failed' => 'Failed Upload Attachment'])
-                                ->withInput();
-                        }
-                    }
-
-                    if (empty($proof_maintence_attachment)) {
-                        // Update Record for Attachment
-                        $proof_maintence_attachment = null;
-                    } else {
-                        // Update Record for Attachment
-                        $proof_maintence_attachment = json_encode($proof_maintence_attachment);
-                    }
-
-                    $history_maintence = HistoryMaintence::create([
-                        'assets_id' => $id,
-                        'description' => $request->description,
-                        'date' => $request->date,
-                        'status' => $request->status,
-                        'latest' => true,
-                        'attachment' => $proof_maintence_attachment,
-                        'created_by' => Auth::user()->id,
-                        'updated_by' => Auth::user()->id,
-                    ]);
-
-                    /**
-                     * Validation Add history Record
-                     */
-                    if ($history_maintence) {
-                        DB::commit();
-                        return redirect()->back()->with('success', 'Maintence Successfully Add');
-                    } else {
-                        /**
-                         * Failed Store Record
-                         */
-                        DB::rollBack();
-                        return redirect()->back()->with('failed', 'Failed Add Maintence');
-                    }
+                /**
+                 * Validation Add history Record
+                 */
+                if ($history_maintence) {
+                    DB::commit();
+                    return redirect()->back()->with('success', 'Maintence Successfully Add');
                 } else {
                     /**
                      * Failed Store Record

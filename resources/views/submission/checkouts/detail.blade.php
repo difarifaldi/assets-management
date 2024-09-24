@@ -63,7 +63,7 @@
                                             <span class="badge badge-danger">Rejected By
                                                 {{ $submission->rejectedBy->name }}</span>
                                         @else
-                                            <span class="badge badge-warning text-white">Process</span>
+                                            <span class="badge badge-warning">Process</span>
                                         @endif
                                     </div>
                                 </div>

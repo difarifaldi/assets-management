@@ -65,11 +65,8 @@
                                         <option disabled hidden selected>Choose Status</option>
                                         <option value="1">
                                             Good Condition</option>
-                                        <option value="2">Minor Damage
+                                        <option value="5">License Expired
                                         </option>
-                                        <option value="3">Major Damage
-                                        </option>
-
                                     </select>
                                 </div>
 
@@ -91,9 +88,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exipired_at">Expired</label>
-                                    <input type="date" class="form-control" id="exipired_at" name="exipired_at"
-                                        placeholder="Expired" value="{{ old('exipired_at') }}">
+                                    <label for="expired_at">Expired</label>
+                                    <input type="date" class="form-control" id="expired_at" name="expired_at"
+                                        placeholder="Expired" value="{{ old('expired_at') }}">
                                 </div>
 
                                 <div class="form-group">
@@ -126,7 +123,7 @@
                                 <div class="mb-3">
                                     <label for="attachment">Attachment <span class="text-danger">*</span></label>
                                     <input type="file" class="form-control" name="attachment[]" id="documentInput"
-                                        accept="image/*" multiple="true" required>
+                                        accept="image/*;capture=camera" multiple="true" required>
                                     <p class="text-danger py-1">* .jpg .jpeg .png</p>
                                     <iframe id="documentPreview" class="w-100 mt-3 d-none"
                                         style="height: 600px;"></iframe>

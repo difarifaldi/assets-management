@@ -1,8 +1,29 @@
 <script type="text/javascript">
     $("form").submit(function(e) {
         e.preventDefault();
-        if ($("input[name='asset_item_check[]']").val() === undefined) {
-            sweetAlertWarning('Please Complete The Record!');
+        if (e.currentTarget.id == 'form-create') {
+            if ($("input[name='asset_item_check[]']").val() === undefined) {
+                sweetAlertWarning('Please Complete The Record!');
+            } else {
+                Swal.fire({
+                    title: 'Are You Sure Want To Save Record?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn btn-primary mr-2 mb-3',
+                        cancelButton: 'btn btn-danger mb-3',
+                    },
+                    buttonsStyling: false,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        sweetAlertProcess();
+                        $('form').unbind('submit').submit();
+                    }
+                })
+            }
         } else {
             Swal.fire({
                 title: 'Are You Sure Want To Save Record?',

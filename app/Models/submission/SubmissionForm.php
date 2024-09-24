@@ -2,6 +2,7 @@
 
 namespace App\Models\submission;
 
+use App\Models\HistoryAssign;
 use App\Models\master\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,5 +34,10 @@ class SubmissionForm extends Model
     public function submissionFormsCheckoutDate()
     {
         return $this->belongsTo(SubmissionFormsCheckoutDate::class, 'submission_form_id');
+    }
+
+    public function historyAssign()
+    {
+        return $this->hasMany(HistoryAssign::class, 'submission_form_id');
     }
 }

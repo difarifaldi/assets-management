@@ -48,7 +48,7 @@
                                             <span class="badge badge-danger">Rejected By
                                                 {{ $submission->rejectedBy->name }}</span>
                                         @else
-                                            <span class="badge badge-warning text-white">Process</span>
+                                            <span class="badge badge-warning">Process</span>
                                         @endif
                                     </div>
                                 </div>
@@ -112,13 +112,26 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        -
+                                                        @if (
+                                                            !is_null(
+                                                                $submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
+                                                            <span class="badge badge-success">Assigned</span>
+                                                        @else
+                                                            -
+                                                        @endif
                                                     </td>
                                                     @role('admin')
-                                                        @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                        @if (
+                                                            !is_null($submission->approved_by) &&
+                                                                !is_null($submission->approved_at) &&
+                                                                is_null(
+                                                                    $submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
                                                             <td>
-                                                                <button class="btn btn-sm btn-primary">Assigning</button>
+                                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                                    data-target="#assign_to_{{ $item_asset->asset->id }}">Assigning</button>
                                                             </td>
+                                                        @else
+                                                            <td>-</td>
                                                         @endif
                                                     @endrole
                                                 </tr>
@@ -152,6 +165,39 @@
             </div>
         </div>
     </div>
+
+    @foreach ($submission->submissionFormItemAsset as $item_asset)
+        {{-- Assign To --}}
+        <div class="modal fade" id="assign_to_{{ $item_asset->asset->id }}">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form method="POST" id="assign-form"
+                        action="{{ route('submission.assignTo', ['id' => $submission->id]) }}" class="forms-control"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('patch')
+                        <input type="hidden" name="assets_id" value="{{ $item_asset->asset->id }}">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalLongTitle">Add Assign and Proof Assign</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="attachment">Proof Assign <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                    accept="image/*;capture=camera" multiple="true" required>
+                                <p class="text-danger py-1">* .png .jpg .jpeg</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-sm btn-primary mx-2">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
     @push('javascript-bottom')
         @include('javascript.submission.script')
     @endpush

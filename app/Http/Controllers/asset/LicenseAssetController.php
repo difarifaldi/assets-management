@@ -48,8 +48,8 @@ class LicenseAssetController extends Controller
             ->addColumn('status', function ($data) {
                 if (!is_null($data->assign_to)) {
                     return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
-                } elseif (!is_null($data->check_out_by)) {
-                    return ' <span class="badge badge-danger">Check Out By .' . $data->checkOutBy->name . '</span>';
+                } elseif ($data->status == 5) {
+                    return '<span class="badge badge-danger">License Expired</span>';
                 } else {
                     return '<span class="badge badge-success">Available</span>';
                 }
@@ -68,7 +68,7 @@ class LicenseAssetController extends Controller
                     $btn_action .= '<a href="' . route('asset.license.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                     $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
                 } elseif (User::find(Auth::user()->id)->hasRole('staff')) {
-                    if (is_null($data->assign_to)) {
+                    if (is_null($data->assign_to) && is_null($data->assign_at) && $data->status != 5) {
                         $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger ml-2" title="Assign To Me">Assign To Me</a>';
                     }
                 }
@@ -105,7 +105,7 @@ class LicenseAssetController extends Controller
                 'name' => 'required|string',
                 'status' => 'required|integer',
                 'value' => 'nullable|integer|min:0',
-                'exipired_at' => 'nullable|date',
+                'expired_at' => 'nullable|date',
                 'description' => 'nullable|string',
                 'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'brand_id' => 'required|integer|exists:brands,id',
@@ -129,7 +129,7 @@ class LicenseAssetController extends Controller
                     'barcode_code' => $request->barcode_code,
                     'status' => $request->status,
                     'value' => $request->value,
-                    'exipired_at' => $request->exipired_at,
+                    'expired_at' => $request->expired_at,
                     'description' => $request->description,
                     'brand_id' => $request->brand_id,
                     'purchase_date' => $request->purchase_date,
@@ -261,7 +261,7 @@ class LicenseAssetController extends Controller
                 'name' => 'required|string',
                 'status' => 'required|integer',
                 'value' => 'nullable|integer|min:0',
-                'exipired_at' => 'nullable|date',
+                'expired_at' => 'nullable|date',
                 'description' => 'nullable|string',
                 'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'assign_to' => 'nullable',
@@ -296,7 +296,7 @@ class LicenseAssetController extends Controller
                         'barcode_code' => $request->barcode_code,
                         'status' => $request->status,
                         'value' => $request->value,
-                        'exipired_at' => $request->exipired_at,
+                        'expired_at' => $request->expired_at,
                         'description' => $request->description,
                         'assign_to' => $request->assign_to,
                         'assign_at' => $request->assign_at,
@@ -541,7 +541,6 @@ class LicenseAssetController extends Controller
                     foreach ($request->file('attachment') as $file) {
                         // File Upload Configuration
                         $file_name = $license->id . '-proof-assign-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
-
 
                         // Uploading File
                         $file->storePubliclyAs($path, $file_name);

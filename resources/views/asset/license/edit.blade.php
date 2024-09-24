@@ -63,11 +63,9 @@
                                         <option disabled hidden selected>Choose Status</option>
                                         <option value="1" {{ $license->status == 1 ? 'selected' : '' }}>
                                             Good Condition</option>
-                                        <option value="2" {{ $license->status == 2 ? 'selected' : '' }}>Minor Damage
+                                        <option value="5" {{ $license->status == 5 ? 'selected' : '' }}>License
+                                            Expired
                                         </option>
-                                        <option value="3" {{ $license->status == 3 ? 'selected' : '' }}>Major Damage
-                                        </option>
-
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -82,9 +80,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exipired_at">Expired</label>
-                                    <input type="date" class="form-control" id="exipired_at" name="exipired_at"
-                                        placeholder="Expired" value="{{ $license->exipired_at }}">
+                                    <label for="expired_at">Expired</label>
+                                    <input type="date" class="form-control" id="expired_at" name="expired_at"
+                                        placeholder="Expired" value="{{ $license->expired_at }}">
                                 </div>
 
                                 <div class="form-group">

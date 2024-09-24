@@ -17,15 +17,17 @@
                                     <button class="nav-link active" data-toggle="tab" data-target="#nav-detail"
                                         type="button" role="tab" aria-controls="nav-detail"
                                         aria-selected="true">Detail</button>
-                                    <button class="nav-link" data-toggle="tab" data-target="#nav-maintence" type="button"
-                                        role="tab" aria-controls="nav-maintence" aria-selected="false">History
-                                        Maintence</button>
-                                    <button class="nav-link" data-toggle="tab" data-target="#nav-assign" type="button"
-                                        role="tab" aria-controls="nav-assign" aria-selected="false">History
-                                        Assign</button>
-                                    <button class="nav-link" data-toggle="tab" data-target="#nav-check" type="button"
-                                        role="tab" aria-controls="nav-check" aria-selected="false">History Check
-                                        Out</button>
+                                    @role('admin')
+                                        <button class="nav-link" data-toggle="tab" data-target="#nav-maintence" type="button"
+                                            role="tab" aria-controls="nav-maintence" aria-selected="false">History
+                                            Maintence</button>
+                                        <button class="nav-link" data-toggle="tab" data-target="#nav-assign" type="button"
+                                            role="tab" aria-controls="nav-assign" aria-selected="false">History
+                                            Assign</button>
+                                        <button class="nav-link" data-toggle="tab" data-target="#nav-check" type="button"
+                                            role="tab" aria-controls="nav-check" aria-selected="false">History Check
+                                            Out</button>
+                                    @endrole
                                 </div>
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
@@ -75,26 +77,28 @@
                                             @elseif($asset->status == 3)
                                                 <span class="badge badge-danger">Major Damage</span>
                                             @elseif($asset->status == 4)
-                                                <span class="badge badge-warning">On Maintence</span>
+                                                <span class="badge badge-danger">On Maintence</span>
                                             @endif
                                         </div>
                                     </div>
 
-                                    <!-- Check Status -->
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Availability Status</label>
-                                        <div class="col-sm-9 col-form-label">
-                                            @if (!is_null($asset->assign_to))
-                                                <span class="badge badge-danger">Assign To
-                                                    {{ $asset->assignTo->name }}</span>
-                                            @elseif(!is_null($asset->check_out_by))
-                                                <span class="badge badge-danger">Check Out By
-                                                    {{ $asset->checkOutBy->name }}</span>
-                                            @else
-                                                <span class="badge badge-success">Available</span>
-                                            @endif
+                                    @if ($asset->status != 4)
+                                        <!-- Check Status -->
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Availability Status</label>
+                                            <div class="col-sm-9 col-form-label">
+                                                @if (!is_null($asset->assign_to))
+                                                    <span class="badge badge-danger">Assign To
+                                                        {{ $asset->assignTo->name }}</span>
+                                                @elseif(!is_null($asset->check_out_by))
+                                                    <span class="badge badge-danger">Check Out By
+                                                        {{ $asset->checkOutBy->name }}</span>
+                                                @else
+                                                    <span class="badge badge-success">Available</span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
 
                                     <!-- Value -->
                                     <div class="form-group row">
@@ -104,19 +108,11 @@
                                         </div>
                                     </div>
 
-                                    <!-- Expired At -->
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Expired</label>
-                                        <div class="col-sm-9 col-form-label">
-                                            {{ $asset->exipired_at ?? '-' }}
-                                        </div>
-                                    </div>
-
                                     <!-- Purchase Date -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Purchase Date</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->purchase_date ?? '-' }}
+                                            {{ !is_null($asset->purchase_date) ? date('d F Y', strtotime($asset->purchase_date)) : '-' }}
                                         </div>
                                     </div>
 
@@ -124,7 +120,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Warranty End Date</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->warranty_end_date ?? '-' }}
+                                            {{ !is_null($asset->warranty_end_date) ? date('d F Y', strtotime($asset->warranty_end_date)) : '-' }}
                                         </div>
                                     </div>
 
@@ -132,7 +128,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Warranty Duration</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->warranty_duration ?? '-' }}
+                                            {{ !is_null($asset->warranty_duration) ? $asset->warranty_duration . ' Month' : '-' }}
                                         </div>
                                     </div>
 
@@ -148,15 +144,17 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Attachment</label>
                                         @if (!is_null($asset->attachmentArray))
-                                            <div class="col-md-9">
-                                                <div class="input-group">
-                                                    <button class="input-group-append btn btn-sm btn-primary"
-                                                        data-toggle="modal" data-target="#addAttachment">
-                                                        <i class="fas fa-plus mr-2 my-auto"></i>
-                                                        Add Attachment
-                                                    </button>
+                                            @role('admin')
+                                                <div class="col-md-9">
+                                                    <div class="input-group">
+                                                        <button class="input-group-append btn btn-sm btn-primary"
+                                                            data-toggle="modal" data-target="#addAttachment">
+                                                            <i class="fas fa-plus mr-2 my-auto"></i>
+                                                            Add Attachment
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endrole
                                             <div class="col-md-12 pt-3">
                                                 <div class="row justify-content-start mt-3">
                                                     @foreach ($asset->attachmentArray as $index => $attachment)
@@ -184,8 +182,10 @@
                                                                             <a class="dropdown-item"
                                                                                 href="{{ asset($attachment) }}"
                                                                                 download>Download</a>
-                                                                            <a class="dropdown-item"
-                                                                                onclick="destroyFile({{ $index }}, 'physical')">Remove</a>
+                                                                            @role('admin')
+                                                                                <a class="dropdown-item"
+                                                                                    onclick="destroyFile({{ $index }}, 'physical')">Remove</a>
+                                                                            @endrole
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -198,10 +198,12 @@
                                             <div class="col-md-9">
                                                 <div class="input-group">
                                                     <span class="mr-3">No Attachment</span>
-                                                    <button class="input-group-append btn btn-sm btn-primary"
-                                                        data-toggle="modal" data-target="#addAttachment">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
+                                                    @role('admin')
+                                                        <button class="input-group-append btn btn-sm btn-primary"
+                                                            data-toggle="modal" data-target="#addAttachment">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    @endrole
                                                 </div>
                                             </div>
                                         @endif
@@ -276,10 +278,7 @@
                                                         Assigned To
                                                     </th>
                                                     <th>
-                                                        Received At
-                                                    </th>
-                                                    <th>
-                                                        Received By
+                                                        Returned At
                                                     </th>
                                                     <th>
                                                         Action
@@ -301,9 +300,6 @@
                                                         <td>
                                                             {{ !is_null($history_assign->return_at) ? date('d F Y H:i:s', strtotime($history_assign->return_at)) : '-' }}
                                                         </td>
-                                                        <td>
-                                                            {{ $history_assign->returnBy->name ?? '-' }}
-                                                        </td>
                                                         <td align="center">
                                                             <button class="btn btn-sm btn-primary">Detail</button>
                                                         </td>
@@ -317,25 +313,26 @@
                             </div>
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
-
-                                @hasrole('admin')
+                                @role('admin')
                                     @if ($asset->status != 4)
-                                        <button class="btn btn-warning mr-2" data-toggle="modal"
-                                            data-target="#maintence">Maintence</button>
+                                        @if (is_null($asset->assign_to) &&
+                                                is_null($asset->assign_at) &&
+                                                (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                            <button class="btn btn-warning mr-2" data-toggle="modal"
+                                                data-target="#maintence">Maintence</button>
+                                            <button data-toggle="modal" data-target="#assignTo"
+                                                class="btn btn-primary">Assign
+                                                To</button>
+                                        @elseif(
+                                            !is_null($asset->assign_to) &&
+                                                !is_null($asset->assign_at) &&
+                                                (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                            <button data-toggle="modal" data-target="#returnAsset"
+                                                class="btn btn-primary">Return
+                                                Asset</button>
+                                        @endif
                                     @endif
-                                    @if (is_null($asset->assign_to) &&
-                                            is_null($asset->assign_at) &&
-                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
-                                        <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
-                                            To</button>
-                                    @elseif(
-                                        !is_null($asset->assign_to) &&
-                                            !is_null($asset->assign_at) &&
-                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
-                                        <button data-toggle="modal" data-target="#returnAsset" class="btn btn-primary">Return
-                                            Asset</button>
-                                    @endif
-                                @endhasrole
+                                @endrole
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -361,7 +358,7 @@
                         <div class="mb-3">
                             <label for="date">Attachment <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="attachment[]" id="documentInput"
-                                accept="image/*" multiple="true" multiple="true" required>
+                                accept="image/*;capture=camera" multiple="true" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
                     </div>

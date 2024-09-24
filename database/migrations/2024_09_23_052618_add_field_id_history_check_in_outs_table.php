@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::table('history_check_in_outs', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
-            $table->integer('submission_forms_id')->nullable();
+            $table->integer('submission_form_id')->nullable();
 
-            $table->foreign('submission_forms_id')->references('id')->on('submission_forms');
+            $table->foreign('submission_form_id')->references('id')->on('submission_forms');
         });
     }
 

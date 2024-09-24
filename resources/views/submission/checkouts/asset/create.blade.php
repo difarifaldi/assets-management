@@ -10,7 +10,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" action="{{ route('submission.store', ['type' => 2]) }}"
+                        <form method="post" id="form-create" action="{{ route('submission.store', ['type' => 2]) }}"
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="assets[{{ $asset->id }}][id]" value="{{ $asset->id }}">
