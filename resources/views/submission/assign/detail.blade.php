@@ -31,6 +31,8 @@
                                                 <i class="fas fa-download mr-1"></i>
                                                 Attachment Document
                                             </a>
+                                        @else
+                                            -
                                         @endif
                                     </div>
                                 </div>
@@ -51,7 +53,16 @@
                                     </div>
                                 </div>
 
-                                <div class="table-responsive mt-5">
+                                @if (!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Reason Rejection</label>
+                                        <div class="col-sm-9 col-form-label">
+                                            {{ $submission->reason ?? '-' }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="table-responsive mt-3">
                                     <table class="table table-bordered datatable" id="asset">
                                         <thead>
                                             <tr>
@@ -68,12 +79,14 @@
                                                     Status Asset
                                                 </th>
                                                 <th>
-                                                    Status Check Out
+                                                    Status Assign
                                                 </th>
                                                 @role('admin')
-                                                    <th width="10%">
-                                                        Action
-                                                    </th>
+                                                    @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                        <th width="10%">
+                                                            Action
+                                                        </th>
+                                                    @endif
                                                 @endrole
                                             </tr>
                                         </thead>
@@ -102,9 +115,11 @@
                                                         -
                                                     </td>
                                                     @role('admin')
-                                                        <td>
-                                                            <button class="btn btn-sm btn-primary">Assigning</button>
-                                                        </td>
+                                                        @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary">Assigning</button>
+                                                            </td>
+                                                        @endif
                                                     @endrole
                                                 </tr>
                                             @endforeach
@@ -112,8 +127,23 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="d-flex pt-3 gap-2">
-                                <a href="{{ route('submission.index') }}" class="btn btn-danger mr-2">Back</a>
+                            <div class="d-flex justify-content-between py-3">
+                                <a href="{{ route('submission.index') }}" class="btn btn-danger">Back</a>
+                                @role('admin')
+                                    <div class="d-flex">
+                                        @if (is_null($submission->approved_by) &&
+                                                is_null($submission->approved_at) &&
+                                                is_null($submission->rejected_by) &&
+                                                is_null($submission->rejected_at))
+                                            <button class="btn btn-sm btn-danger ml-2"
+                                                onclick="rejectedRecord({{ $submission->id }})"
+                                                title="Rejected">Rejected</button>
+                                            <button class="btn btn-sm btn-success ml-2"
+                                                onclick="approvedRecord({{ $submission->id }})"
+                                                title="Approve">Approve</button>
+                                        @endif
+                                    </div>
+                                @endrole
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -122,4 +152,7 @@
             </div>
         </div>
     </div>
+    @push('javascript-bottom')
+        @include('javascript.submission.script')
+    @endpush
 @endsection

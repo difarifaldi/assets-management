@@ -82,8 +82,8 @@ class SubmissionFormController extends Controller
                     }
                 } else {
                     if (!isset($data->approved_at) && !isset($data->rejected_at)) {
-                        $btn_action .= '<button class="btn btn-sm btn-success ml-2" onclick="approvedRecord(' . $data->id . ')" title="Approve">Approve</button>';
                         $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="rejectedRecord(' . $data->id . ')"title="Rejected">Rejected</button>';
+                        $btn_action .= '<button class="btn btn-sm btn-success ml-2" onclick="approvedRecord(' . $data->id . ')" title="Approve">Approve</button>';
                     }
                 }
                 $btn_action .= '</div>';
@@ -173,7 +173,7 @@ class SubmissionFormController extends Controller
                             Storage::makeDirectory($path);
                         }
 
-                        $file_name = $submission->id . '_' . uniqid() . '_' . $request->file('attachment')->getClientOriginalName();
+                        $file_name = $submission->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')).'.'. $request->file('attachment')->getClientOriginalExtension();
                         $request->file('attachment')->storePubliclyAs($path, $file_name);
                         $attachment = $path_store . '/' . $file_name;
 

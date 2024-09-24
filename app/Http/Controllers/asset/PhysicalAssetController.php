@@ -151,7 +151,7 @@ class PhysicalAssetController extends Controller
                     if ($request->hasFile('attachment')) {
                         foreach ($request->file('attachment') as $file) {
                             // Menggunakan nama file asli dengan uniqid untuk menghindari duplikasi nama
-                            $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                            $file_name = $asset->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
                             $file->storePubliclyAs($path, $file_name);
                             $attachments[] = $path_store . '/' . $file_name;
                         }
@@ -369,7 +369,7 @@ class PhysicalAssetController extends Controller
 
                 foreach ($request->file('attachment') as $file) {
                     // File Upload Configuration
-                    $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $file_name = $asset->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
                     // Uploading File
                     $file->storePubliclyAs($path, $file_name);
@@ -397,7 +397,7 @@ class PhysicalAssetController extends Controller
 
                 foreach ($request->file('attachment') as $file) {
                     // File Upload Configuration
-                    $file_name = $asset->id . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $file_name = $asset->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
                     // Uploading File
                     $file->storePubliclyAs($path, $file_name);
@@ -540,7 +540,7 @@ class PhysicalAssetController extends Controller
 
                     foreach ($request->file('attachment') as $file) {
                         // File Upload Configuration
-                        $file_name = $physical->id . '_proof_assign_' . uniqid() . '_' . $file->getClientOriginalName();
+                        $file_name = $physical->id . '-proof-assign-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
                         // Uploading File
                         $file->storePubliclyAs($path, $file_name);
@@ -645,7 +645,7 @@ class PhysicalAssetController extends Controller
 
                     foreach ($request->file('attachment') as $file) {
                         // File Upload Configuration
-                        $file_name = $physical->id . '_proof_return_assign_' . uniqid() . '_' . $file->getClientOriginalName();
+                        $file_name = $physical->id . '-proof-return-assign-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
                         // Uploading File
                         $file->storePubliclyAs($path, $file_name);

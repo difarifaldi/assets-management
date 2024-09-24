@@ -15,6 +15,20 @@
                         <div class="card-body">
                             <div class="col-md-12">
 
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Loan Application Asset Date</label>
+                                    <div class="col-sm-9 col-form-label">
+                                        {{ date('d F Y', strtotime($submission->submissionFormsCheckoutDate->loan_application_asset_date)) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Return Asset Date</label>
+                                    <div class="col-sm-9 col-form-label">
+                                        {{ date('d F Y', strtotime($submission->submissionFormsCheckoutDate->return_asset_date)) }}
+                                    </div>
+                                </div>
+
                                 <!-- Description -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Description</label>
@@ -27,7 +41,14 @@
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Attachment</label>
                                     <div class="col-sm-9 col-form-label">
-                                        {{ $submission->description ?? '-' }}
+                                        @if (!is_null($submission->attachment))
+                                            <a href="{{ asset($submission->attachment) }}" target="_blank">
+                                                <i class="fas fa-download mr-1"></i>
+                                                Attachment Document
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
                                     </div>
                                 </div>
 
@@ -47,7 +68,16 @@
                                     </div>
                                 </div>
 
-                                <div class="table-responsive mt-5">
+                                @if (!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Reason Rejection</label>
+                                        <div class="col-sm-9 col-form-label">
+                                            {{ $submission->reason ?? '-' }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="table-responsive mt-3">
                                     <table class="table table-bordered datatable" id="asset">
                                         <thead>
                                             <tr>
@@ -66,10 +96,12 @@
                                                 <th>
                                                     Status Assigned
                                                 </th>
-                                                @role('admin')
-                                                    <th width="10%">
-                                                        Action
-                                                    </th>
+                                                @role('staff')
+                                                    @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                        <th width="10%">
+                                                            Action
+                                                        </th>
+                                                    @endif
                                                 @endrole
                                             </tr>
                                         </thead>
@@ -97,10 +129,12 @@
                                                     <td>
                                                         -
                                                     </td>
-                                                    @role('admin')
-                                                        <td>
-                                                            <button class="btn btn-sm btn-primary">Assigning</button>
-                                                        </td>
+                                                    @role('staff')
+                                                        @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                            <td>
+                                                                <button class="btn btn-sm btn-warning">Check Out</button>
+                                                            </td>
+                                                        @endif
                                                     @endrole
                                                 </tr>
                                             @endforeach
@@ -108,8 +142,23 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="d-flex pt-3 gap-2">
-                                <a href="{{ route('submission.index') }}" class="btn btn-danger mr-2">Back</a>
+                            <div class="d-flex justify-content-between py-3">
+                                <a href="{{ route('submission.index') }}" class="btn btn-danger">Back</a>
+                                @role('admin')
+                                    <div class="d-flex">
+                                        @if (is_null($submission->approved_by) &&
+                                                is_null($submission->approved_at) &&
+                                                is_null($submission->rejected_by) &&
+                                                is_null($submission->rejected_at))
+                                            <button class="btn btn-sm btn-danger ml-2"
+                                                onclick="rejectedRecord({{ $submission->id }})"
+                                                title="Rejected">Rejected</button>
+                                            <button class="btn btn-sm btn-success ml-2"
+                                                onclick="approvedRecord({{ $submission->id }})"
+                                                title="Approve">Approve</button>
+                                        @endif
+                                    </div>
+                                @endrole
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -118,4 +167,7 @@
             </div>
         </div>
     </div>
+    @push('javascript-bottom')
+        @include('javascript.submission.script')
+    @endpush
 @endsection

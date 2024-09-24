@@ -15,8 +15,23 @@ class SubmissionForm extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function rejectedBy()
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
+
     public function submissionFormItemAsset()
     {
         return $this->hasMany(SubmissionFormItemAsset::class, 'submission_form_id');
+    }
+
+    public function submissionFormsCheckoutDate()
+    {
+        return $this->belongsTo(SubmissionFormsCheckoutDate::class, 'submission_form_id');
     }
 }
