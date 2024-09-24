@@ -74,6 +74,8 @@
                                                 <span class="badge badge-warning">Minor Damage</span>
                                             @elseif($asset->status == 3)
                                                 <span class="badge badge-danger">Major Damage</span>
+                                            @elseif($asset->status == 4)
+                                                <span class="badge badge-warning">On Maintence</span>
                                             @endif
                                         </div>
                                     </div>
@@ -206,7 +208,59 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane pt-3 maintence" id="nav-maintence" role="tabpanel">
+                                    <div class="table-responsive py-3">
+                                        <table class="table table-bordered datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        #
+                                                    </th>
+                                                    <th>
+                                                        Date
+                                                    </th>
+                                                    <th>
+                                                        Description
+                                                    </th>
+                                                    <th>
+                                                        Status
+                                                    </th>
+                                                    <th>
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($asset->historyMaintence as $index => $history_maintence)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $index + 1 }}
+                                                        </td>
+                                                        <td>
+                                                            {{ date('d F Y ', strtotime($history_maintence->date)) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $history_maintence->description }}
+                                                        </td>
+                                                        <td>
+                                                            @if ($history_maintence->status == 1)
+                                                                <span class="badge badge-success">Good Condition</span>
+                                                            @elseif($history_maintence->status == 2)
+                                                                <span class="badge badge-warning">Minor Damage</span>
+                                                            @elseif($history_maintence->status == 3)
+                                                                <span class="badge badge-danger">Major Damage</span>
+                                                            @endif
+                                                        </td>
+
+                                                        <td align="center">
+                                                            <button class="btn btn-sm btn-primary">Detail</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
+
                                 <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">
                                     <div class="table-responsive py-3">
                                         <table class="table table-bordered datatable">
@@ -263,9 +317,12 @@
                             </div>
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
-                                <a href="{{ route('asset.physical.index') }}" class="btn btn-warning mr-2">Maintence</a>
 
                                 @hasrole('admin')
+                                    @if ($asset->status != 4)
+                                        <button class="btn btn-warning mr-2" data-toggle="modal"
+                                            data-target="#maintence">Maintence</button>
+                                    @endif
                                     @if (is_null($asset->assign_to) &&
                                             is_null($asset->assign_at) &&
                                             (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
@@ -372,6 +429,59 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="attachment">Proof Return <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                accept="image/*;capture=camera" multiple="true" required>
+                            <p class="text-danger py-1">* .png .jpg .jpeg</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-sm btn-primary mx-2">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Maintence Asset --}}
+    <div class="modal fade" id="maintence">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="POST" id="maintence-form"
+                    action="{{ route('asset.physical.maintence', ['id' => $asset->id]) }}" class="forms-control"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('patch')
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLongTitle">Add Maintence Asset</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="description">Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="date" name="date"
+                                min="{{ date('Y-m-d') }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status <span class="text-danger">*</span></label>
+                            <select class="form-control select2bs4" id="status" name="status" required>
+                                <option disabled hidden selected>Choose Status</option>
+                                <option value="1">
+                                    Good Condition</option>
+                                <option value="2">Minor Damage
+                                </option>
+                                <option value="3">Major Damage
+                                </option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description <span class="text-danger">*</span></label>
+                            <textarea cols="10" rows="3" name="description" id="description" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="attachment">Proof maintence <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="attachment[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>

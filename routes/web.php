@@ -65,6 +65,7 @@ Route::group(['middleware' => ['role:admin']], function () {
             Route::match(['put', 'patch'], 'upload-image/{id}', 'uploadImage')->name('uploadImage');
             Route::match(['put', 'patch'], 'destroy-image/{id}', 'destroyImage')->name('destroyImage');
             Route::match(['put', 'patch'], 'assign-to/{id}', 'assignTo')->name('assignTo');
+            Route::match(['put', 'patch'], 'maintence/{id}', 'maintence')->name('maintence');
             Route::match(['put', 'patch'], 'return-asset/{id}', 'returnAsset')->name('returnAsset');
         });
         Route::resource('physical', PhysicalAssetController::class, ['except' => ['index', 'show']])->parameters(['physical' => 'id']);
@@ -73,6 +74,7 @@ Route::group(['middleware' => ['role:admin']], function () {
             Route::match(['put', 'patch'], 'upload-image/{id}', 'uploadImage')->name('uploadImage');
             Route::match(['put', 'patch'], 'destroy-image/{id}', 'destroyImage')->name('destroyImage');
             Route::match(['put', 'patch'], 'assign-to/{id}', 'assignTo')->name('assignTo');
+            Route::match(['put', 'patch'], 'maintence/{id}', 'maintence')->name('maintence');
             Route::match(['put', 'patch'], 'return-asset/{id}', 'returnAsset')->name('returnAsset');
         });
         Route::resource('license', LicenseAssetController::class, ['except' => ['index', 'show']])->parameters(['license' => 'id']);
