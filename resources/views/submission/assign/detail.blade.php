@@ -112,9 +112,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if (
-                                                            !is_null(
-                                                                $submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
+                                                        @if (!is_null($submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
                                                             <span class="badge badge-success">Assigned</span>
                                                         @else
                                                             -
@@ -124,13 +122,25 @@
                                                         @if (
                                                             !is_null($submission->approved_by) &&
                                                                 !is_null($submission->approved_at) &&
-                                                                is_null(
-                                                                    $submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
+                                                                is_null($submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
                                                             <td>
-                                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                                                    data-target="#assign_to_{{ $item_asset->asset->id }}">Assigning</button>
+                                                                @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)
+                                                                    @if (is_null($item_asset->asset->assign_to) &&
+                                                                            is_null($item_asset->asset->assign_at) &&
+                                                                            (is_null($item_asset->asset->check_out_by) && is_null($item_asset->asset->check_out_at)))
+                                                                        <button class="btn btn-sm btn-primary"
+                                                                            data-toggle="modal"
+                                                                            data-target="#assign_to_{{ $item_asset->asset->id }}">Assigning</button>
+                                                                    @else
+                                                                        <span class="badge badge-danger">Unavailable</span>
+                                                                    @endif
+                                                                @elseif($item_asset->asset->status == 4)
+                                                                    <span class="badge badge-danger">On Maintence</span>
+                                                                @elseif($item_asset->asset->status == 5)
+                                                                    <span class="badge badge-danger">License Expired</span>
+                                                                @endif
                                                             </td>
-                                                        @else
+                                                        @elseif (!is_null($submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
                                                             <td>-</td>
                                                         @endif
                                                     @endrole
@@ -171,7 +181,7 @@
         <div class="modal fade" id="assign_to_{{ $item_asset->asset->id }}">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <form method="POST" id="assign-form"
+                    <form method="POST" id="assign-form-{{ $item_asset->asset->id }}"
                         action="{{ route('submission.assignTo', ['id' => $submission->id]) }}" class="forms-control"
                         enctype="multipart/form-data">
                         @csrf

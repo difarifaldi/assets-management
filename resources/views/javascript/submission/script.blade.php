@@ -40,7 +40,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     sweetAlertProcess();
-                    $('form').unbind('submit').submit();
+                    $('#' + e.currentTarget.id).unbind('submit').submit();
                 }
             })
         }

@@ -44,7 +44,6 @@ class UserController extends Controller
                 return $user_role;
             })
             ->addColumn('division', function ($data) {
-
                 return $data->division ? $data->division->name : '-';
             })
             ->addColumn('action', function ($data) {
@@ -164,18 +163,37 @@ class UserController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function show(string $id = null)
     {
         try {
-            /**
-             * Get User Record from id
-             */
-            $user = User::find($id);
+            if (!is_null($id)) {
+                /**
+                 * Get User Record from id
+                 */
+                $user = User::find($id);
 
-            /**
-             * Validation User id
-             */
-            if (!is_null($user)) {
+                /**
+                 * Validation User id
+                 */
+                if (!is_null($user)) {
+                    /**
+                     * User Role Configuration
+                     */
+                    $exploded_raw_role = explode('-', $user->getRoleNames()[0]);
+                    $user_role = ucwords(implode(' ', $exploded_raw_role));
+
+                    return view('master.user.detail', compact('user', 'user_role'));
+                } else {
+                    return redirect()
+                        ->back()
+                        ->with(['failed' => 'Invalid Request!']);
+                }
+            } else {
+                /**
+                 * Get User Record from current user
+                 */
+                $user = User::find(Auth::user()->id);
+
                 /**
                  * User Role Configuration
                  */
@@ -183,10 +201,6 @@ class UserController extends Controller
                 $user_role = ucwords(implode(' ', $exploded_raw_role));
 
                 return view('master.user.detail', compact('user', 'user_role'));
-            } else {
-                return redirect()
-                    ->back()
-                    ->with(['failed' => 'Invalid Request!']);
             }
         } catch (Exception $e) {
             return redirect()

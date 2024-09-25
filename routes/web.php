@@ -113,4 +113,6 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
     });
     Route::resource('submission', SubmissionFormController::class, ['except' => ['create', 'store', 'update', 'destroy']])->parameters(['submission' => 'id']);
+
+    Route::get('my-account', [UserController::class, 'show'])->name('myAccount');
 });

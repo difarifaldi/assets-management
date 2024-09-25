@@ -52,9 +52,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Asset::class, 'assign_to');
     }
-
-    public function submission()
-    {
-        return $this->hasMany(SubmissionForm::class, 'created_by');
-    }
 }
