@@ -98,7 +98,7 @@
                                                 </th>
                                                 @role('staff')
                                                     @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
-                                                        <th width="10%">
+                                                        <th>
                                                             Action
                                                         </th>
                                                     @endif
@@ -127,15 +127,59 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        -
+                                                        @if (!is_null($submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->first()))
+                                                            <span class="badge badge-success">Check Out</span>
+                                                        @else
+                                                            -
+                                                        @endif
                                                     </td>
                                                     @role('staff')
-                                                        @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                        @if (
+                                                            !is_null($submission->approved_by) &&
+                                                                !is_null($submission->approved_at) &&
+                                                                is_null($submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->first()))
                                                             <td>
-                                                                <button class="btn btn-sm btn-warning">Check Out</button>
+                                                                @php
+                                                                    $currentDate = \Carbon\Carbon::now();
+                                                                    $loanDate = \Carbon\Carbon::parse(
+                                                                        $submission->submissionFormsCheckoutDate
+                                                                            ->loan_application_asset_date,
+                                                                    );
+                                                                    $returnDate = \Carbon\Carbon::parse(
+                                                                        $submission->submissionFormsCheckoutDate
+                                                                            ->return_asset_date,
+                                                                    );
+                                                                @endphp
+
+                                                                @if ($currentDate->lt($loanDate))
+                                                                    <span class="badge badge-info">Not available yet</span>
+                                                                @elseif ($currentDate->gte($returnDate))
+                                                                    <span class="badge badge-danger">Expired</span>
+                                                                @else
+                                                                    @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)
+                                                                        @if (is_null($item_asset->asset->assign_to) &&
+                                                                                is_null($item_asset->asset->assign_at) &&
+                                                                                (is_null($item_asset->asset->check_out_by) && is_null($item_asset->asset->check_out_at)))
+                                                                            <button class="btn btn-sm btn-warning"
+                                                                                data-toggle="modal"
+                                                                                data-target="#check_out{{ $item_asset->asset->id }}">
+                                                                                Check Out
+                                                                            </button>
+                                                                        @else
+                                                                            <span class="badge badge-danger">Unavailable</span>
+                                                                        @endif
+                                                                    @elseif ($item_asset->asset->status == 4)
+                                                                        <span class="badge badge-danger">On Maintenance</span>
+                                                                    @elseif ($item_asset->asset->status == 5)
+                                                                        <span class="badge badge-danger">License Expired</span>
+                                                                    @endif
+                                                                @endif
                                                             </td>
+                                                        @elseif (!is_null($submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->first()))
+                                                            <td>-</td>
                                                         @endif
                                                     @endrole
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -167,6 +211,38 @@
             </div>
         </div>
     </div>
+    @foreach ($submission->submissionFormItemAsset as $item_asset)
+        {{-- Assign To --}}
+        <div class="modal fade" id="check_out{{ $item_asset->asset->id }}">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form method="POST" id="assign-form-{{ $item_asset->asset->id }}"
+                        action="{{ route('submission.checkOut', ['id' => $submission->id]) }}" class="forms-control"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('patch')
+                        <input type="hidden" name="assets_id" value="{{ $item_asset->asset->id }}">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalLongTitle">Add Checkout and Proof Checkout</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="attachment">Proof Checkout <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                    accept="image/*;capture=camera" multiple="true" required>
+                                <p class="text-danger py-1">* .png .jpg .jpeg</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-sm btn-primary mx-2">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
     @push('javascript-bottom')
         @include('javascript.submission.script')
     @endpush

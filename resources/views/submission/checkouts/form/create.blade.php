@@ -17,7 +17,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="loan_application_asset_date">Loan Application Asset Date <span class="text-danger">*</span></label>
+                                            <label for="loan_application_asset_date">Loan Application Asset Date <span
+                                                    class="text-danger">*</span></label>
                                             <input type="date" class="form-control" id="loan_application_asset_date"
                                                 name="loan_application_asset_date" min="{{ date('Y-m-d') }}"
                                                 value="{{ old('loan_application_asset_date') }}">
@@ -25,7 +26,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="return_asset_date">Return Asset Date <span class="text-danger">*</span></label>
+                                            <label for="return_asset_date">Return Asset Date <span
+                                                    class="text-danger">*</span></label>
                                             <input type="date" class="form-control" id="return_asset_date"
                                                 name="return_asset_date" min="{{ date('Y-m-d') }}"
                                                 value="{{ old('return_asset_date') }}">
@@ -121,7 +123,8 @@
                                                             <button type='button' class='delete-row btn btn-sm btn-danger'
                                                                 value='Delete'>Delete</button>
                                                             <input type='hidden' class='form-control'
-                                                                name='asset_item_check[]' value='{{ $list_asset['id'] }}'>
+                                                                name='asset_item_check[]'
+                                                                value='{{ $list_asset['id'] }}'>
                                                         </td>
                                                     </tr>
                                                 @endforeach

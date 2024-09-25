@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('history_check_in_outs', function (Blueprint $table) {
-            $table->integer('id')->autoIncrement();
+
             $table->integer('submission_form_id')->nullable();
 
             $table->foreign('submission_form_id')->references('id')->on('submission_forms');

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('status');
             $table->bigInteger('value')->nullable();
-            $table->date('expired')->nullable();
+            $table->date('expired_at')->nullable();
             $table->text('description')->nullable();
             $table->json('attachment')->nullable();
             $table->integer('brand_id');

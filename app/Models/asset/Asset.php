@@ -31,6 +31,11 @@ class Asset extends Model
         return $this->belongsTo(User::class, 'assign_to');
     }
 
+    public function checkOut()
+    {
+        return $this->belongsTo(User::class, 'check_out_by');
+    }
+
     public function historyAssign()
     {
         return $this->hasMany(HistoryAssign::class, 'assets_id')->orderBy('history_assigns.created_at', 'desc')->orderBy('history_assigns.latest', 'desc');

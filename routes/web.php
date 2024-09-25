@@ -92,6 +92,7 @@ Route::group(['middleware' => ['role:staff']], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
         Route::get('create/{type}', 'create')->name('create');
         Route::post('store/{type}', 'store')->name('store');
+        Route::match(['put', 'patch'], 'check-out/{id}', 'checkOut')->name('checkOut');
     });
     Route::resource('submission', SubmissionFormController::class, ['except' => ['index', 'create', 'store']])->parameters(['submission' => 'id']);
 });

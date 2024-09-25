@@ -50,7 +50,7 @@ class PhysicalAssetController extends Controller
                 if (!is_null($data->assign_to)) {
                     return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
                 } elseif (!is_null($data->check_out_by)) {
-                    return ' <span class="badge badge-danger">Check Out By .' . $data->checkOutBy->name . '</span>';
+                    return ' <span class="badge badge-warning">Check Out By ' . $data->checkOut->name . '</span>';
                 } elseif ($data->status == 4) {
                     return '<span class="badge badge-danger">On Maintence</span>';
                 } else {

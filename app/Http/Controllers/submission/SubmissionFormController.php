@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submission;
 use App\Http\Controllers\Controller;
 use App\Models\asset\Asset;
 use App\Models\HistoryAssign;
+use App\Models\HistoryCheckInOut;
 use App\Models\master\User;
 use App\Models\submission\SubmissionForm;
 use App\Models\submission\SubmissionFormItemAsset;
@@ -222,7 +223,7 @@ class SubmissionFormController extends Controller
                                     array_push($date_request, [
                                         'submission_form_id' => $submission->id,
                                         'loan_application_asset_date' => $request->loan_application_asset_date,
-                                        'return_asset_date' => $request->loan_application_asset_date,
+                                        'return_asset_date' => $request->return_asset_date,
                                     ]);
 
                                     $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::insert($date_request);
@@ -561,6 +562,108 @@ class SubmissionFormController extends Controller
                      */
                     DB::rollBack();
                     return redirect()->back()->with('failed', 'Failed Add Assign');
+                }
+            } else {
+                session()->flash('failed', 'Invalid Request!');
+                return response()->json(['message', 'Invalid Request!'], 404);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', $e->getMessage());
+        }
+    }
+
+    public function checkOut(Request $request, string $id)
+    {
+        try {
+            $submission = SubmissionForm::find($id);
+
+            if (!is_null($submission)) {
+                /**
+                 * Begin Transaction
+                 */
+                DB::beginTransaction();
+
+                /**
+                 * Update Assign Status Asset Record
+                 */
+                $add_check_out = Asset::where('id', $request->assets_id)->update([
+                    'check_out_by' => $submission->created_by,
+                    'check_out_at' => now(),
+                ]);
+
+                /**
+                 * Validation Update Asset Record
+                 */
+                if ($add_check_out) {
+                    $path = 'public/asset/physical/proof_checkout';
+                    $path_store = 'storage/asset/physical/proof_checkout';
+
+                    // Check Exsisting Path
+                    if (!Storage::exists($path)) {
+                        // Create new Path Directory
+                        Storage::makeDirectory($path);
+                    }
+
+                    $proof_check_out_attachment = [];
+
+                    foreach ($request->file('attachment') as $file) {
+                        // File Upload Configuration
+                        $file_name = $request->assets_id . '-proof-check-out-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
+
+                        // Uploading File
+                        $file->storePubliclyAs($path, $file_name);
+
+                        // Check Upload Success
+                        if (Storage::exists($path . '/' . $file_name)) {
+                            $proof_check_out_attachment['proof_checkout'][] = $path_store . '/' . $file_name;
+                        } else {
+                            // Failed and Rollback
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->withInput();
+                        }
+                    }
+
+                    if (empty($proof_check_out_attachment)) {
+                        // Update Record for Attachment
+                        $proof_check_out_attachment = null;
+                    } else {
+                        // Update Record for Attachment
+                        $proof_check_out_attachment = json_encode($proof_check_out_attachment);
+                    }
+
+                    $history_check_out = HistoryCheckInOut::create([
+                        'assets_id' => $request->assets_id,
+                        'submission_form_id' => $id,
+                        'check_out_by' => $submission->created_by,
+                        'check_out_at' => now(),
+                        'latest' => true,
+                        'attachment' => $proof_check_out_attachment,
+                        'created_by' => Auth::user()->id,
+                        'updated_by' => Auth::user()->id,
+                    ]);
+
+                    /**
+                     * Validation Add history Record
+                     */
+                    if ($history_check_out) {
+                        DB::commit();
+                        return redirect()->back()->with('success', 'Check Out Successfully Add');
+                    } else {
+                        /**
+                         * Failed Store Record
+                         */
+                        DB::rollBack();
+                        return redirect()->back()->with('failed', 'Failed Add Record Check Out');
+                    }
+                } else {
+                    /**
+                     * Failed Store Record
+                     */
+                    DB::rollBack();
+                    return redirect()->back()->with('failed', 'Failed Add Check Out');
                 }
             } else {
                 session()->flash('failed', 'Invalid Request!');
