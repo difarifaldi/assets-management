@@ -47,10 +47,10 @@ class PhysicalAssetController extends Controller
             })
 
             ->addColumn('status', function ($data) {
-                if (!is_null($data->assign_to)) {
+                if (!is_null($data->assign_to) && !is_null($data->assign_at)) {
                     return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
-                } elseif (!is_null($data->check_out_by)) {
-                    return ' <span class="badge badge-warning">Check Out By ' . $data->checkOut->name . '</span>';
+                } elseif (!is_null($data->check_out_by) && !is_null($data->check_out_at)) {
+                    return ' <span class="badge badge-danger">Check Out By ' . $data->checkOut->name . '</span>';
                 } elseif ($data->status == 4) {
                     return '<span class="badge badge-danger">On Maintence</span>';
                 } else {
