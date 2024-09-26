@@ -678,14 +678,14 @@ class SubmissionFormController extends Controller
     {
 
         try {
-            dd($request->all());
             $submission = SubmissionForm::find($id);
 
             if (!is_null($submission)) {
-                $last_check_out = HistoryCheckInOut::where('assets_id', $id)->whereNull('deleted_by')->whereNull('check_in_by')->whereNull('check_in_at')->whereNull('deleted_by')->whereNotNull('latest')->first();
+                $last_check_out = HistoryCheckInOut::where('assets_id', $request->assets_id)->whereNull('deleted_by')->whereNull('check_in_by')->whereNull('check_in_at')->whereNull('deleted_by')->whereNotNull('latest')->first();
                 /**
                  * Begin Transaction
                  */
+
                 DB::beginTransaction();
 
                 $remove_check_out = Asset::where('id', $request->assets_id)->update([
@@ -707,6 +707,8 @@ class SubmissionFormController extends Controller
                     }
 
                     $proof_check_in_attachment['proof_checkout'] = json_decode($last_check_out->attachment)->proof_checkout;
+
+
 
                     foreach ($request->file('attachment') as $file) {
                         // File Upload Configuration

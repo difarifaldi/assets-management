@@ -7,14 +7,17 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h5>
+                            <sup style="font-size: 10px">Rp </sup>{{ number_format($totalValue, 0, ',', '.') }}
+                        </h5>
 
-                        <p>New Orders</p>
+
+                        <p>Total Value</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-bag"></i>
+                        <i class="ion ion-cash"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
                 </div>
             </div>
             <!-- ./col -->
@@ -22,14 +25,15 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>53<sup style="font-size: 20px">%</sup></h3>
+                        <h5>{{ $allAsset }}
+                        </h5>
 
-                        <p>Bounce Rate</p>
+                        <p>All Asset</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
+                        <i class="ion ion-archive"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
                 </div>
             </div>
             <!-- ./col -->
@@ -37,14 +41,14 @@
                 <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>44</h3>
+                        <h5>{{ $physical }}</h5>
 
-                        <p>User Registrations</p>
+                        <p>Physical Asset</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-person-add"></i>
+                        <i class="ion ion-cube"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
                 </div>
             </div>
             <!-- ./col -->
@@ -52,14 +56,14 @@
                 <!-- small box -->
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>65</h3>
+                        <h5>{{ $license }}</h5>
 
-                        <p>Unique Visitors</p>
+                        <p>License Asset</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
+                        <i class="ion ion-document"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
                 </div>
             </div>
             <!-- ./col -->
