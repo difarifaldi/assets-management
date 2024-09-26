@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Submission;
+namespace App\Http\Controllers\submission;
 
 use App\Http\Controllers\Controller;
 use App\Models\asset\Asset;
