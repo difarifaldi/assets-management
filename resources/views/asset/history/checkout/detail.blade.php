@@ -14,14 +14,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Loan Application Asset Date</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ $historyCheckInOut->submission->submissionFormsCheckoutDate->loan_application_asset_date }}
+                                    {{ date('d F Y', strtotime($historyCheckInOut->submission->submissionFormsCheckoutDate->loan_application_asset_date)) }}
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Return Asset Date</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ $historyCheckInOut->submission->submissionFormsCheckoutDate->return_asset_date }}
+                                    {{ date('d F Y', strtotime($historyCheckInOut->submission->submissionFormsCheckoutDate->return_asset_date)) }}
                                 </div>
                             </div>
 
