@@ -3,6 +3,7 @@
 namespace App\Models\asset;
 
 use App\Models\HistoryAssign;
+use App\Models\HistoryCheckInOut;
 use App\Models\HistoryMaintence;
 use App\Models\master\CategoryAssets;
 use App\Models\master\Brand;
@@ -39,6 +40,11 @@ class Asset extends Model
     public function historyAssign()
     {
         return $this->hasMany(HistoryAssign::class, 'assets_id')->orderBy('history_assigns.created_at', 'desc')->orderBy('history_assigns.latest', 'desc');
+    }
+
+    public function historyCheck()
+    {
+        return $this->hasMany(HistoryCheckInOut::class, 'assets_id')->orderBy('history_check_in_outs.created_at', 'desc')->orderBy('history_check_in_outs.latest', 'desc');
     }
 
     public function historyMaintence()

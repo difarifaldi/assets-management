@@ -5,6 +5,8 @@ use App\Http\Controllers\asset\PhysicalAssetController;
 use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\history\HistoryAssignController;
+use App\Http\Controllers\history\HistoryMaintenceController;
+use App\Http\Controllers\history\HistoryCheckInOutController;
 use App\Http\Controllers\master\CategoryAssetsController;
 use App\Http\Controllers\master\DivisionController;
 use App\Http\Controllers\master\ManufactureController;
@@ -28,6 +30,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+
+
+Route::get('dashboard', [PhysicalAssetController::class, 'dashboard'])->name('dashboard');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
@@ -90,7 +95,8 @@ Route::group(['middleware' => ['role:admin']], function () {
 
     Route::group(['prefix' => 'history', 'as' => 'history.'], function () {
         Route::get('assign/{id}', [HistoryAssignController::class, 'show'])->name('assign.show');
-        Route::resource('checkout', HistoryAssignController::class)->parameters(['checkout' => 'id']);
+        Route::get('checkout/{id}', [HistoryCheckInOutController::class, 'show'])->name('checkout.show');
+        Route::get('maintence/{id}', [HistoryMaintenceController::class, 'show'])->name('maintence.show');
     });
 });
 

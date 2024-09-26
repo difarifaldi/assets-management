@@ -676,8 +676,9 @@ class SubmissionFormController extends Controller
 
     public function checkIn(Request $request, string $id)
     {
-        try {
 
+        try {
+            dd($request->all());
             $submission = SubmissionForm::find($id);
 
             if (!is_null($submission)) {

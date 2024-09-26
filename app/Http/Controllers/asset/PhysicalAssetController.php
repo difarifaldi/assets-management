@@ -830,4 +830,9 @@ class PhysicalAssetController extends Controller
             session()->flash('failed', $e->getMessage());
         }
     }
+
+    public function dashboard()
+    {
+        return view('dashboard');
+    }
 }

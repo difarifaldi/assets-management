@@ -244,7 +244,8 @@
                                                             {{ !is_null($history_assign->return_at) ? date('d F Y H:i:s', strtotime($history_assign->return_at)) : '-' }}
                                                         </td>
                                                         <td align="center">
-                                                            <button class="btn btn-sm btn-primary">Detail</button>
+                                                            <a href="{{ route('history.assign.show', ['id' => $history_assign->id]) }}"
+                                                                class="btn btn-sm btn-primary">Detail</a>
                                                         </td>
                                                     </tr>
                                                 @endforeach

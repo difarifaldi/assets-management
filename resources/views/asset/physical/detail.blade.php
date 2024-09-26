@@ -92,7 +92,7 @@
                                                         {{ $asset->assignTo->name }}</span>
                                                 @elseif(!is_null($asset->check_out_by))
                                                     <span class="badge badge-danger">Check Out By
-                                                        {{ $asset->checkOutBy->name }}</span>
+                                                        {{ $asset->checkOut->name }}</span>
                                                 @else
                                                     <span class="badge badge-success">Available</span>
                                                 @endif
@@ -254,7 +254,8 @@
                                                         </td>
 
                                                         <td align="center">
-                                                            <button class="btn btn-sm btn-primary">Detail</button>
+                                                            <a href="{{ route('history.maintence.show', ['id' => $history_maintence->id]) }}"
+                                                                class="btn btn-sm btn-primary">Detail</a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -310,7 +311,61 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane pt-3 fade" id="nav-check" role="tabpanel">...</div>
+
+                                <div class="tab-pane pt-3 fade" id="nav-check" role="tabpanel">
+                                    <div class="table-responsive py-3">
+                                        <table class="table table-bordered datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        #
+                                                    </th>
+                                                    <th>
+                                                        Check Out At
+                                                    </th>
+                                                    <th>
+                                                        Check Out By
+                                                    </th>
+                                                    <th>
+                                                        Check In At
+                                                    </th>
+
+                                                    <th>
+                                                        Check In By
+                                                    </th>
+                                                    <th>
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($asset->historyCheck as $index => $history_check)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $index + 1 }}
+                                                        </td>
+                                                        <td>
+                                                            {{ date('d F Y H:i:s', strtotime($history_check->check_out_at)) }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $history_check->checkOut->name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ !is_null($history_check->check_in_at) ? date('d F Y H:i:s', strtotime($history_check->check_in_at)) : '-' }}
+                                                        </td>
+                                                        <td>
+                                                            {{ !is_null($history_check->checkIn) ? $history_check->checkIn->name : '-' }}
+                                                        </td>
+                                                        <td align="center">
+                                                            <a href="{{ route('history.checkout.show', ['id' => $history_check->id]) }}"
+                                                                class="btn btn-sm btn-primary">Detail</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>

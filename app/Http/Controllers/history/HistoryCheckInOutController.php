@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\history;
 
+use App\Http\Controllers\Controller;
 use App\Models\HistoryCheckInOut;
 use App\Http\Requests\StoreHistoryCheckInOutRequest;
 use App\Http\Requests\UpdateHistoryCheckInOutRequest;
+use Exception;
+use Illuminate\Http\Request;
 
 class HistoryCheckInOutController extends Controller
 {
@@ -35,9 +38,23 @@ class HistoryCheckInOutController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(HistoryCheckInOut $historyCheckInOut)
+    public function show(Request $request, String $id)
     {
-        //
+
+        try {
+            $historyCheckInOut = HistoryCheckInOut::where('id', $id)->first();
+            if (!is_null($historyCheckInOut)) {
+
+
+                return view('asset.history.checkout.detail', compact('historyCheckInOut'));
+            } else {
+                return redirect()
+                    ->back()
+                    ->with(['failed' => 'Invalid Request!']);
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->with(['failed', $e->getMessage()]);
+        }
     }
 
     /**
