@@ -84,21 +84,21 @@
                                                 <th>
                                                     Asset
                                                 </th>
-                                                <th>
+                                                <th width='10%'>
                                                     Barcode
                                                 </th>
                                                 <th>
                                                     Category
                                                 </th>
-                                                <th>
+                                                <th width='10%'>
                                                     Status Asset
                                                 </th>
-                                                <th>
-                                                    Status Assigned
+                                                <th width='15%'>
+                                                    Status Checked
                                                 </th>
                                                 @role('staff')
                                                     @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
-                                                        <th>
+                                                        <th width='15%'>
                                                             Action
                                                         </th>
                                                     @endif
@@ -127,8 +127,14 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if (!is_null($submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->first()))
+                                                        @if (
+                                                            !is_null(
+                                                                $submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->whereNull('check_in_by')->first()))
                                                             <span class="badge badge-success">Check Out</span>
+                                                        @elseif (
+                                                            !is_null(
+                                                                $submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->where('check_in_by')->first()))
+                                                            <span class="badge badge-info">Check In</span>
                                                         @else
                                                             -
                                                         @endif
@@ -160,7 +166,7 @@
                                                                         @if (is_null($item_asset->asset->assign_to) &&
                                                                                 is_null($item_asset->asset->assign_at) &&
                                                                                 (is_null($item_asset->asset->check_out_by) && is_null($item_asset->asset->check_out_at)))
-                                                                            <button class="btn btn-sm btn-warning"
+                                                                            <button class="btn btn-sm btn-primary"
                                                                                 data-toggle="modal"
                                                                                 data-target="#check_out{{ $item_asset->asset->id }}">
                                                                                 Check Out
@@ -175,8 +181,16 @@
                                                                     @endif
                                                                 @endif
                                                             </td>
-                                                        @elseif (!is_null($submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->first()))
-                                                            <td>-</td>
+                                                        @elseif (isset($item_asset->asset->check_out_by) && isset($item_asset->asset->check_out_at))
+                                                            <td>
+
+                                                                <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                                                    data-target="#check_in{{ $item_asset->asset->id }}">
+                                                                    Check In
+                                                                </button>
+                                                            </td>
+                                                        @else
+                                                            <td> -</td>
                                                         @endif
                                                     @endrole
 
@@ -212,7 +226,7 @@
         </div>
     </div>
     @foreach ($submission->submissionFormItemAsset as $item_asset)
-        {{-- Assign To --}}
+        {{-- Check Out --}}
         <div class="modal fade" id="check_out{{ $item_asset->asset->id }}">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -242,7 +256,40 @@
                 </div>
             </div>
         </div>
+
+        {{-- Check In --}}
+        <div class="modal fade" id="check_in{{ $item_asset->asset->id }}">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form method="POST" id="checkIn-form-{{ $item_asset->asset->id }}"
+                        action="{{ route('submission.checkIn', ['id' => $submission->id]) }}" class="forms-control"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('patch')
+                        <input type="hidden" name="assets_id" value="{{ $item_asset->asset->id }}">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalLongTitle">Add CheckIn and Proof CheckIn</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="attachment">Proof CheckIn <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                    accept="image/*;capture=camera" multiple="true" required>
+                                <p class="text-danger py-1">* .png .jpg .jpeg</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-sm btn-primary mx-2">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     @endforeach
+
+
     @push('javascript-bottom')
         @include('javascript.submission.script')
     @endpush

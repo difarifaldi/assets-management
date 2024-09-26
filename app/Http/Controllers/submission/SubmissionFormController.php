@@ -674,6 +674,107 @@ class SubmissionFormController extends Controller
         }
     }
 
+    public function checkIn(Request $request, string $id)
+    {
+        try {
+
+            $submission = SubmissionForm::find($id);
+
+            if (!is_null($submission)) {
+                $last_check_out = HistoryCheckInOut::where('assets_id', $id)->whereNull('deleted_by')->whereNull('check_in_by')->whereNull('check_in_at')->whereNull('deleted_by')->whereNotNull('latest')->first();
+                /**
+                 * Begin Transaction
+                 */
+                DB::beginTransaction();
+
+                $remove_check_out = Asset::where('id', $request->assets_id)->update([
+                    'check_out_by' => null,
+                    'check_out_at' => null,
+                ]);
+
+                /**
+                 * Validation Update Asset Record
+                 */
+                if ($remove_check_out) {
+                    $path = 'public/asset/physical/proof_check_in';
+                    $path_store = 'storage/asset/physical/proof_check_in';
+
+                    // Check Exsisting Path
+                    if (!Storage::exists($path)) {
+                        // Create new Path Directory
+                        Storage::makeDirectory($path);
+                    }
+
+                    $proof_check_in_attachment['proof_checkout'] = json_decode($last_check_out->attachment)->proof_checkout;
+
+                    foreach ($request->file('attachment') as $file) {
+                        // File Upload Configuration
+                        $file_name = $request->assets_id . '-proof-check-in-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
+
+                        // Uploading File
+                        $file->storePubliclyAs($path, $file_name);
+
+                        // Check Upload Success
+                        if (Storage::exists($path . '/' . $file_name)) {
+                            $proof_check_in_attachment['proof_check_in'][] = $path_store . '/' . $file_name;
+                        } else {
+                            // Failed and Rollback
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->withInput();
+                        }
+                    }
+
+                    $proof_check_in_attachment = json_encode($proof_check_in_attachment);
+
+                    $history_check_in = HistoryCheckInOut::where('assets_id', $request->assets_id)
+                        ->whereNull('deleted_by')
+                        ->whereNull('check_in_by')
+                        ->whereNull('check_in_at')
+                        ->whereNull('deleted_by')
+                        ->whereNotNull('latest')
+                        ->update([
+                            'check_in_by' => Auth::user()->id,
+                            'check_in_at' => now(),
+                            'latest' => null,
+                            'attachment' => $proof_check_in_attachment,
+                            'updated_by' => Auth::user()->id,
+                        ]);
+
+                    /**
+                     * Validation Add history Record
+                     */
+                    if ($history_check_in) {
+                        DB::commit();
+                        return redirect()->back()->with('success', 'Check In Successfully Add');
+                    } else {
+                        /**
+                         * Failed Store Record
+                         */
+                        DB::rollBack();
+                        return redirect()->back()->with('failed', 'Failed Add Check In');
+                    }
+                } else {
+                    /**
+                     * Failed Store Record
+                     */
+                    DB::rollBack();
+                    return redirect()->back()->with('failed', 'Failed Add Check In');
+                }
+            } else {
+                /**
+                 * Failed Store Record
+                 */
+                DB::rollBack();
+                return redirect()->back()->with('failed', 'Invalid Request!');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', $e->getMessage());
+        }
+    }
+
     public function destroy(string $id)
     {
         try {

@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\history;
 
+use App\Http\Controllers\Controller;
 use App\Models\HistoryAssign;
 use App\Http\Requests\StoreHistoryAssignRequest;
 use App\Http\Requests\UpdateHistoryAssignRequest;
+use Exception;
+use Illuminate\Http\Request;
 
 class HistoryAssignController extends Controller
 {
@@ -35,15 +38,29 @@ class HistoryAssignController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(HistoryAssign $historyAssign)
+    public function show(Request $request, String $id)
     {
-        //
+
+        try {
+            $historyAssign = HistoryAssign::where('id', $id)->first();
+            if (!is_null($historyAssign)) {
+
+
+                return view('asset.history.assign.detail', compact('historyAssign'));
+            } else {
+                return redirect()
+                    ->back()
+                    ->with(['failed' => 'Invalid Request!']);
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->with(['failed', $e->getMessage()]);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(HistoryAssign $historyAssign)
+    public function edit(Request $request, String $id)
     {
         //
     }

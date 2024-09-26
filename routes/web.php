@@ -3,6 +3,8 @@
 use App\Http\Controllers\asset\LicenseAssetController;
 use App\Http\Controllers\asset\PhysicalAssetController;
 use App\Http\Controllers\AuthController;
+
+use App\Http\Controllers\history\HistoryAssignController;
 use App\Http\Controllers\master\CategoryAssetsController;
 use App\Http\Controllers\master\DivisionController;
 use App\Http\Controllers\master\ManufactureController;
@@ -85,6 +87,11 @@ Route::group(['middleware' => ['role:admin']], function () {
         Route::post('reject', 'reject')->name('reject');
         Route::match(['put', 'patch'], 'assign-to/{id}', 'assignTo')->name('assignTo');
     });
+
+    Route::group(['prefix' => 'history', 'as' => 'history.'], function () {
+        Route::get('assign/{id}', [HistoryAssignController::class, 'show'])->name('assign.show');
+        Route::resource('checkout', HistoryAssignController::class)->parameters(['checkout' => 'id']);
+    });
 });
 
 Route::group(['middleware' => ['role:staff']], function () {
@@ -93,6 +100,7 @@ Route::group(['middleware' => ['role:staff']], function () {
         Route::get('create/{type}', 'create')->name('create');
         Route::post('store/{type}', 'store')->name('store');
         Route::match(['put', 'patch'], 'check-out/{id}', 'checkOut')->name('checkOut');
+        Route::match(['put', 'patch'], 'check-in/{id}', 'checkIn')->name('checkIn');
     });
     Route::resource('submission', SubmissionFormController::class, ['except' => ['index', 'create', 'store']])->parameters(['submission' => 'id']);
 });
