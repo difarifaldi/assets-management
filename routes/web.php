@@ -13,7 +13,6 @@ use App\Http\Controllers\master\ManufactureController;
 use App\Http\Controllers\master\BrandController;
 use App\Http\Controllers\master\UserController;
 use App\Http\Controllers\Submission\SubmissionFormController;
-use App\Http\Controllers\Submission\SubmissionFormsCheckoutDateController;
 use Illuminate\Support\Facades\Route;
 
 /*
