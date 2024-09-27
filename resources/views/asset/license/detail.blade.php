@@ -208,7 +208,7 @@
                                 </div>
                                 <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">
                                     <div class="table-responsive py-3">
-                                        <table class="table table-bordered datatable">
+                                        <table id="table-assign" class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -381,4 +381,11 @@
     @push('javascript-bottom')
         @include('javascript.asset.license.script')
     @endpush
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#table-assign').DataTable();
+        });
+    </script>
 @endsection

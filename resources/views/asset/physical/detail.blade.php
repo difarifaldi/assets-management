@@ -211,7 +211,7 @@
                                 </div>
                                 <div class="tab-pane pt-3 maintence" id="nav-maintence" role="tabpanel">
                                     <div class="table-responsive py-3">
-                                        <table class="table table-bordered datatable">
+                                        <table id="table-maintence" class="table table-bordered ">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -266,7 +266,7 @@
 
                                 <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">
                                     <div class="table-responsive py-3">
-                                        <table class="table table-bordered datatable">
+                                        <table id="table-assign" class="table table-bordered ">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -314,7 +314,7 @@
 
                                 <div class="tab-pane pt-3 fade" id="nav-check" role="tabpanel">
                                     <div class="table-responsive py-3">
-                                        <table class="table table-bordered datatable">
+                                        <table id="table-check" class="table table-bordered ">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -554,4 +554,12 @@
     @push('javascript-bottom')
         @include('javascript.asset.physical.script')
     @endpush
+
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#table-assign, #table-check, #table-maintence').DataTable();
+        });
+    </script>
 @endsection
