@@ -1,4 +1,8 @@
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('#table-assign, #table-check, #table-maintence').DataTable();
+    });
+
     $("form").submit(function(e) {
         e.preventDefault();
         Swal.fire({

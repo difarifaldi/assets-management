@@ -555,11 +555,6 @@
         @include('javascript.asset.physical.script')
     @endpush
 
-    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
-    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#table-assign, #table-check, #table-maintence').DataTable();
-        });
-    </script>
+
+    <script></script>
 @endsection
