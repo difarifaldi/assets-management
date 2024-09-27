@@ -259,7 +259,8 @@
                                 @role('admin')
                                     @if (is_null($asset->assign_to) &&
                                             is_null($asset->assign_at) &&
-                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)) &&
+                                            $asset->status == 1)
                                         <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
                                             To</button>
                                     @elseif(

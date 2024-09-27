@@ -376,9 +376,11 @@
                                                 (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
                                             <button class="btn btn-warning mr-2" data-toggle="modal"
                                                 data-target="#maintence">Maintence</button>
-                                            <button data-toggle="modal" data-target="#assignTo"
-                                                class="btn btn-primary">Assign
-                                                To</button>
+                                            @if ($asset->status == 1)
+                                                <button data-toggle="modal" data-target="#assignTo"
+                                                    class="btn btn-primary">Assign
+                                                    To</button>
+                                            @endif
                                         @elseif(
                                             !is_null($asset->assign_to) &&
                                                 !is_null($asset->assign_at) &&
