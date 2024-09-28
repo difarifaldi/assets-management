@@ -830,13 +830,4 @@ class PhysicalAssetController extends Controller
             session()->flash('failed', $e->getMessage());
         }
     }
-
-    public function dashboard()
-    {
-        $totalValue = Asset::sum('value');
-        $allAsset = Asset::all()->count();
-        $physical = Asset::where('type', 1)->count();
-        $license = Asset::where('type', 2)->count();
-        return view('dashboard', compact('allAsset', 'physical', 'license', 'totalValue'));
-    }
 }

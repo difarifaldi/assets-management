@@ -5,65 +5,56 @@
         <div class="row">
             <div class="col-lg-3 col-6">
                 <!-- small box -->
-                <div class="small-box bg-info">
+                <div class="small-box bg-info py-2">
                     <div class="inner">
                         <h5>
                             <sup style="font-size: 10px">Rp </sup>{{ number_format($totalValue, 0, ',', '.') }}
                         </h5>
-
-
-                        <p>Total Value</p>
+                        <p><b>Total Value</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-cash"></i>
                     </div>
-
                 </div>
             </div>
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
-                <div class="small-box bg-success">
+                <div class="small-box bg-success py-2">
                     <div class="inner">
                         <h5>{{ $allAsset }}
                         </h5>
-
-                        <p>All Asset</p>
+                        <p><b>All Asset</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-archive"></i>
                     </div>
-
                 </div>
             </div>
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
-                <div class="small-box bg-warning">
+                <div class="small-box bg-warning py-2">
                     <div class="inner">
                         <h5>{{ $physical }}</h5>
-
-                        <p>Physical Asset</p>
+                        <p><b>Physical Asset</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-cube"></i>
                     </div>
-
                 </div>
             </div>
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
-                <div class="small-box bg-danger">
+                <div class="small-box bg-danger py-2">
                     <div class="inner">
                         <h5>{{ $license }}</h5>
-
-                        <p>License Asset</p>
+                        <p><b>License Asset</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-document"></i>
                     </div>
-
                 </div>
             </div>
             <!-- ./col -->
