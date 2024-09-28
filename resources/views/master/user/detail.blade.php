@@ -16,9 +16,11 @@
                                     <button class="nav-link active" data-toggle="tab" data-target="#nav-detail"
                                         type="button" role="tab" aria-controls="nav-detail"
                                         aria-selected="true">Detail</button>
-                                    <button class="nav-link" data-toggle="tab" data-target="#nav-assets" type="button"
-                                        role="tab" aria-controls="nav-maintence" aria-selected="false">List of
-                                        Assets</button>
+                                    @if ($user->hasRole('staff'))
+                                        <button class="nav-link" data-toggle="tab" data-target="#nav-assets" type="button"
+                                            role="tab" aria-controls="nav-maintence" aria-selected="false">List of
+                                            Assets</button>
+                                    @endif
                                 </div>
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
