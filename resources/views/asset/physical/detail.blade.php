@@ -93,6 +93,9 @@
                                                 @elseif(!is_null($asset->check_out_by))
                                                     <span class="badge badge-danger">Check Out By
                                                         {{ $asset->checkOut->name }}</span>
+                                                @elseif ($asset->status == 4)
+                                                    <span class="badge badge-danger">On Maintence
+                                                    </span>
                                                 @else
                                                     <span class="badge badge-success">Available</span>
                                                 @endif
@@ -556,5 +559,4 @@
     @endpush
 
 
-    <script></script>
 @endsection

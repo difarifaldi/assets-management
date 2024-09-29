@@ -657,7 +657,9 @@ class PhysicalAssetController extends Controller
                     // Update Record for Attachment
                     $proof_maintence_attachment = json_encode($proof_maintence_attachment);
                 }
-
+                $assetStatus = $physical->update([
+                    'status' => 4
+                ]);
                 $history_maintence = HistoryMaintence::create([
                     'assets_id' => $id,
                     'description' => $request->description,
@@ -672,7 +674,7 @@ class PhysicalAssetController extends Controller
                 /**
                  * Validation Add history Record
                  */
-                if ($history_maintence) {
+                if ($history_maintence && $assetStatus) {
                     DB::commit();
                     return redirect()->back()->with('success', 'Maintence Successfully Add');
                 } else {
