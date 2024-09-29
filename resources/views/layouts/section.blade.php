@@ -35,6 +35,7 @@
             </div>
             <!-- /.content-wrapper -->
 
+            @include('layouts.footer')
 
             <!-- Control Sidebar -->
             <aside class="control-sidebar control-sidebar-dark">
@@ -43,9 +44,6 @@
             <!-- /.control-sidebar -->
         </div>
         <!-- ./wrapper -->
-
-
-
 
     </body>
 @endsection

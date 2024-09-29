@@ -123,7 +123,7 @@ class SubmissionFormController extends Controller
                             ->whereNull('assign_at')
                             ->whereNull('check_out_by')
                             ->whereNull('check_out_at')
-                            ->whereNotIn('status', [2, 3, 4, 5])
+                            ->whereNotIn('status', [3, 4, 5])
                             ->get();
                     } else {
                         $assets = Asset::whereNull('deleted_by')
@@ -132,7 +132,7 @@ class SubmissionFormController extends Controller
                             ->whereNull('assign_at')
                             ->whereNull('check_out_by')
                             ->whereNull('check_out_at')
-                            ->whereNotIn('status', [2, 3, 4, 5])
+                            ->whereNotIn('status', [3, 4, 5])
                             ->where('type', 1)
                             ->get();
                     }

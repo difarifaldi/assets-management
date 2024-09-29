@@ -3,7 +3,7 @@
 use App\Http\Controllers\asset\LicenseAssetController;
 use App\Http\Controllers\asset\PhysicalAssetController;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\history\HistoryAssignController;
 use App\Http\Controllers\history\HistoryMaintenceController;
 use App\Http\Controllers\history\HistoryCheckInOutController;
@@ -13,6 +13,7 @@ use App\Http\Controllers\master\ManufactureController;
 use App\Http\Controllers\master\BrandController;
 use App\Http\Controllers\master\UserController;
 use App\Http\Controllers\submission\SubmissionFormController;
+use App\Models\master\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,12 +33,16 @@ Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
-        return view('home');
+        if (auth()->check() && User::find(auth()->user()->id)->hasRole('admin')) {
+            return redirect()->route('dashboard');
+        } else {
+            return view('home');
+        }
     })->name('home');
 });
 
 Route::group(['middleware' => ['role:admin']], function () {
-    Route::get('dashboard', [PhysicalAssetController::class, 'dashboard'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
         Route::group(['controller' => ManufactureController::class, 'prefix' => 'manufacture', 'as' => 'manufacture.'], function () {
