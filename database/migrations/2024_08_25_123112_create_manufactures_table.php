@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('manufactures', function (Blueprint $table) {
-            $table->id();
+            $table->engine = 'InnoDB';
+            $table->integer('id')->autoIncrement();
             $table->string('name');
             $table->text('address')->nullable();
             $table->integer('created_by');
