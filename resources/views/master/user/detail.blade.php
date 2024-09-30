@@ -167,7 +167,7 @@
                                 </div>
                             </div>
                             <div class="pt-3">
-                                <a href="{{ route('master.user.index') }}" class="btn btn-danger">Back</a>
+                                <a href="{{ url()->previous() }}" class="btn btn-danger">Back</a>
                             </div>
                         </div>
                         <!-- /.card-body -->
