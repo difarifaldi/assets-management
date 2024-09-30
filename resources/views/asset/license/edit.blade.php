@@ -63,6 +63,10 @@
                                         <option disabled hidden selected>Choose Status</option>
                                         <option value="1" {{ $license->status == 1 ? 'selected' : '' }}>
                                             Good Condition</option>
+                                        <option value="2" {{ $license->status == 2 ? 'selected' : '' }}>Minor Damage
+                                        </option>
+                                        <option value="3" {{ $license->status == 3 ? 'selected' : '' }}>Major Damage
+                                        </option>
                                         <option value="5" {{ $license->status == 5 ? 'selected' : '' }}>License
                                             Expired
                                         </option>

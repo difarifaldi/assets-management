@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\history;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryMaintence;
+use App\Models\history\HistoryMaintence;
 use Exception;
 use Illuminate\Http\Request;
 

@@ -81,8 +81,7 @@
                                             @endif
                                         </div>
                                     </div>
-
-                                    @if ($asset->status != 4)
+                                    @if (in_array($asset->status, [1, 2]))
                                         <!-- Check Status -->
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label">Availability Status</label>
@@ -379,7 +378,7 @@
                                                 (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
                                             <button class="btn btn-warning mr-2" data-toggle="modal"
                                                 data-target="#maintence">Maintence</button>
-                                            @if ($asset->status == 1)
+                                            @if (in_array($asset->status, [1, 2]))
                                                 <button data-toggle="modal" data-target="#assignTo"
                                                     class="btn btn-primary">Assign
                                                     To</button>

@@ -65,6 +65,10 @@
                                         <option disabled hidden selected>Choose Status</option>
                                         <option value="1">
                                             Good Condition</option>
+                                        <option value="2">Minor Damage
+                                        </option>
+                                        <option value="3">Major Damage
+                                        </option>
                                         <option value="5">License Expired
                                         </option>
                                     </select>

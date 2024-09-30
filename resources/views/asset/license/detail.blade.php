@@ -72,7 +72,7 @@
                                         </div>
                                     </div>
 
-                                    @if ($asset->status != 5)
+                                    @if (in_array($asset->status, [1, 2]))
                                         <!-- Check Status -->
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label">Availability Status</label>
@@ -260,7 +260,7 @@
                                     @if (is_null($asset->assign_to) &&
                                             is_null($asset->assign_at) &&
                                             (is_null($asset->check_out_by) && is_null($asset->check_out_at)) &&
-                                            $asset->status == 1)
+                                            in_array($asset->status, [1, 2]))
                                         <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
                                             To</button>
                                     @elseif(

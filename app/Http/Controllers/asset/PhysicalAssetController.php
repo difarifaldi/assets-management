@@ -4,8 +4,8 @@ namespace App\Http\Controllers\asset;
 
 use App\Http\Controllers\Controller;
 use App\Models\asset\Asset;
-use App\Models\HistoryAssign;
-use App\Models\HistoryMaintence;
+use App\Models\history\HistoryAssign;
+use App\Models\history\HistoryMaintence;
 use App\Models\master\CategoryAssets;
 use App\Models\master\Brand;
 use App\Models\master\User;
@@ -51,6 +51,8 @@ class PhysicalAssetController extends Controller
                     return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
                 } elseif (!is_null($data->check_out_by) && !is_null($data->check_out_at)) {
                     return ' <span class="badge badge-danger">Check Out By ' . $data->checkOut->name . '</span>';
+                } elseif ($data->status == 3) {
+                    return '<span class="badge badge-danger">Major Damage</span>';
                 } elseif ($data->status == 4) {
                     return '<span class="badge badge-danger">On Maintence</span>';
                 } else {
@@ -657,9 +659,7 @@ class PhysicalAssetController extends Controller
                     // Update Record for Attachment
                     $proof_maintence_attachment = json_encode($proof_maintence_attachment);
                 }
-                $assetStatus = $physical->update([
-                    'status' => 4
-                ]);
+
                 $history_maintence = HistoryMaintence::create([
                     'assets_id' => $id,
                     'description' => $request->description,
@@ -674,7 +674,7 @@ class PhysicalAssetController extends Controller
                 /**
                  * Validation Add history Record
                  */
-                if ($history_maintence && $assetStatus) {
+                if ($history_maintence) {
                     DB::commit();
                     return redirect()->back()->with('success', 'Maintence Successfully Add');
                 } else {

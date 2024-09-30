@@ -2,9 +2,9 @@
 
 namespace App\Models\asset;
 
-use App\Models\HistoryAssign;
-use App\Models\HistoryCheckInOut;
-use App\Models\HistoryMaintence;
+use App\Models\history\HistoryAssign;
+use App\Models\history\HistoryCheckInOut;
+use App\Models\history\HistoryMaintence;
 use App\Models\master\CategoryAssets;
 use App\Models\master\Brand;
 use App\Models\master\User;
