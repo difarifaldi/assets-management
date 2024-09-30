@@ -19,7 +19,7 @@
 
                                 <div class="form-group">
                                     <label for="categories">Category </label>
-                                    <select class="form-control" id="category_asset_id" name="category_asset_id">
+                                    <select class="form-control select2bs4" id="category_asset_id" name="category_asset_id">
                                         @foreach ($categories as $category)
                                             @if ($physical->category->id == $category->id)
                                                 <option value="{{ $category->id }}" selected>{{ $category->name }}
@@ -33,7 +33,7 @@
 
                                 <div class="form-group">
                                     <label for="brand_id">Brand <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="brand_id" name="brand_id">
+                                    <select class="form-control select2bs4" id="brand_id" name="brand_id">
                                         @foreach ($brands as $brand)
                                             @if ($physical->brand->id == $brand->id)
                                                 <option value="{{ $brand->id }}" selected>{{ $brand->name }}
@@ -47,7 +47,7 @@
 
                                 <div class="form-group">
                                     <label for="manufacture_id">Manufacture <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="manufacture_id" name="manufacture_id">
+                                    <select class="form-control select2bs4" id="manufacture_id" name="manufacture_id">
                                         @foreach ($manufactures as $manufacture)
                                             @if (!is_null($physical->manufacture) && $physical->manufacture->id == $manufacture->id)
                                                 <option value="{{ $manufacture->id }}" selected>{{ $manufacture->name }}
