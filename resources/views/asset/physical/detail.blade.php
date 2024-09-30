@@ -50,6 +50,14 @@
                                         </div>
                                     </div>
 
+                                    <!-- Manufacture -->
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Manufacture</label>
+                                        <div class="col-sm-9 col-form-label">
+                                            {{ $asset->manufacture ? $asset->manufacture->name : '-' }}
+                                        </div>
+                                    </div>
+
                                     <!-- Barcode -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Barcode</label>

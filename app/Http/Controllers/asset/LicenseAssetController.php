@@ -7,6 +7,7 @@ use App\Models\asset\Asset;
 use App\Models\history\HistoryAssign;
 use App\Models\master\CategoryAssets;
 use App\Models\master\Brand;
+use App\Models\master\Manufacture;
 use App\Models\master\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -91,8 +92,9 @@ class LicenseAssetController extends Controller
     {
         $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 2)->get();
         $brands = Brand::whereNull('deleted_by')->whereNull('deleted_at')->get();
+        $manufactures = Manufacture::whereNull('deleted_by')->whereNull('deleted_at')->get();
         $users = User::whereNull('deleted_at')->role('staff')->get();
-        return view('asset.license.create', compact('categories', 'brands', 'users'));
+        return view('asset.license.create', compact('categories', 'brands', 'users', 'manufactures'));
     }
 
     /**
@@ -111,6 +113,7 @@ class LicenseAssetController extends Controller
                 'description' => 'nullable|string',
                 'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'brand_id' => 'required|integer|exists:brands,id',
+                'manufacture_id' => 'required|integer|exists:manufactures,id',
                 'purchase_date' => 'nullable|date',
                 'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
                 'warranty_duration' => 'nullable|integer|min:0',
@@ -134,6 +137,7 @@ class LicenseAssetController extends Controller
                     'expired_at' => $request->expired_at,
                     'description' => $request->description,
                     'brand_id' => $request->brand_id,
+                    'manufacture_id' => $request->manufacture_id,
                     'purchase_date' => $request->purchase_date,
                     'warranty_end_date' => $request->warranty_end_date,
                     'warranty_duration' => $request->warranty_duration,
@@ -236,9 +240,10 @@ class LicenseAssetController extends Controller
             if (!is_null($license)) {
                 $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 2)->get();
                 $brands = Brand::whereNull('deleted_by')->whereNull('deleted_at')->get();
+                $manufactures = Manufacture::whereNull('deleted_by')->whereNull('deleted_at')->get();
                 $users = User::whereNull('deleted_at')->role('staff')->get();
 
-                return view('asset.license.edit', compact('license', 'categories', 'brands', 'users'));
+                return view('asset.license.edit', compact('license', 'categories', 'brands', 'users', 'manufactures'));
             } else {
                 return redirect()
                     ->back()
@@ -269,6 +274,7 @@ class LicenseAssetController extends Controller
                 'assign_to' => 'nullable',
                 'assign_at' => 'nullable',
                 'brand_id' => 'required|integer|exists:brands,id',
+                'manufacture_id' => 'required|integer|exists:manufactures,id',
                 'purchase_date' => 'nullable|date',
                 'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
                 'warranty_duration' => 'nullable|integer|min:0',
@@ -303,6 +309,7 @@ class LicenseAssetController extends Controller
                         'assign_to' => $request->assign_to,
                         'assign_at' => $request->assign_at,
                         'brand_id' => $request->brand_id,
+                        'manufacture_id' => $request->manufacture_id,
                         'purchase_date' => $request->purchase_date,
                         'warranty_end_date' => $request->warranty_end_date,
                         'warranty_duration' => $request->warranty_duration,

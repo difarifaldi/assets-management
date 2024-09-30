@@ -7,6 +7,7 @@ use App\Models\history\HistoryCheckInOut;
 use App\Models\history\HistoryMaintence;
 use App\Models\master\CategoryAssets;
 use App\Models\master\Brand;
+use App\Models\master\Manufacture;
 use App\Models\master\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,11 @@ class Asset extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function manufacture()
+    {
+        return $this->belongsTo(Manufacture::class, 'manufacture_id');
     }
 
     public function assignTo()

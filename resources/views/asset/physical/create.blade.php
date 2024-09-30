@@ -47,6 +47,21 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="manufacture_id">Manufacture <span class="text-danger">*</span></label>
+                                    <select class="form-control select2bs4" id="manufacture_id" name="manufacture_id">
+                                        <option disabled hidden selected>Choose Manufacture</option>
+                                        @foreach ($manufactures as $manufacture)
+                                            @if (!is_null(old('manufacture_id')) && old('manufacture_id') == $manufacture->id)
+                                                <option value="{{ $manufacture->id }}" selected>{{ $manufacture->name }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $manufacture->id }}">{{ $manufacture->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+
 
                                 <div class="form-group">
                                     <label for="barcode_code">Barcode <span class="text-danger">*</span></label>

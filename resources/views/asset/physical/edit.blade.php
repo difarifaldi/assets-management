@@ -42,7 +42,20 @@
                                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endif
                                         @endforeach
+                                    </select>
+                                </div>
 
+                                <div class="form-group">
+                                    <label for="manufacture_id">Manufacture <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="manufacture_id" name="manufacture_id">
+                                        @foreach ($manufactures as $manufacture)
+                                            @if (!is_null($physical->manufacture) && $physical->manufacture->id == $manufacture->id)
+                                                <option value="{{ $manufacture->id }}" selected>{{ $manufacture->name }}
+                                                </option>
+                                            @else
+                                                <option value="{{ $manufacture->id }}">{{ $manufacture->name }}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </div>
 
