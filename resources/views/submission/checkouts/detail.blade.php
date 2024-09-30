@@ -159,7 +159,7 @@
 
                                                                 @if ($currentDate->lt($loanDate))
                                                                     <span class="badge badge-info">Not available yet</span>
-                                                                @elseif ($currentDate->gte($returnDate))
+                                                                @elseif ($currentDate->gt($returnDate))
                                                                     <span class="badge badge-danger">Expired</span>
                                                                 @else
                                                                     @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)
