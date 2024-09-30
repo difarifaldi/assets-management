@@ -4,8 +4,8 @@ namespace App\Http\Controllers\submission;
 
 use App\Http\Controllers\Controller;
 use App\Models\asset\Asset;
-use App\Models\HistoryAssign;
-use App\Models\HistoryCheckInOut;
+use App\Models\history\HistoryAssign;
+use App\Models\history\HistoryCheckInOut;
 use App\Models\master\User;
 use App\Models\submission\SubmissionForm;
 use App\Models\submission\SubmissionFormItemAsset;

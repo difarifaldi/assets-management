@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\history;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryCheckInOut;
+use App\Models\history\HistoryCheckInOut;
 use App\Http\Requests\StoreHistoryCheckInOutRequest;
 use App\Http\Requests\UpdateHistoryCheckInOutRequest;
 use Exception;

@@ -2,8 +2,8 @@
 
 namespace App\Models\submission;
 
-use App\Models\HistoryAssign;
-use App\Models\HistoryCheckInOut;
+use App\Models\history\HistoryAssign;
+use App\Models\history\HistoryCheckInOut;
 use App\Models\master\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

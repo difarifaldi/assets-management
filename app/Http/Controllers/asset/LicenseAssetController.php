@@ -4,7 +4,7 @@ namespace App\Http\Controllers\asset;
 
 use App\Http\Controllers\Controller;
 use App\Models\asset\Asset;
-use App\Models\HistoryAssign;
+use App\Models\history\HistoryAssign;
 use App\Models\master\CategoryAssets;
 use App\Models\master\Brand;
 use App\Models\master\User;

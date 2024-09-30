@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\history;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryAssign;
+use App\Models\history\HistoryAssign;
 use App\Http\Requests\StoreHistoryAssignRequest;
 use App\Http\Requests\UpdateHistoryAssignRequest;
 use Exception;
