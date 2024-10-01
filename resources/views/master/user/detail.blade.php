@@ -166,15 +166,10 @@
                                     </div>
                                 </div>
                             </div>
-<<<<<<< HEAD
                             <div class="d-flex pt-3 ">
                                 <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2">Back</a>
                                 <a href="{{ route('myAccount.edit', ['id' => $user->id]) }}"
                                     class="btn btn-warning text-white">Edit</a>
-=======
-                            <div class="pt-3">
-                                <a href="{{ url()->previous() }}" class="btn btn-danger">Back</a>
->>>>>>> 583eeb6bb79b4b713dedfc6962cd29ffa21f8017
                             </div>
                         </div>
                         <!-- /.card-body -->
