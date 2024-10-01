@@ -166,8 +166,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="pt-3">
-                                <a href="{{ route('master.user.index') }}" class="btn btn-danger">Back</a>
+                            <div class="d-flex pt-3 ">
+                                <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2">Back</a>
+                                <a href="{{ route('myAccount.edit', ['id' => $user->id]) }}"
+                                    class="btn btn-warning text-white">Edit</a>
                             </div>
                         </div>
                         <!-- /.card-body -->

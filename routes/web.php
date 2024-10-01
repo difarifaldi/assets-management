@@ -132,5 +132,5 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
     });
     Route::resource('submission', SubmissionFormController::class, ['except' => ['create', 'store', 'update', 'destroy']])->parameters(['submission' => 'id']);
 
-    Route::get('my-account', [UserController::class, 'show'])->name('myAccount');
+    Route::resource('myAccount', UserController::class, ['except' => ['create', 'store', 'destroy']])->parameters(['myAccount' => 'id']);
 });

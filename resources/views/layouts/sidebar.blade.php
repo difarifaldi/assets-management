@@ -58,7 +58,7 @@
                 @role('staff')
                     <li class="nav-header">ACCOUNT</li>
                     <li class="nav-item">
-                        <a href="{{ route('myAccount') }}" class="nav-link">
+                        <a href="{{ route('myAccount.show', ['id' => Auth::user()->id]) }}" class="nav-link">
                             <i class="fas fa-user nav-icon"></i>
                             <p>My Account</p>
                         </a>

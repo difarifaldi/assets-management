@@ -146,20 +146,19 @@
                                                                 is_null($submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->first()))
                                                             <td>
                                                                 @php
-                                                                    $currentDate = \Carbon\Carbon::now();
+                                                                    $currentDate = \Carbon\Carbon::now()->toDateString();
                                                                     $loanDate = \Carbon\Carbon::parse(
                                                                         $submission->submissionFormsCheckoutDate
                                                                             ->loan_application_asset_date,
-                                                                    );
+                                                                    )->toDateString();
                                                                     $returnDate = \Carbon\Carbon::parse(
                                                                         $submission->submissionFormsCheckoutDate
                                                                             ->return_asset_date,
-                                                                    );
+                                                                    )->toDateString();
                                                                 @endphp
-
-                                                                @if ($currentDate->lt($loanDate))
+                                                                @if ($currentDate < $loanDate)
                                                                     <span class="badge badge-info">Not available yet</span>
-                                                                @elseif ($currentDate->gte($returnDate))
+                                                                @elseif ($currentDate > $returnDate)
                                                                     <span class="badge badge-danger">Expired</span>
                                                                 @else
                                                                     @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)

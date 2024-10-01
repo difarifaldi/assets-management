@@ -248,6 +248,7 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         try {
+
             /**
              * Validation Request Body Variables
              */
@@ -375,9 +376,15 @@ class UserController extends Controller
                          */
                         if ($user_update) {
                             DB::commit();
-                            return redirect()
-                                ->route('master.user.index')
-                                ->with(['success' => 'Successfully Update User']);
+                            if (Auth::user()->hasRole('admin')) {
+                                return redirect()
+                                    ->route('master.user.index')
+                                    ->with(['success' => 'Successfully Update User']);
+                            } else {
+                                return redirect()
+                                    ->route('myAccount.show', ['id' => $id])
+                                    ->with(['success' => 'Successfully Update Account']);
+                            }
                         } else {
                             /**
                              * Failed Store Record
@@ -403,8 +410,7 @@ class UserController extends Controller
         } catch (Exception $e) {
             return redirect()
                 ->back()
-                ->with(['failed' => $e->getMessage()])
-                ->withInput();
+                ->with(['failed' => $e->getMessage()]);
         }
     }
 
