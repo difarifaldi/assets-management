@@ -376,7 +376,7 @@ class UserController extends Controller
                          */
                         if ($user_update) {
                             DB::commit();
-                            if (User::find(Auth::user())->hasRole('admin')) {
+                            if (User::find(Auth::user()->id)->hasRole('admin')) {
                                 return redirect()
                                     ->route('master.user.index')
                                     ->with(['success' => 'Successfully Update User']);
