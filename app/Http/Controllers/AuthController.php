@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\master\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -16,6 +17,11 @@ class AuthController extends Controller
     public function login()
     {
         return view('auth.login');
+    }
+
+    public function forgot()
+    {
+        return view('auth.forgot.index');
     }
 
     public function authenticate(Request $request)
@@ -55,12 +61,82 @@ class AuthController extends Controller
         }
     }
 
+    public function confirmation(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required',
+            ]);
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!is_null($user) && $user->roles[0]->name == 'staff') {
+                $data['user'] = $user;
+                return view('auth.forgot.password', $data);
+            } else {
+                return redirect()
+                    ->back()
+                    ->withErrors(['email' => 'Account not registered.'])
+                    ->withInput();
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function setPassword(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'password' => 'required',
+                're_password' => 'required',
+            ]);
+
+            if ($request->password != $request->re_password) {
+                return redirect()
+                    ->route('forgot.index')
+                    ->with(['failed' => 'Password Not Match']);
+            }
+
+            /**
+             * Begin Transaction
+             */
+            DB::beginTransaction();
+
+            /**
+             * Update User Record
+             */
+            $user_update = User::where('id', $id)->update([
+                'password' => bcrypt($request->password),
+            ]);
+
+            /**
+             * Validation Update User Password
+             */
+            if ($user_update) {
+                DB::commit();
+                return redirect()
+                    ->route('login')
+                    ->with(['success' => 'Successfully Change Password']);
+            } else {
+                /**
+                 * Failed Store Record
+                 */
+                DB::rollBack();
+                return redirect()
+                    ->route('forgot.index')
+                    ->with(['failed' => 'Failed Change Password']);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');
-        // return redirect()->route('login')->with('success', 'Logout successful');
     }
 }

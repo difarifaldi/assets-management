@@ -28,9 +28,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
-Route::get('forgot', [AuthController::class, 'forgot'])->name('forgot');
 Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::group(['prefix' => 'forgot', 'as' => 'forgot.'], function () {
+    Route::get('/', [AuthController::class, 'forgot'])->name('index');
+    Route::post('confirmation', [AuthController::class, 'confirmation'])->name('confirmation');
+    Route::match(['put', 'patch'], 'set-password/{id}', [AuthController::class, 'setPassword'])->name('setPassword');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {

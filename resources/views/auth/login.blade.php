@@ -42,6 +42,9 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-12 text-right">
+                            <a href="{{ route('forgot.index') }}"><i>Forgot Password?</i></a>
+                        </div>
                         <div class="row pt-3">
                             <div class="col-8">
                                 <div class="icheck-primary">
