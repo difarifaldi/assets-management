@@ -12,7 +12,7 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form method="post"
-                            @if ($user->hasRole('admin')) action="{{ route('master.user.update', ['id' => $user->id]) }}" @else action="{{ route('myAccount.update', ['id' => $user->id]) }}" @endif>
+                            @if ($user->hasRole('admin')) action="{{ route('master.user.update', ['id' => $user->id]) }}" @else action="{{ route('my-account.update', ['id' => $user->id]) }}" @endif>
                             @csrf
                             @method('patch')
                             <div class="card-body">
@@ -101,14 +101,7 @@
                                 </div>
 
                                 <div class="pt-3 d-flex">
-                                    @if (Auth::user()->hasRole('admin'))
-                                        <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2">Back</a>
-                                    @else
-                                        <a href="{{ route('myAccount.show', ['id' => Auth::user()->id]) }}"
-                                            class="btn btn-danger mr-2">
-                                            Back
-                                        </a>
-                                    @endif
+                                    <a href="{{ url()->previous() }}" class="btn btn-danger mr-2">Back</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>

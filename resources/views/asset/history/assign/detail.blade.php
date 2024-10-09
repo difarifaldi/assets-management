@@ -29,7 +29,6 @@
                                 @if (!is_null($historyAssign->attachment))
                                     <div class="col-md-12 pt-3">
                                         <div class="row justify-content-start mt-3">
-
                                             @foreach (json_decode($historyAssign->attachment)->proof_assign as $index => $attachment)
                                                 <div class="col-md-3" id="attachment_{{ $index }}">
                                                     <div class="card shadow">
@@ -53,10 +52,6 @@
                                                                     aria-labelledby="dropdownMenuLink">
                                                                     <a class="dropdown-item" href="{{ asset($attachment) }}"
                                                                         download>Download</a>
-                                                                    @role('admin')
-                                                                        <a class="dropdown-item"
-                                                                            onclick="destroyFile({{ $index }}, 'physical')">Remove</a>
-                                                                    @endrole
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -119,10 +114,6 @@
                                                                         <a class="dropdown-item"
                                                                             href="{{ asset($attachment) }}"
                                                                             download>Download</a>
-                                                                        @role('admin')
-                                                                            <a class="dropdown-item"
-                                                                                onclick="destroyFile({{ $index }}, 'physical')">Remove</a>
-                                                                        @endrole
                                                                     </div>
                                                                 </div>
                                                             </div>

@@ -17,7 +17,6 @@
                                     {{ date('d F Y H:i:s', strtotime($historyMaintence->date)) }}
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Status</label>
                                 <div class="col-sm-9 col-form-label">
@@ -32,7 +31,6 @@
                                     </td>
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Description</label>
                                 <div class="col-sm-9 col-form-label">
@@ -44,7 +42,6 @@
                                 @if (!is_null($historyMaintence->attachment))
                                     <div class="col-md-12 pt-3">
                                         <div class="row justify-content-start mt-3">
-
                                             @foreach (json_decode($historyMaintence->attachment)->proof_maintence as $index => $attachment)
                                                 <div class="col-md-3" id="attachment_{{ $index }}">
                                                     <div class="card shadow">
@@ -68,10 +65,6 @@
                                                                     aria-labelledby="dropdownMenuLink">
                                                                     <a class="dropdown-item" href="{{ asset($attachment) }}"
                                                                         download>Download</a>
-                                                                    @role('admin')
-                                                                        <a class="dropdown-item"
-                                                                            onclick="destroyFile({{ $index }}, 'physical')">Remove</a>
-                                                                    @endrole
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -96,11 +89,11 @@
                             </div>
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection

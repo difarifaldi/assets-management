@@ -157,7 +157,7 @@
                                                                     )->toDateString();
                                                                 @endphp
                                                                 @if ($currentDate < $loanDate)
-                                                                    <span class="badge badge-info">Not available yet</span>
+                                                                    <span class="badge badge-info">Not Available Yet</span>
                                                                 @elseif ($currentDate > $returnDate)
                                                                     <span class="badge badge-danger">Expired</span>
                                                                 @else
@@ -182,7 +182,6 @@
                                                             </td>
                                                         @elseif (isset($item_asset->asset->check_out_by) && isset($item_asset->asset->check_out_at))
                                                             <td>
-
                                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                                     data-target="#check_in{{ $item_asset->asset->id }}">
                                                                     Check In

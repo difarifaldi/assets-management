@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::get('forgot', [AuthController::class, 'forgot'])->name('forgot');
 Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -112,6 +113,12 @@ Route::group(['middleware' => ['role:staff']], function () {
         Route::match(['put', 'patch'], 'check-in/{id}', 'checkIn')->name('checkIn');
     });
     Route::resource('submission', SubmissionFormController::class, ['except' => ['index', 'create', 'store']])->parameters(['submission' => 'id']);
+
+    Route::group(['prefix' => 'my-account', 'as' => 'my-account.'], function () {
+        Route::get('', [UserController::class, 'show'])->name('show');
+        Route::get('edit/{id}', [UserController::class, 'edit'])->name('edit');
+        Route::match(['put', 'patch'], '{id}', [UserController::class, 'update'])->name('update');
+    });
 });
 
 Route::group(['middleware' => ['role:admin|staff']], function () {
@@ -131,6 +138,4 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
     });
     Route::resource('submission', SubmissionFormController::class, ['except' => ['create', 'store', 'update', 'destroy']])->parameters(['submission' => 'id']);
-
-    Route::resource('myAccount', UserController::class, ['except' => ['create', 'store', 'destroy']])->parameters(['myAccount' => 'id']);
 });

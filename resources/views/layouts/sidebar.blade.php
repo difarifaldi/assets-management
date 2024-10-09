@@ -11,10 +11,11 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('img/' . Auth::user()->roles[0]->name.'.png') }}" class="img-circle elevation-2"
+                    alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                <a href="#" class="d-block text-truncate" style="max-width: 150px">{{ Auth::user()->name }}</a>
             </div>
         </div>
 
@@ -58,7 +59,7 @@
                 @role('staff')
                     <li class="nav-header">ACCOUNT</li>
                     <li class="nav-item">
-                        <a href="{{ route('myAccount.show', ['id' => Auth::user()->id]) }}" class="nav-link">
+                        <a href="{{ route('my-account.show') }}" class="nav-link">
                             <i class="fas fa-user nav-icon"></i>
                             <p>My Account</p>
                         </a>

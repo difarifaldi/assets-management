@@ -248,7 +248,6 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-
             /**
              * Validation Request Body Variables
              */
@@ -259,7 +258,7 @@ class UserController extends Controller
                 'roles' => 'required',
                 'nik' => 'numeric|digits:16',
                 'division_id' => 'required',
-                'phone' => 'required|numeric|min_digits:11',
+                'phone' => 'required|numeric',
                 'address' => 'nullable',
             ]);
 
@@ -292,13 +291,13 @@ class UserController extends Controller
                      * Validation Password Request
                      */
                     if (isset($request->password)) {
-                        /**
-                         * Validation Request Body Variables
-                         */
-                        $request->validate([
-                            'password' => 'required',
-                            're_password' => 'required|same:password',
-                        ]);
+
+                        if ($request->password != $request->re_password) {
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Password Not Match'])
+                                ->withInput();
+                        }
 
                         /**
                          * Begin Transaction
@@ -382,7 +381,7 @@ class UserController extends Controller
                                     ->with(['success' => 'Successfully Update User']);
                             } else {
                                 return redirect()
-                                    ->route('myAccount.show', ['id' => $id])
+                                    ->route('my-account.show')
                                     ->with(['success' => 'Successfully Update Account']);
                             }
                         } else {

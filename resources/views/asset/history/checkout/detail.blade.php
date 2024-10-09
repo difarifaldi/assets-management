@@ -45,7 +45,6 @@
                                 @if (!is_null($historyCheckInOut->attachment))
                                     <div class="col-md-12 pt-3">
                                         <div class="row justify-content-start mt-3">
-
                                             @foreach (json_decode($historyCheckInOut->attachment)->proof_checkout as $index => $attachment)
                                                 <div class="col-md-3" id="attachment_{{ $index }}">
                                                     <div class="card shadow">
@@ -70,10 +69,6 @@
                                                                     <a class="dropdown-item"
                                                                         href="{{ asset($attachment) }}"
                                                                         download>Download</a>
-                                                                    @role('admin')
-                                                                        <a class="dropdown-item"
-                                                                            onclick="destroyFile({{ $index }}, 'physical')">Remove</a>
-                                                                    @endrole
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -144,10 +139,6 @@
                                                                         <a class="dropdown-item"
                                                                             href="{{ asset($attachment) }}"
                                                                             download>Download</a>
-                                                                        @role('admin')
-                                                                            <a class="dropdown-item"
-                                                                                onclick="destroyFile({{ $index }}, 'physical')">Remove</a>
-                                                                        @endrole
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -171,8 +162,6 @@
                                     @endif
                                 </div>
                             @endif
-
-
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
 
