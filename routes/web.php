@@ -121,7 +121,7 @@ Route::group(['middleware' => ['role:staff']], function () {
 
     Route::group(['prefix' => 'my-account', 'as' => 'my-account.'], function () {
         Route::get('/', [UserController::class, 'show'])->name('show');
-        Route::get('edit/{id}', [UserController::class, 'edit'])->name('edit');
+        Route::get('edit', [UserController::class, 'edit'])->name('edit');
         Route::match(['put', 'patch'], '{id}', [UserController::class, 'update'])->name('update');
     });
 });

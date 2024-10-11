@@ -209,18 +209,42 @@ class UserController extends Controller
         }
     }
 
-    public function edit(string $id)
+    public function edit(string $id = null)
     {
         try {
-            /**
-             * Get User Record from id
-             */
-            $user = User::find($id);
+            if (!is_null($id)) {
+                /**
+                 * Get User Record from id
+                 */
+                $user = User::find($id);
 
-            /**
-             * Validation User id
-             */
-            if (!is_null($user)) {
+                /**
+                 * Validation User id
+                 */
+                if (!is_null($user)) {
+                    /**
+                     * Get All Role
+                     */
+                    $roles = Role::all();
+                    $division = Division::whereNull('deleted_at')->get();
+
+                    /**
+                     * Disabled Edit Role with Same User Logged in
+                     */
+                    $role_disabled = $id == Auth::user()->id ? 'disabled' : '';
+
+                    return view('master.user.edit', compact('user', 'roles', 'division', 'role_disabled'));
+                } else {
+                    return redirect()
+                        ->back()
+                        ->with(['failed' => 'Invalid Request!']);
+                }
+            } else {
+                /**
+                 * Get User Record from current user
+                 */
+                $user = User::find(Auth::user()->id);
+
                 /**
                  * Get All Role
                  */
@@ -233,10 +257,6 @@ class UserController extends Controller
                 $role_disabled = $id == Auth::user()->id ? 'disabled' : '';
 
                 return view('master.user.edit', compact('user', 'roles', 'division', 'role_disabled'));
-            } else {
-                return redirect()
-                    ->back()
-                    ->with(['failed' => 'Invalid Request!']);
             }
         } catch (Exception $e) {
             return redirect()
