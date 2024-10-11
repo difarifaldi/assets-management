@@ -362,6 +362,13 @@ class SubmissionFormController extends Controller
              * Validation Submission id
              */
             if (!is_null($submission)) {
+
+                if ($submission->created_by != Auth::user()->id) {
+                    return redirect()
+                        ->back()
+                        ->with(['failed' => 'Invalid Request!']);
+                }
+
                 if ($submission->type == 1) {
                     return view('submission.assign.detail', compact('submission'));
                 } else {
