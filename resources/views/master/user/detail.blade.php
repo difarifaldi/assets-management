@@ -168,7 +168,7 @@
                             </div>
                             <div class="d-flex pt-3 ">
                                 <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2">Back</a>
-                                <a href="{{ route('my-account.edit', ['id' => $user->id]) }}"
+                                <a href="{{ route('my-account.edit') }}"
                                     class="btn btn-warning text-white">Edit</a>
                             </div>
                         </div>
