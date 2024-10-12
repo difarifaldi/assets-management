@@ -360,19 +360,20 @@ class SubmissionFormController extends Controller
         try {
             $request->validate([
                 'description' => 'required',
-
             ]);
+
             $submission = SubmissionForm::find($id);
 
             if (!is_null($submission)) {
                 DB::beginTransaction();
 
+                // Update deskripsi
                 $submission_update = SubmissionForm::where('id', $id)->update([
-                    'description' => $request->description
+                    'description' => $request->description,
                 ]);
 
                 if ($submission_update) {
-                    if (!empty($request->hasFile('attachment'))) {
+                    if ($request->hasFile('attachment')) {
                         $path = 'public/submission/' . $submission->id;
                         $path_store = 'storage/submission/' . $submission->id;
 
@@ -382,149 +383,68 @@ class SubmissionFormController extends Controller
 
                         $file_name = $submission->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $request->file('attachment')->getClientOriginalExtension();
 
+                        // Hapus file yang sudah ada jika ada
                         if (Storage::exists($path . '/' . $file_name)) {
                             Storage::delete($path . '/' . $file_name);
                         }
 
+                        // Simpan file yang diunggah
                         $request->file('attachment')->storePubliclyAs($path, $file_name);
                         $attachment = $path_store . '/' . $file_name;
 
-                        $submision_attachment = $submission->update([
+                        // Update lampiran
+                        $submission_attachment = $submission->update([
                             'attachment' => $attachment,
                         ]);
-                        $assets_request = [];
+                    }
+
+                    // Hapus semua aset lama
+                    SubmissionFormItemAsset::where('submission_form_id', $submission->id)->delete();
+
+                    // Menyimpan aset baru
+                    if (is_array($request->assets) && !empty($request->assets)) {
                         foreach ($request->assets as $asset) {
-                            array_push($assets_request, [
-                                'submission_form_id' => $submission->id,
-                                'assets_id' => $asset['id'],
-                            ]);
-                        }
-                        SubmissionFormItemAsset::where('submission_form_id', $submission->id)
-                            ->where('assets_id', $asset['id'])
-                            ->delete();
-                        $submission_form_item_assets = SubmissionFormItemAsset::insert($assets_request);
-
-
-                        if ($submision_attachment && $submission_form_item_assets) {
-                            if (Storage::exists($path . '/' . $file_name)) {
-                                /**
-                                 * Form as Checkout
-                                 */
-                                if ($submission->type == 2) {
-                                    $date_request = [];
-                                    array_push($date_request, [
-                                        'submission_form_id' => $submission->id,
-                                        'loan_application_asset_date' => $request->loan_application_asset_date,
-                                        'return_asset_date' => $request->return_asset_date,
-                                    ]);
-
-                                    SubmissionFormsCheckoutDate::where('submission_form_id', $submission->id)
-                                        ->where('loan_application_asset_date', $submission->submissionFormsCheckoutDate->loan_application_asset_date)->where('return_asset_date', $submission->submissionFormsCheckoutDate->return_asset_date)
-                                        ->delete();
-                                    $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::insert($date_request);
-
-                                    if ($submissionFormCheckoutDate) {
-                                        DB::commit();
-                                        return redirect()
-                                            ->route('submission.index')
-                                            ->with(['success' => 'Successfully Updated Submission Checkout']);
-                                    } else {
-                                        /**
-                                         * Failed Store Record
-                                         */
-                                        DB::rollBack();
-                                        return redirect()
-                                            ->back()
-                                            ->with(['failed' => 'Failed Updated Submission Checkout'])
-                                            ->withInput();
-                                    }
-                                } else {
-                                    DB::commit();
-                                    return redirect()
-                                        ->route('submission.index')
-                                        ->with(['success' => 'Successfully Updated Submission Assign']);
-                                }
+                            // Memastikan bahwa $asset adalah array dan memiliki kunci 'id'
+                            if (is_array($asset) && isset($asset['id'])) {
+                                SubmissionFormItemAsset::create([
+                                    'submission_form_id' => $submission->id,
+                                    'assets_id' => $asset['id'],
+                                ]);
                             } else {
-                                /**
-                                 * Failed Store Record
-                                 */
-                                DB::rollBack();
-                                return redirect()
-                                    ->back()
-                                    ->with(['failed' => 'Failed Upload Attachment'])
-                                    ->withInput();
+                                return redirect()->back()->with(['failed' => 'Invalid asset format']);
                             }
+                        }
+                    }
+
+                    // Menangani pengisian form checkout
+                    if ($submission->type == 2) {
+                        $date_request = [
+                            'submission_form_id' => $submission->id,
+                            'loan_application_asset_date' => $request->loan_application_asset_date,
+                            'return_asset_date' => $request->return_asset_date,
+                        ];
+
+                        // Hapus tanggal checkout yang lama
+                        SubmissionFormsCheckoutDate::where('submission_form_id', $submission->id)->delete();
+                        $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::create($date_request);
+
+                        if ($submissionFormCheckoutDate) {
+                            DB::commit();
+                            return redirect()
+                                ->route('submission.index')
+                                ->with(['success' => 'Successfully Updated Submission Checkout']);
                         } else {
-                            /**
-                             * Failed Store Record
-                             */
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Added Submission'])
+                                ->with(['failed' => 'Failed Updated Submission Checkout'])
                                 ->withInput();
                         }
                     } else {
-                        $assets_request = [];
-                        foreach ($request->assets as $asset) {
-                            array_push($assets_request, [
-                                'submission_form_id' => $submission->id,
-                                'assets_id' => $asset['id'],
-                            ]);
-                        }
-                        SubmissionFormItemAsset::where('submission_form_id', $submission->id)
-                            ->where('assets_id', $asset['id'])
-                            ->delete();
-                        $submission_form_item_assets = SubmissionFormItemAsset::insert($assets_request);
-                        if ($submission_form_item_assets) {
-
-                            /**
-                             * Form as Checkout
-                             */
-                            if ($submission->type == 2) {
-                                $date_request = [];
-                                array_push($date_request, [
-                                    'submission_form_id' => $submission->id,
-                                    'loan_application_asset_date' => $request->loan_application_asset_date,
-                                    'return_asset_date' => $request->return_asset_date,
-                                ]);
-
-                                SubmissionFormsCheckoutDate::where('submission_form_id', $submission->id)
-                                    ->where('loan_application_asset_date', $submission->submissionFormsCheckoutDate->loan_application_asset_date)->where('return_asset_date', $submission->submissionFormsCheckoutDate->return_asset_date)
-                                    ->delete();
-                                $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::insert($date_request);
-
-                                if ($submissionFormCheckoutDate) {
-                                    DB::commit();
-                                    return redirect()
-                                        ->route('submission.index')
-                                        ->with(['success' => 'Successfully Updated Submission Checkout']);
-                                } else {
-                                    /**
-                                     * Failed Store Record
-                                     */
-                                    DB::rollBack();
-                                    return redirect()
-                                        ->back()
-                                        ->with(['failed' => 'Failed Updated Submission Checkout'])
-                                        ->withInput();
-                                }
-                            } else {
-                                DB::commit();
-                                return redirect()
-                                    ->route('submission.index')
-                                    ->with(['success' => 'Successfully Updated Submission Assign']);
-                            }
-                        } else {
-                            /**
-                             * Failed Store Record
-                             */
-                            DB::rollBack();
-                            return redirect()
-                                ->back()
-                                ->with(['failed' => 'Failed Added Submission'])
-                                ->withInput();
-                        }
+                        DB::commit();
+                        return redirect()
+                            ->route('submission.index')
+                            ->with(['success' => 'Successfully Updated Submission Assign']);
                     }
                 } else {
                     DB::rollBack();
@@ -534,12 +454,13 @@ class SubmissionFormController extends Controller
                         ->withInput();
                 }
             } else {
-                return redirect()->back()->with(['failed', 'invalid Request']);
+                return redirect()->back()->with(['failed' => 'Invalid Request']);
             }
         } catch (Exception $e) {
-            return redirect()->back()->with(['failed', $e->getMessage()]);
+            return redirect()->back()->with(['failed' => $e->getMessage()]);
         }
     }
+
 
     public function edit(Request $request, string $id)
     {

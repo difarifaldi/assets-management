@@ -16,6 +16,26 @@
                             @csrf
                             @method('patch')
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="loan_application_asset_date">Loan Application Asset Date <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" id="loan_application_asset_date"
+                                                name="loan_application_asset_date" min="{{ date('Y-m-d') }}"
+                                                value="{{ $submission->submissionFormsCheckoutDate->loan_application_asset_date }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="return_asset_date">Return Asset Date <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" id="return_asset_date"
+                                                name="return_asset_date" min="{{ date('Y-m-d') }}"
+                                                value="{{ $submission->submissionFormsCheckoutDate->return_asset_date }}">
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="description">Description <span class="text-danger">*</span></label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
@@ -78,33 +98,40 @@
                                             </tr>
 
 
-                                            @foreach ($submission->submissionFormItemAsset as $item_asset)
+                                            @foreach ($submission->submissionFormItemAsset as $index => $item_asset)
                                                 <tr>
                                                     <td>
-                                                        <input type='text' class='form-control' name='assets[name]'
+                                                        <input type='hidden' class='form-control'
+                                                            name='assets[{{ $index }}][id]'
+                                                            value='{{ $item_asset->asset->id }}'>
+
+                                                        <input type='text' class='form-control'
+                                                            name='assets[{{ $index }}][name]'
                                                             value='{{ $item_asset->asset->name }}' readonly>
                                                     </td>
                                                     <td>
-                                                        <input type='text' class='form-control' name='assets[barcode]'
+                                                        <input type='text' class='form-control'
+                                                            name='assets[{{ $index }}][barcode]'
                                                             value='{{ $item_asset->asset->barcode_code }}' readonly>
                                                     </td>
                                                     <td>
-                                                        <input type='text' class='form-control' name='assets[category]'
+                                                        <input type='text' class='form-control'
+                                                            name='assets[{{ $index }}][category]'
                                                             value='{{ $item_asset->asset->category->name }}' readonly>
                                                     </td>
                                                     <td>
-                                                        <input type='text' class='form-control' name='assets[category]'
+                                                        <input type='text' class='form-control'
+                                                            name='assets[{{ $index }}][status]'
                                                             value='{{ $item_asset->asset->status === 1 ? 'Good Condition' : ($item_asset->asset->status === 2 ? 'Minor Damage' : 'Major Damage') }}'
                                                             readonly>
-
                                                     </td>
                                                     <td align='center'>
                                                         <button type='button' class='delete-row btn btn-sm btn-danger'
                                                             value='Delete'>Delete</button>
-                                                        <input type='hidden' class='form-control' name='asset_item_check[]'
+                                                        <input type='hidden' class='form-control'
+                                                            name='asset_item_check[]'
                                                             value='{{ $item_asset->asset->id }}'>
                                                     </td>
-
                                                 </tr>
                                             @endforeach
 
