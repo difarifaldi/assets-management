@@ -114,10 +114,12 @@ Route::group(['middleware' => ['role:staff']], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
         Route::get('create/{type}', 'create')->name('create');
         Route::post('store/{type}', 'store')->name('store');
+        Route::get('edit/{type}/{id}', 'edit')->name('edit');
+        Route::match(['put', 'patch'], 'update/{id}', 'update')->name('update');
         Route::match(['put', 'patch'], 'check-out/{id}', 'checkOut')->name('checkOut');
         Route::match(['put', 'patch'], 'check-in/{id}', 'checkIn')->name('checkIn');
     });
-    Route::resource('submission', SubmissionFormController::class, ['except' => ['index', 'create', 'store']])->parameters(['submission' => 'id']);
+    Route::resource('submission', SubmissionFormController::class, ['except' => ['index', 'create', 'store', 'edit']])->parameters(['submission' => 'id']);
 
     Route::group(['prefix' => 'my-account', 'as' => 'my-account.'], function () {
         Route::get('/', [UserController::class, 'show'])->name('show');

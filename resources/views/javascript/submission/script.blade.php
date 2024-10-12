@@ -219,6 +219,21 @@
         }
     }
 
+    // button delete row asset
+    $(document).on('click', '.delete-row', function() {
+        var row = $(this).closest('tr');
+        var assetId = row.find('input[name="asset_item_check[]"]').val();
+
+
+        $('#asset_id').append($('<option>', {
+            value: assetId,
+            text: row.find('input[name="assets[name]"]')
+                .val()
+        }));
+
+        row.remove();
+    });
+
     function deleteRow(id) {
         $('#asset_id').append($('<option>', {
             value: $('#asset_id_' + id).val(),
