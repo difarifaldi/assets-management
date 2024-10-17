@@ -14,6 +14,13 @@
                         <!-- form start -->
                         <div class="card-body">
                             <div class="col-md-12">
+                                <!-- Date and Time -->
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Submission Date and Time</label>
+                                    <div class="col-sm-9 col-form-label">
+                                        {{ date('d F Y H:i:s', strtotime($submission->created_at)) }}
+                                    </div>
+                                </div>
                                 <!-- Description -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Description</label>
@@ -21,7 +28,6 @@
                                         {{ $submission->description ?? '-' }}
                                     </div>
                                 </div>
-
                                 <!-- Attachment -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Attachment</label>
@@ -36,7 +42,6 @@
                                         @endif
                                     </div>
                                 </div>
-
                                 <!-- Status -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Approval Status</label>
@@ -52,7 +57,6 @@
                                         @endif
                                     </div>
                                 </div>
-
                                 @if (!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Reason Rejection</label>
@@ -61,7 +65,6 @@
                                         </div>
                                     </div>
                                 @endif
-
                                 <div class="table-responsive mt-3">
                                     <table class="table table-bordered datatable" id="asset">
                                         <thead>
@@ -175,7 +178,6 @@
             </div>
         </div>
     </div>
-
     @foreach ($submission->submissionFormItemAsset as $item_asset)
         {{-- Assign To --}}
         <div class="modal fade" id="assign_to_{{ $item_asset->asset->id }}">

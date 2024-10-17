@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\master;
 
 use App\Http\Controllers\Controller;
+use App\Models\asset\Asset;
 use App\Models\master\Division;
 use App\Models\master\User;
 use Exception;
@@ -182,7 +183,12 @@ class UserController extends Controller
                     $exploded_raw_role = explode('-', $user->getRoleNames()[0]);
                     $user_role = ucwords(implode(' ', $exploded_raw_role));
 
-                    return view('master.user.detail', compact('user', 'user_role'));
+                    /**
+                     * Get Asset Assigning and Check Out by User
+                     */
+                    $assets = Asset::where('assign_to', $user->id)->orWhere('check_out_by', $user->id)->get();
+
+                    return view('master.user.detail', compact('user', 'user_role', 'assets'));
                 } else {
                     return redirect()
                         ->back()
@@ -200,7 +206,13 @@ class UserController extends Controller
                 $exploded_raw_role = explode('-', $user->getRoleNames()[0]);
                 $user_role = ucwords(implode(' ', $exploded_raw_role));
 
-                return view('master.user.detail', compact('user', 'user_role'));
+
+                /**
+                 * Get Asset Assigning and Check Out by User
+                 */
+                $assets = Asset::where('assign_to', $user->id)->orWhere('check_out_by', $user->id)->get();
+
+                return view('master.user.detail', compact('user', 'user_role', 'assets'));
             }
         } catch (Exception $e) {
             return redirect()

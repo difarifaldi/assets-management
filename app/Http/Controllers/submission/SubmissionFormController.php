@@ -516,10 +516,12 @@ class SubmissionFormController extends Controller
              */
             if (!is_null($submission)) {
 
-                if ($submission->created_by != Auth::user()->id) {
-                    return redirect()
-                        ->back()
-                        ->with(['failed' => 'Invalid Request!']);
+                if (User::find(Auth::user()->id)->hasRole('staff')) {
+                    if ($submission->created_by != Auth::user()->id) {
+                        return redirect()
+                            ->back()
+                            ->with(['failed' => 'Invalid Request!']);
+                    }
                 }
 
                 if ($submission->type == 1) {

@@ -21,7 +21,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="attachment">Attachment</label>
-                                    <input type="file" class="form-control" required name="attachment"
+                                    <input type="file" class="form-control" name="attachment"
                                         id="documentInput">
                                 </div>
                                 <div class="table-responsive mt-5">

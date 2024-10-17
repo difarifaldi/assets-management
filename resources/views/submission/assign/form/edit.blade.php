@@ -21,14 +21,17 @@
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
                                         placeholder="Description" required>{{ $submission->description }}</textarea>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="attachment">Attachment</label>
                                     <input type="file" class="form-control" name="attachment" id="documentInput">
-                                    <label class="mt-2"> <a href="{{ asset($submission->attachment) }}" target="_blank">
-                                            <i class="fas fa-download mr-1"></i>
-                                            Attachment Document
-                                        </a></label>
+                                    @if (!is_null($submission->attachment))
+                                        <label class="m-2">
+                                            <a href="{{ asset($submission->attachment) }}" target="_blank">
+                                                <i class="fas fa-download mr-1"></i>
+                                                Attachment Document
+                                            </a>
+                                        </label>
+                                    @endif
                                 </div>
                                 <div class="table-responsive mt-5">
                                     <table class="table table-bordered datatable" id="asset">
@@ -76,44 +79,44 @@
                                                         onclick="addPhysicalAsset()">Add</button>
                                                 </td>
                                             </tr>
-
-
-                                            @foreach ($submission->submissionFormItemAsset as $index => $item_asset)
-                                                <tr>
+                                            @foreach ($submission->submissionFormItemAsset as $item_asset)
+                                                <tr id='asset_tr_{{ $item_asset->asset->id }}'>
                                                     <td>
                                                         <input type='hidden' class='form-control'
-                                                            name='assets[{{ $index }}][id]'
+                                                            id='asset_id_{{ $item_asset->asset->id }}'
+                                                            name='assets[{{ $item_asset->asset->id }}][id]'
                                                             value='{{ $item_asset->asset->id }}'>
 
                                                         <input type='text' class='form-control'
-                                                            name='assets[{{ $index }}][name]'
+                                                            id='asset_name_{{ $item_asset->asset->id }}'
+                                                            name='assets[{{ $item_asset->asset->id }}][name]'
                                                             value='{{ $item_asset->asset->name }}' readonly>
                                                     </td>
                                                     <td>
                                                         <input type='text' class='form-control'
-                                                            name='assets[{{ $index }}][barcode]'
+                                                            name='assets[{{ $item_asset->asset->id }}][barcode]'
                                                             value='{{ $item_asset->asset->barcode_code }}' readonly>
                                                     </td>
                                                     <td>
                                                         <input type='text' class='form-control'
-                                                            name='assets[{{ $index }}][category]'
+                                                            name='assets[{{ $item_asset->asset->id }}][category]'
                                                             value='{{ $item_asset->asset->category->name }}' readonly>
                                                     </td>
                                                     <td>
                                                         <input type='text' class='form-control'
-                                                            name='assets[{{ $index }}][status]'
+                                                            name='assets[{{ $item_asset->asset->id }}][status]'
                                                             value='{{ $item_asset->asset->status === 1 ? 'Good Condition' : ($item_asset->asset->status === 2 ? 'Minor Damage' : 'Major Damage') }}'
                                                             readonly>
                                                     </td>
                                                     <td align='center'>
-                                                        <button type='button' class='delete-row btn btn-sm btn-danger'
-                                                            value='Delete'>Delete</button>
+                                                        <button type='button' class='btn btn-sm btn-danger'
+                                                            onclick='deleteRow({{ $item_asset->asset->id }})'
+                                                            title='Delete'>Delete</button>
                                                         <input type='hidden' class='form-control' name='asset_item_check[]'
                                                             value='{{ $item_asset->asset->id }}'>
                                                     </td>
                                                 </tr>
                                             @endforeach
-
                                         </tbody>
                                     </table>
                                 </div>

@@ -48,7 +48,11 @@ class LicenseAssetController extends Controller
 
             ->addColumn('status', function ($data) {
                 if (!is_null($data->assign_to)) {
-                    return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
+                    if (User::find(Auth::user()->id)->hasRole('admin')) {
+                        return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
+                    } else {
+                        return '<span class="badge badge-danger">Assigned</span>';
+                    }
                 } elseif ($data->status == 3) {
                     return '<span class="badge badge-danger">Major Damage</span>';
                 } elseif ($data->status == 5) {

@@ -49,9 +49,17 @@ class PhysicalAssetController extends Controller
 
             ->addColumn('status', function ($data) {
                 if (!is_null($data->assign_to) && !is_null($data->assign_at)) {
-                    return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
+                    if (User::find(Auth::user()->id)->hasRole('admin')) {
+                        return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
+                    } else {
+                        return '<span class="badge badge-danger">Assigned</span>';
+                    }
                 } elseif (!is_null($data->check_out_by) && !is_null($data->check_out_at)) {
-                    return ' <span class="badge badge-danger">Check Out By ' . $data->checkOut->name . '</span>';
+                    if (User::find(Auth::user()->id)->hasRole('admin')) {
+                        return ' <span class="badge badge-danger">Check Out By ' . $data->checkOut->name . '</span>';
+                    } else {
+                        return '<span class="badge badge-danger">Checked Out</span>';
+                    }
                 } elseif ($data->status == 3) {
                     return '<span class="badge badge-danger">Major Damage</span>';
                 } elseif ($data->status == 4) {

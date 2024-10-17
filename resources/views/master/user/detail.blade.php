@@ -88,6 +88,9 @@
                                                         Asset
                                                     </th>
                                                     <th>
+                                                        Assign At / Check Out At
+                                                    </th>
+                                                    <th>
                                                         Barcode
                                                     </th>
                                                     <th>
@@ -99,22 +102,29 @@
                                                     <th>
                                                         Value
                                                     </th>
-                                                    <th>
-                                                        Action
-                                                    </th>
+                                                    @role('staff')
+                                                        <th>
+                                                            Action
+                                                        </th>
+                                                    @endrole
                                                 </tr>
                                             </thead>
                                             @php
                                                 $total_value = 0;
                                             @endphp
                                             <tbody>
-                                                @foreach ($user->asset as $index => $asset)
+                                                @foreach ($assets as $index => $asset)
                                                     <tr>
                                                         <td>
                                                             {{ $index + 1 }}
                                                         </td>
                                                         <td>
                                                             {{ $asset->name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ !is_null($asset->assign_at) ? 'Assign At' : 'Check Out At' }}
+                                                            <br>
+                                                            {{ !is_null($asset->assign_at) ? date('d F Y H:i:s', strtotime($asset->assign_at)) : date('d F Y H:i:s', strtotime($asset->check_out_at)) }}
                                                         </td>
                                                         <td>
                                                             {{ $asset->barcode_code }}
@@ -137,29 +147,33 @@
                                                             @endphp
                                                             {{ 'Rp.' . number_format($asset->value, 0, ',', '.') . ',00' }}
                                                         </td>
-                                                        <td>
-                                                            @if ($asset->type == 1)
-                                                                <a href="{{ route('asset.physical.show', ['id' => $asset->id]) }}"
-                                                                    class="btn btn-sm btn-primary">Detail</a>
-                                                            @else
-                                                                <a href="{{ route('asset.license.show', ['id' => $asset->id]) }}"
-                                                                    class="btn btn-sm btn-primary">Detail</a>
-                                                            @endif
-                                                        </td>
+                                                        @role('staff')
+                                                            <td>
+                                                                @if ($asset->type == 1)
+                                                                    <a href="{{ route('asset.physical.show', ['id' => $asset->id]) }}"
+                                                                        class="btn btn-sm btn-primary">Detail</a>
+                                                                @else
+                                                                    <a href="{{ route('asset.license.show', ['id' => $asset->id]) }}"
+                                                                        class="btn btn-sm btn-primary">Detail</a>
+                                                                @endif
+                                                            </td>
+                                                        @endrole
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td colspan="5" align="right">
+                                                    <td colspan="6" align="right">
                                                         <label>Total Value</label>
                                                     </td>
                                                     <td align="right">
                                                         {{ 'Rp.' . number_format($total_value, 0, ',', '.') . ',00' }}
                                                     </td>
-                                                    <td>
-                                                        &nbsp;
-                                                    </td>
+                                                    @role('staff')
+                                                        <td>
+                                                            &nbsp;
+                                                        </td>
+                                                    @endrole
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -174,7 +188,6 @@
                             </div>
                         </div>
                         <!-- /.card-body -->
-
                     </div>
                 </div>
             </div>
