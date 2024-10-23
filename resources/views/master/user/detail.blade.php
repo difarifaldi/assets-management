@@ -26,7 +26,7 @@
                             <div class="tab-content" id="nav-tabContent">
                                 <div class="tab-pane pt-3 fade show active" id="nav-detail" role="tabpanel">
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label" for="nik">NIK </label>
+                                        <label class="col-sm-3 col-form-label" for="nik">Employee Number </label>
                                         <div class="col-sm-9 col-form-label">
                                             {{ $user->nik }}
                                         </div>

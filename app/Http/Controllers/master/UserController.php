@@ -83,11 +83,11 @@ class UserController extends Controller
              */
             $request->validate([
                 'username' => 'required',
-                'nik' => 'numeric|digits:16',
+                'nik' => 'numeric',
                 'division_id' => 'required',
                 'name' => 'required|string',
                 'email' => 'required|email',
-                'phone' => 'required|numeric',
+                'phone' => 'required',
                 'address' => 'nullable',
                 'roles' => 'required',
                 'password' => 'required',
@@ -288,9 +288,9 @@ class UserController extends Controller
                 'email' => 'required|email',
                 'username' => 'required',
                 'roles' => 'required',
-                'nik' => 'numeric|digits:16',
+                'nik' => 'numeric',
                 'division_id' => 'required',
-                'phone' => 'required|numeric',
+                'phone' => 'required',
                 'address' => 'nullable',
             ]);
 

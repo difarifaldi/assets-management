@@ -20,9 +20,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="nik">NIK <span class="text-danger">*</span></label>
+                                    <label for="nik">Employee Number <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="nik" name="nik"
-                                        placeholder="NIK" value="{{ old('nik') }}">
+                                        placeholder="Employee Number" value="{{ old('nik') }}">
                                 </div>
 
                                 <div class="form-group">
