@@ -193,15 +193,15 @@ class ManufactureController extends Controller
                     DB::commit();
                     return redirect()
                         ->route('master.manufacture.index')
-                        ->with(['success' => 'Successfully Update manufacture']);
+                        ->with(['success' => 'Successfully Update Manufacture']);
                 } else {
                     /**
-                     * Failed Store Record  
+                     * Failed Store Record
                      */
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update manufacture'])
+                        ->with(['failed' => 'Failed Update Manufacture'])
                         ->withInput();
                 }
             } else {
