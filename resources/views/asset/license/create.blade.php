@@ -5,18 +5,15 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-info">
-
                         <div class="card-header">
                             <h3 class="card-title font-weight-bold">Add License Asset</h3>
                         </div>
-
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form method="post" id="create-form" action="{{ route('asset.license.store') }}"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
-
                                 <div class="form-group">
                                     <label for="categories">Category </label>
                                     <select class="form-control select2bs4" id="category_asset_id" name="category_asset_id">
@@ -31,7 +28,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="brand_id">Brand <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="brand_id" name="brand_id">
@@ -46,7 +42,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="manufacture_id">Manufacture <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="manufacture_id" name="manufacture_id">
@@ -61,7 +56,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="barcode_code">Barcode <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="barcode_code" name="barcode_code"
@@ -72,7 +66,6 @@
                                     <input type="text" class="form-control" id="name" name="name"
                                         placeholder="Name" value="{{ old('name') }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="status" name="status" required>
@@ -87,7 +80,6 @@
                                         </option>
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="value">Value</label>
                                     <div class="input-group mb-3">
@@ -98,26 +90,22 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="purchase_date">Purchase Date</label>
                                     <input type="date" class="form-control" id="purchase_date" name="purchase_date"
                                         placeholder="Purchase Date" value="{{ old('purchase_date') }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="expired_at">Expired</label>
                                     <input type="date" class="form-control" id="expired_at" name="expired_at"
                                         placeholder="Expired" value="{{ old('expired_at') }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="warranty_end_date">Warranty End Date</label>
                                     <input type="date" class="form-control" id="warranty_end_date"
                                         name="warranty_end_date" placeholder="Expired"
                                         value="{{ old('warranty_end_date') }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="warranty_duration">Warranty Duration</label>
                                     <div class="input-group mb-3">
@@ -129,15 +117,11 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <div class="form-group">
                                     <label for="description">Description</label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
                                         placeholder="Description">{{ old('description') }}</textarea>
                                 </div>
-
-
                                 <div class="mb-3">
                                     <label for="attachment">Attachment <span class="text-danger">*</span></label>
                                     <input type="file" class="form-control" name="attachment[]" id="documentInput"
@@ -146,7 +130,6 @@
                                     <iframe id="documentPreview" class="w-100 mt-3 d-none"
                                         style="height: 600px;"></iframe>
                                 </div>
-
                                 <div class="pt-3 d-flex">
                                     <a href="{{ route('asset.license.index') }}" class="btn btn-danger mr-2">
                                         Back</a>

@@ -16,7 +16,6 @@
                             @csrf
                             @method('patch')
                             <div class="card-body">
-
                                 <div class="form-group">
                                     <label for="categories">Category </label>
                                     <select class="form-control select2bs4" id="category_asset_id" name="category_asset_id">
@@ -30,7 +29,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="brand_id">Brand <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="brand_id" name="brand_id">
@@ -42,10 +40,8 @@
                                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endif
                                         @endforeach
-
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="manufacture_id">Manufacture <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="manufacture_id" name="manufacture_id">
@@ -59,7 +55,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="barcode_code">Barcode <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="barcode_code" name="barcode_code"
@@ -70,7 +65,6 @@
                                     <input type="text" class="form-control" id="name" name="name"
                                         placeholder="Name" value="{{ $license->name }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="status" name="status" required>
@@ -96,26 +90,22 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <label for="expired_at">Expired</label>
                                     <input type="date" class="form-control" id="expired_at" name="expired_at"
                                         placeholder="Expired" value="{{ $license->expired_at }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="purchase_date">Purchase Date</label>
                                     <input type="date" class="form-control" id="purchase_date" name="purchase_date"
                                         placeholder="Purchase Date" value="{{ $license->purchase_date }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="warranty_end_date">Warranty End Date</label>
                                     <input type="date" class="form-control" id="warranty_end_date"
                                         name="warranty_end_date" placeholder="Expired"
                                         value="{{ $license->warranty_end_date }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="warranty_duration">Warranty Duration <span
                                             class="text-danger">*</span></label>
@@ -128,14 +118,11 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <div class="form-group">
                                     <label for="description">Description</label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
                                         placeholder="Description">{{ $license->description }}</textarea>
                                 </div>
-
                                 <div class="pt-3 d-flex">
                                     <a href="{{ route('asset.license.index') }}" class="btn btn-danger mr-2">
                                         Back</a>

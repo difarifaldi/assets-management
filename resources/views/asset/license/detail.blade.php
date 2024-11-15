@@ -35,7 +35,6 @@
                                             {{ $asset->category ? $asset->category->name : '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Brand -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Brand</label>
@@ -43,7 +42,6 @@
                                             {{ $asset->brand ? $asset->brand->name : '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Manufacture -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Manufacture</label>
@@ -51,7 +49,6 @@
                                             {{ $asset->manufacture ? $asset->manufacture->name : '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Barcode -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Barcode</label>
@@ -59,7 +56,6 @@
                                             {{ $asset->barcode_code ?? '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Name -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Name</label>
@@ -67,7 +63,6 @@
                                             {{ $asset->name ?? '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Status -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Status</label>
@@ -79,7 +74,6 @@
                                             @endif
                                         </div>
                                     </div>
-
                                     @if (in_array($asset->status, [1, 2]))
                                         <!-- Check Status -->
                                         <div class="form-group row">
@@ -97,7 +91,6 @@
                                             </div>
                                         </div>
                                     @endif
-
                                     <!-- Value -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Value</label>
@@ -105,7 +98,6 @@
                                             {{ 'Rp.' . number_format($asset->value, 0, ',', '.') . ',00' }}
                                         </div>
                                     </div>
-
                                     <!-- Expired At -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Expired</label>
@@ -113,7 +105,6 @@
                                             {{ !is_null($asset->expired_at) ? date('d F Y', strtotime($asset->expired_at)) : '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Purchase Date -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Purchase Date</label>
@@ -121,7 +112,6 @@
                                             {{ !is_null($asset->purchase_date) ? date('d F Y', strtotime($asset->purchase_date)) : '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Warranty End Date -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Warranty End Date</label>
@@ -129,7 +119,6 @@
                                             {{ !is_null($asset->warranty_end_date) ? date('d F Y', strtotime($asset->warranty_end_date)) : '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Warranty Duration -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Warranty Duration</label>
@@ -137,7 +126,6 @@
                                             {{ !is_null($asset->warranty_duration) ? $asset->warranty_duration . ' Month' : '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Description -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Description</label>
@@ -145,7 +133,6 @@
                                             {{ $asset->description ?? '-' }}
                                         </div>
                                     </div>
-
                                     <!-- Attachment -->
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Attachment</label>

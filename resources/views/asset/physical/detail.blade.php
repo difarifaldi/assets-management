@@ -273,7 +273,6 @@
                                         </table>
                                     </div>
                                 </div>
-
                                 <div class="tab-pane pt-3 fade" id="nav-assign" role="tabpanel">
                                     <div class="table-responsive py-3">
                                         <table id="table-assign" class="table table-bordered ">
@@ -321,7 +320,6 @@
                                         </table>
                                     </div>
                                 </div>
-
                                 <div class="tab-pane pt-3 fade" id="nav-check" role="tabpanel">
                                     <div class="table-responsive py-3">
                                         <table id="table-check" class="table table-bordered ">
@@ -564,6 +562,4 @@
     @push('javascript-bottom')
         @include('javascript.asset.physical.script')
     @endpush
-
-
 @endsection

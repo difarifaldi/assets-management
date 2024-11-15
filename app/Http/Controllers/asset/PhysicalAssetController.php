@@ -116,18 +116,12 @@ class PhysicalAssetController extends Controller
     {
         try {
             $request->validate([
-                'category_asset_id' => 'nullable|integer|exists:category_assets,id',
-                'barcode_code' => 'required|string',
-                'name' => 'required|string',
-                'status' => 'required|integer',
-                'value' => 'nullable|integer|min:0',
-                'description' => 'nullable|string',
-                'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-                'brand_id' => 'required|integer|exists:brands,id',
-                'manufacture_id' => 'required|integer|exists:manufactures,id',
-                'purchase_date' => 'nullable|date',
-                'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
-                'warranty_duration' => 'nullable|integer|min:0',
+                'barcode_code' => 'required',
+                'name' => 'required',
+                'status' => 'required',
+                'attachment.*' => 'file|mimes:jpg,jpeg,png',
+                'brand_id' => 'required',
+                'manufacture_id' => 'required',
             ]);
 
             $barcode_check = Asset::whereNull('deleted_by')
@@ -196,7 +190,9 @@ class PhysicalAssetController extends Controller
                     ->withInput();
             }
         } catch (Exception $e) {
-            dd($e->getLine(), $e->getMessage(), $e->getFile());
+            return redirect()
+                ->back()
+                ->with(['failed' => $e->getMessage()]);
         }
     }
 
@@ -275,20 +271,12 @@ class PhysicalAssetController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'category_asset_id' => 'nullable|integer|exists:category_assets,id',
-                'barcode_code' => 'required|string',
-                'name' => 'required|string',
-                'status' => 'required|integer',
-                'value' => 'nullable|integer|min:0',
-                'description' => 'nullable|string',
-                'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-                'assign_to' => 'nullable',
-                'assign_at' => 'nullable',
-                'brand_id' => 'required|integer|exists:brands,id',
-                'manufacture_id' => 'required|integer|exists:manufactures,id',
-                'purchase_date' => 'nullable|date',
-                'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
-                'warranty_duration' => 'nullable|integer|min:0',
+                'barcode_code' => 'required',
+                'name' => 'required',
+                'status' => 'required',
+                'attachment.*' => 'file|mimes:jpg,jpeg,png',
+                'brand_id' => 'required',
+                'manufacture_id' => 'required',
             ]);
 
             $barcode_check = Asset::whereNull('deleted_by')
@@ -707,8 +695,9 @@ class PhysicalAssetController extends Controller
                 return redirect()->back()->with('failed', 'Invalid Request!');
             }
         } catch (Exception $e) {
-            dd($e->getMessage(), $e->getFile());
-            // return redirect()->back()->with('failed', $e->getMessage());
+            return redirect()
+                ->back()
+                ->with(['failed' => $e->getMessage()]);
         }
     }
 
