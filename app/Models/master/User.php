@@ -22,6 +22,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $guarded = [];
+    protected $table = 'pengguna';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -43,13 +44,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function division()
+    public function divisi()
     {
-        return $this->belongsTo(Division::class, 'division_id');
+        return $this->belongsTo(Division::class, 'id_divisi');
     }
 
     public function asset()
     {
-        return $this->hasMany(Asset::class, 'assign_to');
+        return $this->hasMany(Asset::class, 'ditugaskan_ke');
     }
 }

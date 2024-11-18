@@ -27,19 +27,19 @@
                                                 #
                                             </th>
                                             <th>
-                                                Name
+                                                Nama
                                             </th>
                                             <th>
                                                 Email
                                             </th>
                                             <th>
-                                                Role
+                                                Peran
                                             </th>
                                             <th>
-                                                Division
+                                                Divisi
                                             </th>
                                             <th>
-                                                Action
+                                                Aksi
                                             </th>
                                         </tr>
                                     </thead>

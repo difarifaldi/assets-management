@@ -10,4 +10,5 @@ class SubmissionFormsCheckoutDate extends Model
     use HasFactory;
     protected $guarded = [];
     public $timestamps = false;
+    protected $table = 'form_pengajuan_tanggal_peminjaman';
 }

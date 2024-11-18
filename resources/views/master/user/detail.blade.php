@@ -7,7 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail User - {{ $user->name }}</h3>
+                                <h3 class="card-title font-weight-bold">Detail Pengguna - {{ $user->nama }}</h3>
                             </div>
                         </div>
                         <div class="card-body">
@@ -18,23 +18,23 @@
                                         aria-selected="true">Detail</button>
                                     @if ($user->hasRole('staff'))
                                         <button class="nav-link" data-toggle="tab" data-target="#nav-assets" type="button"
-                                            role="tab" aria-controls="nav-maintence" aria-selected="false">List of
-                                            Assets</button>
+                                            role="tab" aria-controls="nav-maintence" aria-selected="false">Daftar
+                                            Asset</button>
                                     @endif
                                 </div>
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
                                 <div class="tab-pane pt-3 fade show active" id="nav-detail" role="tabpanel">
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label" for="nik">Employee Number </label>
+                                        <label class="col-sm-3 col-form-label" for="nik">Nomor Pegawai </label>
                                         <div class="col-sm-9 col-form-label">
                                             {{ $user->nik }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label" for="name">Name </label>
+                                        <label class="col-sm-3 col-form-label" for="nama">Nama </label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $user->name }}
+                                            {{ $user->nama }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -50,29 +50,29 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label" for="phone">Phone </label>
+                                        <label class="col-sm-3 col-form-label" for="noHP">Nomor HP </label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $user->phone }}
+                                            {{ $user->noHP }}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label" for="division">Division </label>
+                                        <label class="col-sm-3 col-form-label" for="divisi">Divisi </label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $user->division->name ?? '-' }}
+                                            {{ $user->divisi->nama ?? '-' }}
                                         </div>
                                     </div>
                                     @role('admin')
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label" for="roles">Role </label>
+                                            <label class="col-sm-3 col-form-label" for="roles">Peran </label>
                                             <div class="col-sm-9 col-form-label">
                                                 {{ $user_role }}
                                             </div>
                                         </div>
                                     @endrole
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label" for="address">Address </label>
+                                        <label class="col-sm-3 col-form-label" for="alamat">Alamat </label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $user->address ? $user->address : '-' }}
+                                            {{ $user->alamat ? $user->alamat : '-' }}
                                         </div>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@
                                                     </th>
                                                     @role('staff')
                                                         <th>
-                                                            Action
+                                                            Aksi
                                                         </th>
                                                     @endrole
                                                 </tr>
@@ -119,7 +119,7 @@
                                                             {{ $index + 1 }}
                                                         </td>
                                                         <td>
-                                                            {{ $asset->name }}
+                                                            {{ $asset->nama }}
                                                         </td>
                                                         <td>
                                                             {{ !is_null($asset->assign_at) ? 'Assign At' : 'Check Out At' }}
@@ -130,7 +130,7 @@
                                                             {{ $asset->barcode_code }}
                                                         </td>
                                                         <td>
-                                                            {{ $asset->category->name }}
+                                                            {{ $asset->category->nama }}
                                                         </td>
                                                         <td>
                                                             @if ($asset->status == 1)
@@ -181,7 +181,7 @@
                                 </div>
                             </div>
                             <div class="d-flex pt-3 ">
-                                <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2">Back</a>
+                                <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2">Kembali</a>
                                 @hasrole('staff')
                                     <a href="{{ route('my-account.edit') }}" class="btn btn-warning text-white">Edit</a>
                                 @endhasrole

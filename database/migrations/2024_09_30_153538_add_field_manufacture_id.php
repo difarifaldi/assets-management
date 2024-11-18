@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('assets', function (Blueprint $table) {
-            $table->integer('manufacture_id')->nullable();
-            $table->foreign('manufacture_id')->references('id')->on('manufactures');
+        Schema::table('aset', function (Blueprint $table) {
+            $table->integer('id_manufaktur')->nullable();
+            $table->foreign('id_manufaktur')->references('id')->on('manufaktur');
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assets');
+        Schema::dropIfExists('aset');
     }
 };

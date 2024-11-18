@@ -38,7 +38,7 @@ class DivisionController extends Controller
          */
         $dataTable = DataTables::of($division)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
+            ->addColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
 
                 /**
@@ -53,8 +53,8 @@ class DivisionController extends Controller
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'address', 'action'])
-            ->rawColumns(['action'])
+            ->only(['nama', 'alamat', 'aksi'])
+            ->rawColumns(['aksi'])
             ->make(true);
 
         return $dataTable;
@@ -78,7 +78,7 @@ class DivisionController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
+                'nama' => 'required|string',
             ]);
 
             DB::beginTransaction();
@@ -87,7 +87,7 @@ class DivisionController extends Controller
              * Create Division Record
              */
             $division = Division::lockforUpdate()->create([
-                'name' => $request->name,
+                'nama' => $request->nama,
             ]);
 
             /**
@@ -97,15 +97,15 @@ class DivisionController extends Controller
                 DB::commit();
                 return redirect()
                     ->route('master.division.index')
-                    ->with(['success' => 'Successfully Add Division']);
+                    ->with(['success' => 'Berhasil Tambah Divisi']);
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add Division'])
+                    ->with(['failed' => 'Gagal Tambah Divisi'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -162,7 +162,7 @@ class DivisionController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
+                'nama' => 'required|string',
 
             ]);
 
@@ -178,7 +178,7 @@ class DivisionController extends Controller
                  * Update Division Record
                  */
                 $category_update = Division::where('id', $id)->update([
-                    'name' => $request->name,
+                    'nama' => $request->nama,
                 ]);
 
                 /**
@@ -188,15 +188,15 @@ class DivisionController extends Controller
                     DB::commit();
                     return redirect()
                         ->route('master.division.index')
-                        ->with(['success' => 'Successfully Update Division']);
+                        ->with(['success' => 'Berhasil Ubah Divisi']);
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update Division'])
+                        ->with(['failed' => 'Gagal Ubah Divisi'])
                         ->withInput();
                 }
             } else {
@@ -234,13 +234,13 @@ class DivisionController extends Controller
              */
             if ($category_destroy) {
                 DB::commit();
-                session()->flash('success', 'Division Successfully Deleted');
+                session()->flash('success', 'Division Berhasil Hapus');
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete Division');
+                session()->flash('failed', 'Gagal Hapus Divisi');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

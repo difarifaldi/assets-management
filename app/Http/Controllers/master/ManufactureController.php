@@ -38,7 +38,7 @@ class ManufactureController extends Controller
          */
         $dataTable = DataTables::of($manufacture)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
+            ->addColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
 
                 /**
@@ -48,13 +48,13 @@ class ManufactureController extends Controller
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
 
                     $btn_action .= '<a href="' . route('master.manufacture.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
-                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
+                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Hapus">Hapus</button>';
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'address', 'action'])
-            ->rawColumns(['action'])
+            ->only(['nama', 'alamat', 'aksi'])
+            ->rawColumns(['aksi'])
             ->make(true);
 
         return $dataTable;
@@ -78,7 +78,7 @@ class ManufactureController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
+                'nama' => 'required|string',
             ]);
 
             DB::beginTransaction();
@@ -87,8 +87,8 @@ class ManufactureController extends Controller
              * Create Manufacture Record
              */
             $manufacture = Manufacture::lockforUpdate()->create([
-                'name' => $request->name,
-                'address' => $request->address,
+                'nama' => $request->nama,
+                'alamat' => $request->alamat,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,
             ]);
@@ -100,15 +100,15 @@ class ManufactureController extends Controller
                 DB::commit();
                 return redirect()
                     ->route('master.manufacture.index')
-                    ->with(['success' => 'Successfully Add Manufacture']);
+                    ->with(['success' => 'Berhasil Tambah Manufaktur']);
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add Manufacture'])
+                    ->with(['failed' => 'Gagal Tambah Manufaktur'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -156,7 +156,7 @@ class ManufactureController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Ubah Data the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
@@ -165,7 +165,7 @@ class ManufactureController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
+                'nama' => 'required|string',
 
             ]);
 
@@ -178,30 +178,30 @@ class ManufactureController extends Controller
                 DB::beginTransaction();
 
                 /**
-                 * Update Manufacture Record
+                 * Ubah Data Manufacture Record
                  */
                 $manufacture_update = Manufacture::where('id', $id)->update([
-                    'name' => $request->name,
-                    'address' => $request->address,
+                    'nama' => $request->nama,
+                    'alamat' => $request->alamat,
                     'updated_by' => Auth::user()->id,
                 ]);
 
                 /**
-                 * Validation Update Manufacture Record
+                 * Validation Ubah Data Manufacture Record
                  */
                 if ($manufacture_update) {
                     DB::commit();
                     return redirect()
                         ->route('master.manufacture.index')
-                        ->with(['success' => 'Successfully Update manufacture']);
+                        ->with(['success' => 'Berhasil Ubah Data manufaktur']);
                 } else {
                     /**
-                     * Failed Store Record  
+                     * Gagal Store Record  
                      */
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update manufacture'])
+                        ->with(['failed' => 'Gagal Ubah Data manufaktur'])
                         ->withInput();
                 }
             } else {
@@ -228,7 +228,7 @@ class ManufactureController extends Controller
             DB::beginTransaction();
 
             /**
-             * Update Manufacture Record
+             * Ubah Data Manufacture Record
              */
             $manufacture_destroy = Manufacture::where('id', $id)->update([
                 'deleted_by' => Auth::user()->id,
@@ -236,17 +236,17 @@ class ManufactureController extends Controller
             ]);
 
             /**
-             * Validation Update Manufacture Record
+             * Validation Ubah Data Manufacture Record
              */
             if ($manufacture_destroy) {
                 DB::commit();
-                session()->flash('success', 'Manufacture Successfully Deleted');
+                session()->flash('success', 'Manufaktur Berhasil Dihapus');
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete Manufacture');
+                session()->flash('failed', 'Gagal Hapus Manufaktur');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

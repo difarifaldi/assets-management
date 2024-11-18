@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('submission_forms_checkout_dates', function (Blueprint $table) {
+        Schema::create('form_pengajuan_tanggal_peminjaman', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('submission_form_id');
-            $table->date('loan_application_asset_date');
-            $table->date('return_asset_date');
+            $table->integer('id_form_pengajuan');
+            $table->date('tanggal_pengajuan_peminjaman_aset');
+            $table->date('tanggal_pengembalian_aset');
 
-            $table->foreign('submission_form_id')->references('id')->on('submission_forms');
+            $table->foreign('id_form_pengajuan')->references('id')->on('form_pengajuan');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submission_forms_checkout_dates');
+        Schema::dropIfExists('form_pengajuan_tanggal_peminjaman');
     }
 };

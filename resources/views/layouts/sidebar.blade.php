@@ -11,7 +11,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('img/' . Auth::user()->roles[0]->name.'.png') }}" class="img-circle elevation-2"
+                <img src="{{ asset('img/' . Auth::user()->roles[0]->name . '.png') }}" class="img-circle elevation-2"
                     alt="User Image">
             </div>
             <div class="info">
@@ -34,30 +34,30 @@
                     </li>
                 @endrole
 
-                <li class="nav-header">SUBMISSION</li>
+                <li class="nav-header">Penugasan</li>
                 <li class="nav-item">
                     <a href="{{ route('submission.index') }}" class="nav-link">
                         <i class="fas fa-file-alt nav-icon"></i>
-                        <p>Submission Form</p>
+                        <p>Form Penugasan</p>
                     </a>
                 </li>
 
-                <li class="nav-header">ASSET DATA</li>
+                <li class="nav-header">DATA ASET</li>
                 <li class="nav-item">
                     <a href="{{ route('asset.physical.index') }}" class="nav-link">
                         <i class="fas fa-list nav-icon"></i>
-                        <p>Physical Asset</p>
+                        <p>Aset Fisik</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('asset.license.index') }}" class="nav-link">
                         <i class="fas fa-list nav-icon"></i>
-                        <p>License Asset</p>
+                        <p>Aset Lisensi</p>
                     </a>
                 </li>
 
                 @role('staff')
-                    <li class="nav-header">ACCOUNT</li>
+                    <li class="nav-header">Akun</li>
                     <li class="nav-item">
                         <a href="{{ route('my-account.show') }}" class="nav-link">
                             <i class="fas fa-user nav-icon"></i>
@@ -67,7 +67,7 @@
                 @endrole
 
                 @role('admin')
-                    <li class="nav-header">MASTER DATA</li>
+                    <li class="nav-header">DATA MASTER</li>
                     <li class="nav-item">
                         <a href="{{ route('master.manufacture.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-tools"></i>
@@ -90,7 +90,7 @@
                         <a href="{{ route('master.category.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-clipboard-list"></i>
                             <p>
-                                Category Asset
+                                Kategori Aset
                             </p>
                         </a>
                     </li>
@@ -99,7 +99,7 @@
                         <a href="{{ route('master.division.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-sitemap"></i>
                             <p>
-                                Division Staff
+                                Divisi Staff
                             </p>
                         </a>
                     </li>
@@ -107,7 +107,7 @@
                         <a href="{{ route('master.user.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-user"></i>
                             <p>
-                                Users
+                                Pengguna
                             </p>
                         </a>
                     </li>

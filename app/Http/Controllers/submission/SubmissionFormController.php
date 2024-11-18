@@ -54,23 +54,23 @@ class SubmissionFormController extends Controller
             ->addColumn('created_at', function ($data) {
                 return date('d F Y H:i:s', strtotime($data->created_at));
             })
-            ->addColumn('type', function ($data) {
-                return $data->type == 1 ? 'Assign' : ($data->type == 2 ? 'Checkout ' : '-');
+            ->addColumn('tipe', function ($data) {
+                return $data->tipe == 1 ? 'Penugasan' : ($data->tipe == 2 ? 'Peminjaman ' : '-');
             })
             ->addColumn('status', function ($data) {
-                if ($data->approved_by != null && $data->approved_at != null) {
-                    return '<div class="badge badge-success">Approved</div>';
-                } elseif ($data->rejected_by != null && $data->rejected_at != null) {
-                    return '<div class="badge badge-danger">Rejected</div>';
+                if ($data->diterima_oleh != null && $data->diterima_pada != null) {
+                    return '<div class="badge badge-success">Diterima</div>';
+                } elseif ($data->ditolak_oleh != null && $data->ditolak_pada != null) {
+                    return '<div class="badge badge-danger">Ditolak</div>';
                 } else {
-                    return '<div class="badge badge-warning">Process</div>';
+                    return '<div class="badge badge-warning">Sedang Proses</div>';
                 }
             })
             ->addColumn('created_by', function ($data) {
-                return $data->createdBy->name;
+                return $data->createdBy->nama;
             })
 
-            ->addColumn('action', function ($data) {
+            ->addColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
                 $btn_action .= '<a href="' . route('submission.show', ['id' => $data->id]) . '" class="btn btn-sm btn-primary" title="Detail">Detail</a>';
 
@@ -78,26 +78,26 @@ class SubmissionFormController extends Controller
                  * Validation Role Has Access Edit and Delete
                  */
                 if (User::find(Auth::user()->id)->hasRole('staff')) {
-                    if (!isset($data->approved_at) && !isset($data->rejected_at)) {
-                        if ($data->type == 1) {
+                    if (!isset($data->diterima_pada) && !isset($data->ditolak_pada)) {
+                        if ($data->tipe == 1) {
                             $btn_action .= '<a href="' . route('submission.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                         } else {
-                            $btn_action .= '<a href="' . route('submission.edit', ['type' => 'checkout', 'id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                            $btn_action .= '<a href="' . route('submission.edit', ['tipe' => 'Peminjaman', 'id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                         }
 
-                        $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
+                        $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Hapus">Hapus</button>';
                     }
                 } else {
-                    if (!isset($data->approved_at) && !isset($data->rejected_at)) {
-                        $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="rejectedRecord(' . $data->id . ')"title="Rejected">Rejected</button>';
-                        $btn_action .= '<button class="btn btn-sm btn-success ml-2" onclick="approvedRecord(' . $data->id . ')" title="Approve">Approve</button>';
+                    if (!isset($data->diterima_pada) && !isset($data->ditolak_pada)) {
+                        $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="rejectedRecord(' . $data->id . ')"title="Ditolak">Ditolak</button>';
+                        $btn_action .= '<button class="btn btn-sm btn-success ml-2" onclick="approvedRecord(' . $data->id . ')" title="Diterima">Diterima</button>';
                     }
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['type', 'description', 'status', 'created_at', 'created_by', 'action'])
-            ->rawColumns(['status', 'action'])
+            ->only(['tipe', 'deskripsi', 'status', 'created_at', 'created_by', 'aksi'])
+            ->rawColumns(['status', 'aksi'])
             ->make(true);
 
         return $dataTable;
@@ -109,7 +109,7 @@ class SubmissionFormController extends Controller
     public function create(Request $request, string $type)
     {
         try {
-            if (in_array($type, ['assign', 'checkouts'])) {
+            if (in_array($type, ['Penugasan', 'Peminjaman'])) {
                 if (isset($request->asset)) {
                     $asset = Asset::find($request->asset);
 
@@ -121,24 +121,24 @@ class SubmissionFormController extends Controller
                             ->with(['failed' => 'Invalid Request!']);
                     }
                 } else {
-                    if ($type == 'assign') {
+                    if ($type == 'Penugasan') {
                         $assets = Asset::whereNull('deleted_by')
                             ->whereNull('deleted_at')
-                            ->whereNull('assign_to')
-                            ->whereNull('assign_at')
-                            ->whereNull('check_out_by')
-                            ->whereNull('check_out_at')
+                            ->whereNull('ditugaskan_ke')
+                            ->whereNull('ditugaskan_pada')
+                            ->whereNull('dipinjam_oleh')
+                            ->whereNull('dipinjam_pada')
                             ->whereNotIn('status', [3, 4, 5])
                             ->get();
                     } else {
                         $assets = Asset::whereNull('deleted_by')
                             ->whereNull('deleted_at')
-                            ->whereNull('assign_to')
-                            ->whereNull('assign_at')
-                            ->whereNull('check_out_by')
-                            ->whereNull('check_out_at')
+                            ->whereNull('ditugaskan_ke')
+                            ->whereNull('ditugaskan_pada')
+                            ->whereNull('dipinjam_oleh')
+                            ->whereNull('dipinjam_pada')
                             ->whereNotIn('status', [3, 4, 5])
-                            ->where('type', 1)
+                            ->where('tipe', 1)
                             ->get();
                     }
 
@@ -166,7 +166,7 @@ class SubmissionFormController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'description' => 'required',
+                'deskripsi' => 'required',
             ]);
 
             /**
@@ -179,8 +179,8 @@ class SubmissionFormController extends Controller
                  * Create SubmissionForm Record
                  */
                 $submission = SubmissionForm::lockforUpdate()->create([
-                    'type' => $type,
-                    'description' => $request->description,
+                    'tipe' => $type,
+                    'deskripsi' => $request->deskripsi,
                     'created_by' => Auth::user()->id,
                     'updated_by' => Auth::user()->id,
                 ]);
@@ -190,9 +190,9 @@ class SubmissionFormController extends Controller
                  */
                 if ($submission) {
                     /**
-                     * Has Attachment
+                     * Has Lampiran
                      */
-                    if ($request->hasFile('attachment')) {
+                    if ($request->hasFile('lampiran')) {
                         $path = 'public/submission/' . $submission->id;
                         $path_store = 'storage/submission/' . $submission->id;
 
@@ -200,19 +200,19 @@ class SubmissionFormController extends Controller
                             Storage::makeDirectory($path);
                         }
 
-                        $file_name = $submission->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $request->file('attachment')->getClientOriginalExtension();
-                        $request->file('attachment')->storePubliclyAs($path, $file_name);
+                        $file_name = $submission->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $request->file('lampiran')->getClientOriginalExtension();
+                        $request->file('lampiran')->storePubliclyAs($path, $file_name);
                         $attachment = $path_store . '/' . $file_name;
 
                         $submision_attachment = $submission->update([
-                            'attachment' => $attachment,
+                            'lampiran' => $attachment,
                         ]);
 
                         $assets_request = [];
                         foreach ($request->assets as $asset) {
                             array_push($assets_request, [
-                                'submission_form_id' => $submission->id,
-                                'assets_id' => $asset['id'],
+                                'id_form_pengajuan' => $submission->id,
+                                'id_aset' => $asset['id'],
                             ]);
                         }
 
@@ -226,9 +226,9 @@ class SubmissionFormController extends Controller
                                 if ($type == 2) {
                                     $date_request = [];
                                     array_push($date_request, [
-                                        'submission_form_id' => $submission->id,
-                                        'loan_application_asset_date' => $request->loan_application_asset_date,
-                                        'return_asset_date' => $request->return_asset_date,
+                                        'id_form_pengajuan' => $submission->id,
+                                        'tanggal_pengajuan_peminjaman_aset' => $request->tanggal_pengajuan_peminjaman_aset,
+                                        'tanggal_pengembalian_aset' => $request->tanggal_pengembalian_aset,
                                     ]);
 
                                     $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::insert($date_request);
@@ -237,49 +237,49 @@ class SubmissionFormController extends Controller
                                         DB::commit();
                                         return redirect()
                                             ->route('submission.index')
-                                            ->with(['success' => 'Successfully Added Submission Checkout']);
+                                            ->with(['success' => 'Berhasil Menambahkan Pengajuan Peminjaman']);
                                     } else {
                                         /**
-                                         * Failed Store Record
+                                         * Gagal Store Record
                                          */
                                         DB::rollBack();
                                         return redirect()
                                             ->back()
-                                            ->with(['failed' => 'Failed Added Submission Checkout'])
+                                            ->with(['failed' => 'Gagal Menambahkan Pengajuan Peminjaman'])
                                             ->withInput();
                                     }
                                 } else {
                                     DB::commit();
                                     return redirect()
                                         ->route('submission.index')
-                                        ->with(['success' => 'Successfully Added Submission Assign']);
+                                        ->with(['success' => 'Berhasil Menambahkan Pengajuan Penugasan']);
                                 }
                             } else {
                                 /**
-                                 * Failed Store Record
+                                 * Gagal Store Record
                                  */
                                 DB::rollBack();
                                 return redirect()
                                     ->back()
-                                    ->with(['failed' => 'Failed Upload Attachment'])
+                                    ->with(['failed' => 'Gagal Upload Lampiran'])
                                     ->withInput();
                             }
                         } else {
                             /**
-                             * Failed Store Record
+                             * Gagal Store Record
                              */
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Added Submission'])
+                                ->with(['failed' => 'Gagal Menambahkan Pengajuan'])
                                 ->withInput();
                         }
                     } else {
                         $assets_request = [];
                         foreach ($request->assets as $asset) {
                             array_push($assets_request, [
-                                'submission_form_id' => $submission->id,
-                                'assets_id' => $asset['id'],
+                                'id_form_pengajuan' => $submission->id,
+                                'id_aset' => $asset['id'],
                             ]);
                         }
 
@@ -292,9 +292,9 @@ class SubmissionFormController extends Controller
                             if ($type == 2) {
                                 $date_request = [];
                                 array_push($date_request, [
-                                    'submission_form_id' => $submission->id,
-                                    'loan_application_asset_date' => $request->loan_application_asset_date,
-                                    'return_asset_date' => $request->loan_application_asset_date,
+                                    'id_form_pengajuan' => $submission->id,
+                                    'tanggal_pengajuan_peminjaman_aset' => $request->tanggal_pengajuan_peminjaman_aset,
+                                    'tanggal_pengembalian_aset' => $request->tanggal_pengajuan_peminjaman_aset,
                                 ]);
 
                                 $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::insert($date_request);
@@ -303,42 +303,42 @@ class SubmissionFormController extends Controller
                                     DB::commit();
                                     return redirect()
                                         ->route('submission.index')
-                                        ->with(['success' => 'Successfully Added Submission Checkout']);
+                                        ->with(['success' => 'Berhasil Menambahkan Pengajuan Peminjaman']);
                                 } else {
                                     /**
-                                     * Failed Store Record
+                                     * Gagal Store Record
                                      */
                                     DB::rollBack();
                                     return redirect()
                                         ->back()
-                                        ->with(['failed' => 'Failed Added Submission Checkout'])
+                                        ->with(['failed' => 'Gagal Menambahkan Pengajuan Peminjaman'])
                                         ->withInput();
                                 }
                             } else {
                                 DB::commit();
                                 return redirect()
                                     ->route('submission.index')
-                                    ->with(['success' => 'Successfully Added Submission Assign']);
+                                    ->with(['success' => 'Berhasil Menambahkan Pengajuan Penugasan']);
                             }
                         } else {
                             /**
-                             * Failed Store Record
+                             * Gagal Store Record
                              */
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Added Submission'])
+                                ->with(['failed' => 'Gagal Menambahkan Pengajuan'])
                                 ->withInput();
                         }
                     }
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Added Submission'])
+                        ->with(['failed' => 'Gagal Menambahkan Pengajuan'])
                         ->withInput();
                 }
             } else {
@@ -359,7 +359,7 @@ class SubmissionFormController extends Controller
     {
         try {
             $request->validate([
-                'description' => 'required',
+                'deskripsi' => 'required',
             ]);
 
             $submission = SubmissionForm::find($id);
@@ -369,11 +369,11 @@ class SubmissionFormController extends Controller
 
                 // Update deskripsi
                 $submission_update = SubmissionForm::where('id', $id)->update([
-                    'description' => $request->description,
+                    'deskripsi' => $request->deskripsi,
                 ]);
 
                 if ($submission_update) {
-                    if ($request->hasFile('attachment')) {
+                    if ($request->hasFile('lampiran')) {
                         $path = 'public/submission/' . $submission->id;
                         $path_store = 'storage/submission/' . $submission->id;
 
@@ -381,7 +381,7 @@ class SubmissionFormController extends Controller
                             Storage::makeDirectory($path);
                         }
 
-                        $file_name = $submission->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $request->file('attachment')->getClientOriginalExtension();
+                        $file_name = $submission->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $request->file('lampiran')->getClientOriginalExtension();
 
                         // Hapus file yang sudah ada jika ada
                         if (Storage::exists($path . '/' . $file_name)) {
@@ -389,17 +389,17 @@ class SubmissionFormController extends Controller
                         }
 
                         // Simpan file yang diunggah
-                        $request->file('attachment')->storePubliclyAs($path, $file_name);
+                        $request->file('lampiran')->storePubliclyAs($path, $file_name);
                         $attachment = $path_store . '/' . $file_name;
 
                         // Update lampiran
                         $submission_attachment = $submission->update([
-                            'attachment' => $attachment,
+                            'lampiran' => $attachment,
                         ]);
                     }
 
                     // Hapus semua aset lama
-                    SubmissionFormItemAsset::where('submission_form_id', $submission->id)->delete();
+                    SubmissionFormItemAsset::where('id_form_pengajuan', $submission->id)->delete();
 
                     // Menyimpan aset baru
                     if (is_array($request->assets) && !empty($request->assets)) {
@@ -407,8 +407,8 @@ class SubmissionFormController extends Controller
                             // Memastikan bahwa $asset adalah array dan memiliki kunci 'id'
                             if (is_array($asset) && isset($asset['id'])) {
                                 SubmissionFormItemAsset::create([
-                                    'submission_form_id' => $submission->id,
-                                    'assets_id' => $asset['id'],
+                                    'id_form_pengajuan' => $submission->id,
+                                    'id_aset' => $asset['id'],
                                 ]);
                             } else {
                                 return redirect()->back()->with(['failed' => 'Invalid asset format']);
@@ -417,40 +417,40 @@ class SubmissionFormController extends Controller
                     }
 
                     // Menangani pengisian form checkout
-                    if ($submission->type == 2) {
+                    if ($submission->tipe == 2) {
                         $date_request = [
-                            'submission_form_id' => $submission->id,
-                            'loan_application_asset_date' => $request->loan_application_asset_date,
-                            'return_asset_date' => $request->return_asset_date,
+                            'id_form_pengajuan' => $submission->id,
+                            'tanggal_pengajuan_peminjaman_aset' => $request->tanggal_pengajuan_peminjaman_aset,
+                            'tanggal_pengembalian_aset' => $request->tanggal_pengembalian_aset,
                         ];
 
                         // Hapus tanggal checkout yang lama
-                        SubmissionFormsCheckoutDate::where('submission_form_id', $submission->id)->delete();
+                        SubmissionFormsCheckoutDate::where('id_form_pengajuan', $submission->id)->delete();
                         $submissionFormCheckoutDate = SubmissionFormsCheckoutDate::create($date_request);
 
                         if ($submissionFormCheckoutDate) {
                             DB::commit();
                             return redirect()
                                 ->route('submission.index')
-                                ->with(['success' => 'Successfully Updated Submission Checkout']);
+                                ->with(['success' => 'Berhasil Mengubah Pengajuan Peminjaman']);
                         } else {
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Updated Submission Checkout'])
+                                ->with(['failed' => 'Gagal Mengubah Pengajuan Peminjaman'])
                                 ->withInput();
                         }
                     } else {
                         DB::commit();
                         return redirect()
                             ->route('submission.index')
-                            ->with(['success' => 'Successfully Updated Submission Assign']);
+                            ->with(['success' => 'Berhasil Mengubah Pengajuan Penugasan']);
                     }
                 } else {
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update Submission'])
+                        ->with(['failed' => 'Gagal Mengubah Pengajuan'])
                         ->withInput();
                 }
             } else {
@@ -466,30 +466,30 @@ class SubmissionFormController extends Controller
     {
         try {
             $submission = SubmissionForm::find($id);
-            $submissionItems = SubmissionFormItemAsset::where('submission_form_id', $submission->id)->get();
+            $submissionItems = SubmissionFormItemAsset::where('id_form_pengajuan', $submission->id)->get();
             if (!is_null($submission)) {
-                $submissionAssetIds = $submissionItems->pluck('assets_id')->toArray();
-                if ($submission->type == 1) {
-                    $type = 'assign';
+                $submissionAssetIds = $submissionItems->pluck('id_aset')->toArray();
+                if ($submission->tipe == 1) {
+                    $type = 'Penugasan';
                     $assets = Asset::whereNull('deleted_by')
                         ->whereNull('deleted_at')
-                        ->whereNull('assign_to')
-                        ->whereNull('assign_at')
-                        ->whereNull('check_out_by')
-                        ->whereNull('check_out_at')
+                        ->whereNull('ditugaskan_ke')
+                        ->whereNull('ditugaskan_pada')
+                        ->whereNull('dipinjam_oleh')
+                        ->whereNull('dipinjam_pada')
                         ->whereNotIn('status', [3, 4, 5])
                         ->whereNotIn('id', $submissionAssetIds)
                         ->get();
                 } else {
-                    $type = 'checkouts';
+                    $type = 'Peminjaman';
                     $assets = Asset::whereNull('deleted_by')
                         ->whereNull('deleted_at')
-                        ->whereNull('assign_to')
-                        ->whereNull('assign_at')
-                        ->whereNull('check_out_by')
-                        ->whereNull('check_out_at')
+                        ->whereNull('ditugaskan_ke')
+                        ->whereNull('ditugaskan_pada')
+                        ->whereNull('dipinjam_oleh')
+                        ->whereNull('dipinjam_pada')
                         ->whereNotIn('status', [3, 4, 5])
-                        ->where('type', 1)
+                        ->where('tipe', 1)
                         ->whereNotIn('id', $submissionAssetIds)
                         ->get();
                 }
@@ -507,12 +507,12 @@ class SubmissionFormController extends Controller
     {
         try {
             /**
-             * Get Submission Record from id
+             * Get Pengajuan Data from id
              */
             $submission = SubmissionForm::find($id);
 
             /**
-             * Validation Submission id
+             * Validation Pengajuan id
              */
             if (!is_null($submission)) {
 
@@ -524,7 +524,7 @@ class SubmissionFormController extends Controller
                     }
                 }
 
-                if ($submission->type == 1) {
+                if ($submission->tipe == 1) {
                     return view('submission.assign.detail', compact('submission'));
                 } else {
                     return view('submission.checkouts.detail', compact('submission'));
@@ -556,8 +556,8 @@ class SubmissionFormController extends Controller
                  * Update SubmissionForm Record
                  */
                 $approved_submission = $submission->update([
-                    'approved_by' => Auth::user()->id,
-                    'approved_at' => now(),
+                    'diterima_oleh' => Auth::user()->id,
+                    'diterima_pada' => now(),
                 ]);
 
                 /**
@@ -566,14 +566,14 @@ class SubmissionFormController extends Controller
                 if ($approved_submission) {
                     DB::commit();
                     $submission_result = SubmissionForm::find($request->id);
-                    session()->flash('success', 'Submission Successfully Approved');
+                    session()->flash('success', 'Submission Berhasil Diterima');
                     return response()->json(['data', $submission_result], 200);
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
-                    session()->flash('failed', 'Submission Failed Approved');
+                    session()->flash('failed', 'Submission Gagal Diterima');
                     return response()->json(['message', 'Failed'], 400);
                 }
             } else {
@@ -601,9 +601,9 @@ class SubmissionFormController extends Controller
                  * Update SubmissionForm Record
                  */
                 $rejected_submission = $submission->update([
-                    'rejected_by' => Auth::user()->id,
-                    'rejected_at' => now(),
-                    'reason' => $request->reason,
+                    'ditolak_oleh' => Auth::user()->id,
+                    'ditolak_pada' => now(),
+                    'alasan' => $request->alasan,
                 ]);
 
                 /**
@@ -612,14 +612,14 @@ class SubmissionFormController extends Controller
                 if ($rejected_submission) {
                     DB::commit();
                     $submission_result = SubmissionForm::find($request->id);
-                    session()->flash('success', 'Submission Successfully Rejected');
+                    session()->flash('success', 'Submission Berhasil Ditolak');
                     return response()->json(['data', $submission_result], 200);
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
-                    session()->flash('failed', 'Submission Failed Rejected');
+                    session()->flash('failed', 'Submission Gagal Ditolak');
                     return response()->json(['message', 'Failed'], 400);
                 }
             } else {
@@ -632,7 +632,7 @@ class SubmissionFormController extends Controller
         }
     }
 
-    public function assignTo(Request $request, string $id)
+    public function PenugasanTo(Request $request, string $id)
     {
         try {
             $submission = SubmissionForm::find($id);
@@ -644,19 +644,19 @@ class SubmissionFormController extends Controller
                 DB::beginTransaction();
 
                 /**
-                 * Update Assign Status Asset Record
+                 * Update Penugasan Status Asset Record
                  */
-                $add_assign = Asset::where('id', $request->assets_id)->update([
-                    'assign_to' => $submission->created_by,
-                    'assign_at' => now(),
+                $add_assign = Asset::where('id', $request->id_aset)->update([
+                    'ditugaskan_ke' => $submission->created_by,
+                    'ditugaskan_pada' => now(),
                 ]);
 
                 /**
                  * Validation Update Asset Record
                  */
                 if ($add_assign) {
-                    $path = 'public/asset/physical/proof_assign';
-                    $path_store = 'storage/asset/physical/proof_assign';
+                    $path = 'public/asset/physical/bukti_penugasan';
+                    $path_store = 'storage/asset/physical/bukti_penugasan';
 
                     // Check Exsisting Path
                     if (!Storage::exists($path)) {
@@ -666,64 +666,64 @@ class SubmissionFormController extends Controller
 
                     $proof_assign_attachment = [];
 
-                    foreach ($request->file('attachment') as $file) {
+                    foreach ($request->file('lampiran') as $file) {
                         // File Upload Configuration
-                        $file_name = $request->assets_id . '-proof-assign-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
+                        $file_name = $request->id_aset . '-proof-assign-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
                         // Uploading File
                         $file->storePubliclyAs($path, $file_name);
 
                         // Check Upload Success
                         if (Storage::exists($path . '/' . $file_name)) {
-                            $proof_assign_attachment['proof_assign'][] = $path_store . '/' . $file_name;
+                            $proof_assign_attachment['bukti_penugasan'][] = $path_store . '/' . $file_name;
                         } else {
-                            // Failed and Rollback
+                            // Gagal and Rollback
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->with(['failed' => 'Gagal Upload Lampiran'])
                                 ->withInput();
                         }
                     }
 
                     if (empty($proof_assign_attachment)) {
-                        // Update Record for Attachment
+                        // Update Data for Lampiran
                         $proof_assign_attachment = null;
                     } else {
-                        // Update Record for Attachment
+                        // Update Data for Lampiran
                         $proof_assign_attachment = json_encode($proof_assign_attachment);
                     }
 
                     $history_assign = HistoryAssign::create([
-                        'assets_id' => $request->assets_id,
-                        'submission_form_id' => $id,
-                        'assign_to' => $submission->created_by,
-                        'assign_at' => now(),
+                        'id_aset' => $request->id_aset,
+                        'id_form_pengajuan' => $id,
+                        'ditugaskan_ke' => $submission->created_by,
+                        'ditugaskan_pada' => now(),
                         'latest' => true,
-                        'attachment' => $proof_assign_attachment,
+                        'lampiran' => $proof_assign_attachment,
                         'created_by' => Auth::user()->id,
                         'updated_by' => Auth::user()->id,
                     ]);
 
                     /**
-                     * Validation Add history Record
+                     * Validation Menambahkan history Record
                      */
                     if ($history_assign) {
                         DB::commit();
-                        return redirect()->back()->with('success', 'Assign Successfully Add');
+                        return redirect()->back()->with('success', 'Penugasan Berhasil Ditambah');
                     } else {
                         /**
-                         * Failed Store Record
+                         * Gagal Store Record
                          */
                         DB::rollBack();
-                        return redirect()->back()->with('failed', 'Failed Add Record Assign');
+                        return redirect()->back()->with('failed', 'Gagal Menambah Data Penugasan');
                     }
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
-                    return redirect()->back()->with('failed', 'Failed Add Assign');
+                    return redirect()->back()->with('failed', 'Gagal Menambah Penugasan');
                 }
             } else {
                 session()->flash('failed', 'Invalid Request!');
@@ -746,19 +746,19 @@ class SubmissionFormController extends Controller
                 DB::beginTransaction();
 
                 /**
-                 * Update Assign Status Asset Record
+                 * Update Penugasan Status Asset Record
                  */
-                $add_check_out = Asset::where('id', $request->assets_id)->update([
-                    'check_out_by' => $submission->created_by,
-                    'check_out_at' => now(),
+                $add_check_out = Asset::where('id', $request->id_aset)->update([
+                    'dipinjam_oleh' => $submission->created_by,
+                    'dipinjam_pada' => now(),
                 ]);
 
                 /**
                  * Validation Update Asset Record
                  */
                 if ($add_check_out) {
-                    $path = 'public/asset/physical/proof_checkout';
-                    $path_store = 'storage/asset/physical/proof_checkout';
+                    $path = 'public/asset/physical/proof_Peminjaman';
+                    $path_store = 'storage/asset/physical/proof_Peminjaman';
 
                     // Check Exsisting Path
                     if (!Storage::exists($path)) {
@@ -768,64 +768,64 @@ class SubmissionFormController extends Controller
 
                     $proof_check_out_attachment = [];
 
-                    foreach ($request->file('attachment') as $file) {
+                    foreach ($request->file('lampiran') as $file) {
                         // File Upload Configuration
-                        $file_name = $request->assets_id . '-proof-check-out-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
+                        $file_name = $request->id_aset . '-proof-check-out-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
                         // Uploading File
                         $file->storePubliclyAs($path, $file_name);
 
                         // Check Upload Success
                         if (Storage::exists($path . '/' . $file_name)) {
-                            $proof_check_out_attachment['proof_checkout'][] = $path_store . '/' . $file_name;
+                            $proof_check_out_attachment['proof_Peminjaman'][] = $path_store . '/' . $file_name;
                         } else {
-                            // Failed and Rollback
+                            // Gagal and Rollback
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->with(['failed' => 'Gagal Upload Lampiran'])
                                 ->withInput();
                         }
                     }
 
                     if (empty($proof_check_out_attachment)) {
-                        // Update Record for Attachment
+                        // Update Data for Lampiran
                         $proof_check_out_attachment = null;
                     } else {
-                        // Update Record for Attachment
+                        // Update Data for Lampiran
                         $proof_check_out_attachment = json_encode($proof_check_out_attachment);
                     }
 
                     $history_check_out = HistoryCheckInOut::create([
-                        'assets_id' => $request->assets_id,
-                        'submission_form_id' => $id,
-                        'check_out_by' => $submission->created_by,
-                        'check_out_at' => now(),
+                        'id_aset' => $request->id_aset,
+                        'id_form_pengajuan' => $id,
+                        'dipinjam_oleh' => $submission->created_by,
+                        'dipinjam_pada' => now(),
                         'latest' => true,
-                        'attachment' => $proof_check_out_attachment,
+                        'lampiran' => $proof_check_out_attachment,
                         'created_by' => Auth::user()->id,
                         'updated_by' => Auth::user()->id,
                     ]);
 
                     /**
-                     * Validation Add history Record
+                     * Validation Menambahkan history Record
                      */
                     if ($history_check_out) {
                         DB::commit();
-                        return redirect()->back()->with('success', 'Check Out Successfully Add');
+                        return redirect()->back()->with('success', 'Peminjaman Berhasil Ditambahkan');
                     } else {
                         /**
-                         * Failed Store Record
+                         * Gagal Store Record
                          */
                         DB::rollBack();
-                        return redirect()->back()->with('failed', 'Failed Add Record Check Out');
+                        return redirect()->back()->with('failed', 'Gagal Menambahkan Data Peminjaman');
                     }
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
-                    return redirect()->back()->with('failed', 'Failed Add Check Out');
+                    return redirect()->back()->with('failed', 'Gagal Menambahkan Peminjaman');
                 }
             } else {
                 session()->flash('failed', 'Invalid Request!');
@@ -843,16 +843,16 @@ class SubmissionFormController extends Controller
             $submission = SubmissionForm::find($id);
 
             if (!is_null($submission)) {
-                $last_check_out = HistoryCheckInOut::where('assets_id', $request->assets_id)->whereNull('deleted_by')->whereNull('check_in_by')->whereNull('check_in_at')->whereNull('deleted_by')->whereNotNull('latest')->first();
+                $last_check_out = HistoryCheckInOut::where('id_aset', $request->id_aset)->whereNull('deleted_by')->whereNull('pengembalian_oleh')->whereNull('pengembalian_pada')->whereNull('deleted_by')->whereNotNull('latest')->first();
                 /**
                  * Begin Transaction
                  */
 
                 DB::beginTransaction();
 
-                $remove_check_out = Asset::where('id', $request->assets_id)->update([
-                    'check_out_by' => null,
-                    'check_out_at' => null,
+                $remove_check_out = Asset::where('id', $request->id_aset)->update([
+                    'dipinjam_oleh' => null,
+                    'dipinjam_pada' => null,
                 ]);
 
                 /**
@@ -868,69 +868,69 @@ class SubmissionFormController extends Controller
                         Storage::makeDirectory($path);
                     }
 
-                    $proof_check_in_attachment['proof_checkout'] = json_decode($last_check_out->attachment)->proof_checkout;
+                    $proof_check_in_attachment['proof_Peminjaman'] = json_decode($last_check_out->attachment)->proof_checkout;
 
 
 
-                    foreach ($request->file('attachment') as $file) {
+                    foreach ($request->file('lampiran') as $file) {
                         // File Upload Configuration
-                        $file_name = $request->assets_id . '-proof-check-in-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
+                        $file_name = $request->id_aset . '-proof-check-in-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
                         // Uploading File
                         $file->storePubliclyAs($path, $file_name);
 
                         // Check Upload Success
                         if (Storage::exists($path . '/' . $file_name)) {
-                            $proof_check_in_attachment['proof_check_in'][] = $path_store . '/' . $file_name;
+                            $proof_check_in_attachment['bukti_pengembalian'][] = $path_store . '/' . $file_name;
                         } else {
-                            // Failed and Rollback
+                            // Gagal and Rollback
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->with(['failed' => 'Gagal Upload Lampiran'])
                                 ->withInput();
                         }
                     }
 
                     $proof_check_in_attachment = json_encode($proof_check_in_attachment);
 
-                    $history_check_in = HistoryCheckInOut::where('assets_id', $request->assets_id)
+                    $history_check_in = HistoryCheckInOut::where('id_aset', $request->id_aset)
                         ->whereNull('deleted_by')
-                        ->whereNull('check_in_by')
-                        ->whereNull('check_in_at')
+                        ->whereNull('pengembalian_oleh')
+                        ->whereNull('pengembalian_pada')
                         ->whereNull('deleted_by')
                         ->whereNotNull('latest')
                         ->update([
-                            'check_in_by' => Auth::user()->id,
-                            'check_in_at' => now(),
+                            'pengembalian_oleh' => Auth::user()->id,
+                            'pengembalian_pada' => now(),
                             'latest' => null,
-                            'attachment' => $proof_check_in_attachment,
+                            'lampiran' => $proof_check_in_attachment,
                             'updated_by' => Auth::user()->id,
                         ]);
 
                     /**
-                     * Validation Add history Record
+                     * Validation Menambahkan history Record
                      */
                     if ($history_check_in) {
                         DB::commit();
-                        return redirect()->back()->with('success', 'Check In Successfully Add');
+                        return redirect()->back()->with('success', 'Pengembalian Berhasil Ditambahkan');
                     } else {
                         /**
-                         * Failed Store Record
+                         * Gagal Store Record
                          */
                         DB::rollBack();
-                        return redirect()->back()->with('failed', 'Failed Add Check In');
+                        return redirect()->back()->with('failed', 'Gagal Menambahkan Pengembalian');
                     }
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
-                    return redirect()->back()->with('failed', 'Failed Add Check In');
+                    return redirect()->back()->with('failed', 'Gagal Menambahkan Pengembalian');
                 }
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
                 return redirect()->back()->with('failed', 'Invalid Request!');
@@ -954,13 +954,13 @@ class SubmissionFormController extends Controller
              */
             if ($submission_destroy) {
                 DB::commit();
-                session()->flash('success', 'brand Successfully Deleted');
+                session()->flash('success', 'Pengajuan Berhasil Dihapus');
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete brand');
+                session()->flash('failed', 'Gagal Hapus Pengajuan');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

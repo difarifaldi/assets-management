@@ -6,7 +6,7 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Edit Category - {{ $category->name }}</h3>
+                            <h3 class="card-title font-weight-bold">Edit Kategori - {{ $category->nama }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -15,18 +15,18 @@
                             @method('patch')
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Name" value="{{ $category->name }}">
+                                    <label for="nama">Nama <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nama" name="nama"
+                                        placeholder="Nama" value="{{ $category->nama }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="type">Type <span class="text-danger">*</span></label>
+                                    <label for="type">Tipe <span class="text-danger">*</span></label>
                                     <select class="form-control " id="type_edit" name="type" required>
 
                                         <option value="1" {{ $category->type == 1 ? 'selected' : '' }}>
-                                            Physical Asset</option>
+                                            Aset Fisik</option>
 
-                                        <option value="2" {{ $category->type == 2 ? 'selected' : '' }}>License Asset
+                                        <option value="2" {{ $category->type == 2 ? 'selected' : '' }}>Aset Lisensi
                                         </option>
 
 
@@ -34,7 +34,7 @@
                                 </div>
 
                                 <div class="pt-3 d-flex">
-                                    <a href="{{ route('master.category.index') }}" class="btn btn-danger mr-2"> Back</a>
+                                    <a href="{{ route('master.category.index') }}" class="btn btn-danger mr-2"> Kembali</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>

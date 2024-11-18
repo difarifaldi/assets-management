@@ -6,7 +6,7 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Add User</h3>
+                            <h3 class="card-title font-weight-bold">Tambah Pengguna</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -20,17 +20,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="nik">Employee Number <span class="text-danger">*</span></label>
+                                    <label for="nik">Nomor Pegawai <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="nik" name="nik"
-                                        placeholder="Employee Number" value="{{ old('nik') }}">
+                                        placeholder="Nomor Pegawai" value="{{ old('nik') }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="division">Division <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="division_id" name="division_id" required>
-                                        <option disabled hidden selected>Choose Division</option>
-                                        @foreach ($division as $dv)
-                                            @if (!is_null(old('division_id')) && old('division_id') == $dv->id)
+                                    <label for="divisi">Divisi <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="id_divisi" name="id_divisi" required>
+                                        <option disabled hidden selected>Pilih Divisi</option>
+                                        @foreach ($divisi as $dv)
+                                            @if (!is_null(old('id_divisi')) && old('id_divisi') == $dv->id)
                                                 <option value="{{ $dv->id }}" selected>{{ $dv->name }}
                                                 </option>
                                             @else
@@ -41,9 +41,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Name" value="{{ old('name') }}">
+                                    <label for="nama">Nama <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nama" name="nama"
+                                        placeholder="Nama" value="{{ old('nama') }}">
                                 </div>
 
                                 <div class="form-group">
@@ -53,9 +53,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="roles">Role <span class="text-danger">*</span></label>
+                                    <label for="roles">Peran <span class="text-danger">*</span></label>
                                     <select class="form-control" id="roles" name="roles" required>
-                                        <option disabled hidden selected>Choose Role</option>
+                                        <option disabled hidden selected>Pilih Peran</option>
                                         @foreach ($roles as $role)
                                             @if (!is_null(old('roles')) && old('roles') == $role->name)
                                                 <option value="{{ $role->name }}" selected>{{ $role->name }}
@@ -68,9 +68,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="phone">Phone <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="phone" name="phone"
-                                        placeholder="Phone" value="{{ old('phone') }}">
+                                    <label for="noHP">Nomor HP <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="noHP" name="noHP"
+                                        placeholder="Nomor HP" value="{{ old('noHP') }}">
                                 </div>
 
                                 <div class="form-group">
@@ -87,13 +87,12 @@
 
 
                                 <div class="form-group">
-                                    <label for="address">Address <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" name="address" id="address" cols="10" rows="3"
-                                        placeholder="Location Address">{{ old('address') }}</textarea>
+                                    <label for="alamat">Alamat <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="alamat" id="alamat" cols="10" rows="3" placeholder="Alamat">{{ old('alamat') }}</textarea>
                                 </div>
 
                                 <div class="pt-3 d-flex">
-                                    <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2"> Back</a>
+                                    <a href="{{ route('master.user.index') }}" class="btn btn-danger mr-2"> Kembali</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>

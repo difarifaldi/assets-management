@@ -6,15 +6,15 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Manufacture</h3>
+                            <h3 class="card-title font-weight-bold">Manufaktur</h3>
                         </div>
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
                                 @if ($can_create)
                                     <div>
                                         <a href="{{ route('master.manufacture.create') }}" class="btn btn-sm btn-primary">
-                                            Add
-                                            Manufacture</a>
+                                            Tambah
+                                            Manufaktur</a>
                                     </div>
                                 @endif
                             </div>
@@ -27,13 +27,13 @@
                                                 #
                                             </th>
                                             <th>
-                                                Name
+                                                Nama
                                             </th>
                                             <th>
-                                                Address
+                                                Alamat
                                             </th>
                                             <th>
-                                                Action
+                                                Aksi
                                             </th>
                                         </tr>
                                     </thead>

@@ -7,7 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail Physical Asset - {{ $asset->name }}
+                                <h3 class="card-title font-weight-bold">Detail Aset Fisik - {{ $asset->nama }}
                             </div>
                         </div>
                         <!-- form start -->
@@ -19,14 +19,14 @@
                                         aria-selected="true">Detail</button>
                                     @role('admin')
                                         <button class="nav-link" data-toggle="tab" data-target="#nav-maintence" type="button"
-                                            role="tab" aria-controls="nav-maintence" aria-selected="false">History
-                                            Maintence</button>
+                                            role="tab" aria-controls="nav-maintence" aria-selected="false">Riwayat
+                                            Perbaikan</button>
                                         <button class="nav-link" data-toggle="tab" data-target="#nav-assign" type="button"
-                                            role="tab" aria-controls="nav-assign" aria-selected="false">History
-                                            Assign</button>
+                                            role="tab" aria-controls="nav-assign" aria-selected="false">Riwayat
+                                            Penugasan</button>
                                         <button class="nav-link" data-toggle="tab" data-target="#nav-check" type="button"
-                                            role="tab" aria-controls="nav-check" aria-selected="false">History Check
-                                            Out</button>
+                                            role="tab" aria-controls="nav-check" aria-selected="false">Riwayat
+                                            Peminjaman</button>
                                     @endrole
                                 </div>
                             </nav>
@@ -34,11 +34,11 @@
                                 <div class="tab-pane pt-3 fade show active" id="nav-detail" role="tabpanel">
                                     <!-- /.card-header -->
                                     <input type="hidden" id="asset" value="{{ $asset->id }}">
-                                    <!-- Category -->
+                                    <!-- Kategori -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Category</label>
+                                        <label class="col-sm-3 col-form-label">Kategori</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->category ? $asset->category->name : '-' }}
+                                            {{ $asset->category ? $asset->category->nama : '-' }}
                                         </div>
                                     </div>
 
@@ -46,15 +46,15 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Brand</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->brand ? $asset->brand->name : '-' }}
+                                            {{ $asset->brand ? $asset->brand->nama : '-' }}
                                         </div>
                                     </div>
 
                                     <!-- Manufacture -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Manufacture</label>
+                                        <label class="col-sm-3 col-form-label">Manufaktur</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->manufacture ? $asset->manufacture->name : '-' }}
+                                            {{ $asset->manufaktur ? $asset->manufaktur->nama : '-' }}
                                         </div>
                                     </div>
 
@@ -68,9 +68,9 @@
 
                                     <!-- Name -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Name</label>
+                                        <label class="col-sm-3 col-form-label">Nama</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->name ?? '-' }}
+                                            {{ $asset->nama ?? '-' }}
                                         </div>
                                     </div>
 
@@ -79,32 +79,32 @@
                                         <label class="col-sm-3 col-form-label">Status</label>
                                         <div class="col-sm-9 col-form-label">
                                             @if ($asset->status == 1)
-                                                <span class="badge badge-success">Good Condition</span>
+                                                <span class="badge badge-success">Kondisi Bagus</span>
                                             @elseif($asset->status == 2)
-                                                <span class="badge badge-warning">Minor Damage</span>
+                                                <span class="badge badge-warning">Kerusakan Ringan </span>
                                             @elseif($asset->status == 3)
-                                                <span class="badge badge-danger">Major Damage</span>
+                                                <span class="badge badge-danger">Kerusakan Berat </span>
                                             @elseif($asset->status == 4)
-                                                <span class="badge badge-danger">On Maintence</span>
+                                                <span class="badge badge-danger">Dalam Perbaikan</span>
                                             @endif
                                         </div>
                                     </div>
                                     @if (in_array($asset->status, [1, 2]))
                                         <!-- Check Status -->
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Availability Status</label>
+                                            <label class="col-sm-3 col-form-label">Ketersediaan Status</label>
                                             <div class="col-sm-9 col-form-label">
-                                                @if (!is_null($asset->assign_to))
-                                                    <span class="badge badge-danger">Assign To
-                                                        {{ $asset->assignTo->name }}</span>
-                                                @elseif(!is_null($asset->check_out_by))
-                                                    <span class="badge badge-danger">Check Out By
-                                                        {{ $asset->checkOut->name }}</span>
+                                                @if (!is_null($asset->ditugaskan_ke))
+                                                    <span class="badge badge-danger">Ditugaskan Ke
+                                                        {{ $asset->assignTo->nama }}</span>
+                                                @elseif(!is_null($asset->dipinjam_oleh))
+                                                    <span class="badge badge-danger">Dipinjam Oleh
+                                                        {{ $asset->checkOut->nama }}</span>
                                                 @elseif ($asset->status == 4)
-                                                    <span class="badge badge-danger">On Maintence
+                                                    <span class="badge badge-danger">Dalam Perbaikan
                                                     </span>
                                                 @else
-                                                    <span class="badge badge-success">Available</span>
+                                                    <span class="badge badge-success">Tersedia</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -112,39 +112,39 @@
 
                                     <!-- Value -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Value</label>
+                                        <label class="col-sm-3 col-form-label">Nilai</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ 'Rp.' . number_format($asset->value, 0, ',', '.') . ',00' }}
+                                            {{ 'Rp.' . number_format($asset->nilai, 0, ',', '.') . ',00' }}
                                         </div>
                                     </div>
 
                                     <!-- Purchase Date -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Purchase Date</label>
+                                        <label class="col-sm-3 col-form-label">Tanggal Pengambilan</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ !is_null($asset->purchase_date) ? date('d F Y', strtotime($asset->purchase_date)) : '-' }}
+                                            {{ !is_null($asset->tanggal_pengambilan) ? date('d F Y', strtotime($asset->tanggal_pengambilan)) : '-' }}
                                         </div>
                                     </div>
 
                                     <!-- Warranty End Date -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Warranty End Date</label>
+                                        <label class="col-sm-3 col-form-label">Tanggal Akhir Garansi</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ !is_null($asset->warranty_end_date) ? date('d F Y', strtotime($asset->warranty_end_date)) : '-' }}
+                                            {{ !is_null($asset->tanggal_akhir_garansi) ? date('d F Y', strtotime($asset->tanggal_akhir_garansi)) : '-' }}
                                         </div>
                                     </div>
 
                                     <!-- Warranty Duration -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Warranty Duration</label>
+                                        <label class="col-sm-3 col-form-label">Durasi Garansi</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ !is_null($asset->warranty_duration) ? $asset->warranty_duration . ' Month' : '-' }}
+                                            {{ !is_null($asset->tanggal_akhir_garansi) ? $asset->tanggal_akhir_garansi . ' Month' : '-' }}
                                         </div>
                                     </div>
 
-                                    <!-- Description -->
+                                    <!-- Deskripsi -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Description</label>
+                                        <label class="col-sm-3 col-form-label">Deskripsi</label>
                                         <div class="col-sm-9 col-form-label">
                                             {{ $asset->description ?? '-' }}
                                         </div>
@@ -167,15 +167,14 @@
                                             @endrole
                                             <div class="col-md-12 pt-3">
                                                 <div class="row justify-content-start mt-3">
-                                                    @foreach ($asset->attachmentArray as $index => $attachment)
+                                                    @foreach ($asset->attachmentArray as $index => $lampiran)
                                                         <div class="col-md-3" id="attachment_{{ $index }}">
                                                             <div class="card shadow">
                                                                 <input type="hidden" id="file_name_{{ $index }}"
-                                                                    value="{{ $attachment }}">
+                                                                    value="{{ $lampiran }}">
                                                                 <div style="width:100%;overflow:hidden">
-                                                                    <a href="{{ asset($attachment) }}"
-                                                                        class="text-black">
-                                                                        <img src="{{ asset($attachment) }}"
+                                                                    <a href="{{ asset($lampiran) }}" class="text-black">
+                                                                        <img src="{{ asset($lampiran) }}"
                                                                             onerror="this.onerror=null;this.src='{{ asset('img/image-not-found.jpg') }}'"
                                                                             width="100%"
                                                                             style="height:350px;object-fit: cover;" />
@@ -190,7 +189,7 @@
                                                                         <div class="dropdown-menu"
                                                                             aria-labelledby="dropdownMenuLink">
                                                                             <a class="dropdown-item"
-                                                                                href="{{ asset($attachment) }}"
+                                                                                href="{{ asset($lampiran) }}"
                                                                                 download>Download</a>
                                                                             @role('admin')
                                                                                 <a class="dropdown-item"
@@ -231,7 +230,7 @@
                                                         Date
                                                     </th>
                                                     <th>
-                                                        Description
+                                                        Deskripsi
                                                     </th>
                                                     <th>
                                                         Status
@@ -255,11 +254,11 @@
                                                         </td>
                                                         <td>
                                                             @if ($history_maintence->status == 1)
-                                                                <span class="badge badge-success">Good Condition</span>
+                                                                <span class="badge badge-success">Kondisi Bagus</span>
                                                             @elseif($history_maintence->status == 2)
-                                                                <span class="badge badge-warning">Minor Damage</span>
+                                                                <span class="badge badge-warning">Kerusakan</span>
                                                             @elseif($history_maintence->status == 3)
-                                                                <span class="badge badge-danger">Major Damage</span>
+                                                                <span class="badge badge-danger">Kerusakan</span>
                                                             @endif
                                                         </td>
 
@@ -306,7 +305,7 @@
                                                             {{ date('d F Y H:i:s', strtotime($history_assign->assign_at)) }}
                                                         </td>
                                                         <td>
-                                                            {{ $history_assign->assignTo->name }}
+                                                            {{ $history_assign->assignTo->nama }}
                                                         </td>
                                                         <td>
                                                             {{ !is_null($history_assign->return_at) ? date('d F Y H:i:s', strtotime($history_assign->return_at)) : '-' }}
@@ -358,13 +357,13 @@
                                                             {{ date('d F Y H:i:s', strtotime($history_check->check_out_at)) }}
                                                         </td>
                                                         <td>
-                                                            {{ $history_check->checkOut->name }}
+                                                            {{ $history_check->checkOut->nama }}
                                                         </td>
                                                         <td>
                                                             {{ !is_null($history_check->check_in_at) ? date('d F Y H:i:s', strtotime($history_check->check_in_at)) : '-' }}
                                                         </td>
                                                         <td>
-                                                            {{ !is_null($history_check->checkIn) ? $history_check->checkIn->name : '-' }}
+                                                            {{ !is_null($history_check->checkIn) ? $history_check->checkIn->nama : '-' }}
                                                         </td>
                                                         <td align="center">
                                                             <a href="{{ route('history.checkout.show', ['id' => $history_check->id]) }}"
@@ -381,9 +380,9 @@
                                 <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
                                 @role('admin')
                                     @if ($asset->status != 4)
-                                        @if (is_null($asset->assign_to) &&
+                                        @if (is_null($asset->ditugaskan_ke) &&
                                                 is_null($asset->assign_at) &&
-                                                (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                                (is_null($asset->dipinjam_oleh) && is_null($asset->check_out_at)))
                                             <button class="btn btn-warning mr-2" data-toggle="modal"
                                                 data-target="#maintence">Maintence</button>
                                             @if (in_array($asset->status, [1, 2]))
@@ -392,9 +391,9 @@
                                                     To</button>
                                             @endif
                                         @elseif(
-                                            !is_null($asset->assign_to) &&
+                                            !is_null($asset->ditugaskan_ke) &&
                                                 !is_null($asset->assign_at) &&
-                                                (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
+                                                (is_null($asset->dipinjam_oleh) && is_null($asset->check_out_at)))
                                             <button data-toggle="modal" data-target="#returnAsset"
                                                 class="btn btn-primary">Return
                                                 Asset</button>
@@ -414,7 +413,7 @@
     <div class="modal fade" id="addAttachment">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="post" id="add-attachment"
+                <form method="post" id="add-lampiran"
                     action="{{ route('asset.physical.uploadImage', ['id' => $asset->id]) }}" class="forms-upload"
                     enctype="multipart/form-data">
                     @csrf
@@ -425,7 +424,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="date">Attachment <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                            <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
@@ -454,17 +453,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="assign_to">Assign To <span class="text-danger">*</span></label>
-                            <select class="form-control select2bs4" id="assign_to" name="assign_to">
+                            <label for="ditugaskan_ke">Assign To <span class="text-danger">*</span></label>
+                            <select class="form-control select2bs4" id="ditugaskan_ke" name="ditugaskan_ke">
                                 <option hidden disabled selected>Choose Staff</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="attachment">Proof Assign <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                            <label for="lampiran">Proof Assign <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
@@ -493,8 +492,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="attachment">Proof Return <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                            <label for="lampiran">Proof Return <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
@@ -519,11 +518,11 @@
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Add Maintence Asset</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Tambah Perbaikan Aset</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="description">Date <span class="text-danger">*</span></label>
+                            <label for="deskripsi">Tanggal <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" id="date" name="date"
                                 min="{{ date('Y-m-d') }}">
                         </div>
@@ -531,23 +530,23 @@
                         <div class="form-group">
                             <label for="status">Status <span class="text-danger">*</span></label>
                             <select class="form-control select2bs4" id="status" name="status" required>
-                                <option disabled hidden selected>Choose Status</option>
+                                <option disabled hidden selected>Pilih Status</option>
                                 <option value="1">
-                                    Good Condition</option>
-                                <option value="2">Minor Damage
+                                    Kondisi Bagus</option>
+                                <option value="2"> Sedikit
                                 </option>
-                                <option value="3">Major Damage
+                                <option value="3"> Banyak
                                 </option>
 
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="description">Description <span class="text-danger">*</span></label>
+                            <label for="description">Deskripsi <span class="text-danger">*</span></label>
                             <textarea cols="10" rows="3" name="description" id="description" class="form-control"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="attachment">Proof maintence <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                            <label for="lampiran">Bukti Perbaikan <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>

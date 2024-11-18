@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('history_maintences', function (Blueprint $table) {
+        Schema::create('riwayat_perawatan', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
             $table->integer('assets_id');
@@ -28,10 +28,10 @@ return new class extends Migration
             $table->timestamp('deleted_at')->nullable();
 
 
-            $table->foreign('assets_id')->references('id')->on('assets');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
-            $table->foreign('deleted_by')->references('id')->on('users');
+            $table->foreign('assets_id')->references('id')->on('aset');
+            $table->foreign('created_by')->references('id')->on('pengguna');
+            $table->foreign('updated_by')->references('id')->on('pengguna');
+            $table->foreign('deleted_by')->references('id')->on('pengguna');
         });
     }
 
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('history_maintences');
+        Schema::dropIfExists('riwayat_perawatan');
     }
 };

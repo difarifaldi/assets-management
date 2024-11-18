@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('brand', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
-            $table->string('name');
+            $table->string('nama');
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();
             $table->integer('updated_by');
@@ -23,9 +23,9 @@ return new class extends Migration
             $table->timestamp('deleted_at')->nullable();
 
             // Foreign Key
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
-            $table->foreign('deleted_by')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('pengguna');
+            $table->foreign('updated_by')->references('id')->on('pengguna');
+            $table->foreign('deleted_by')->references('id')->on('pengguna');
         });
     }
 
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('brand');
     }
 };

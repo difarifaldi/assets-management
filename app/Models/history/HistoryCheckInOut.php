@@ -13,19 +13,20 @@ class HistoryCheckInOut extends Model
     protected $guarded = [];
     protected $primaryKey = null;
     public $incrementing = false;
+    protected $table = 'riwayat_peminjaman';
 
     public function checkOut()
     {
-        return $this->belongsTo(User::class, 'check_out_by');
+        return $this->belongsTo(User::class, 'dipinjam_oleh');
     }
 
     public function checkIn()
     {
-        return $this->belongsTo(User::class, 'check_in_by');
+        return $this->belongsTo(User::class, 'pengembalian_oleh');
     }
 
     public function submission()
     {
-        return $this->belongsTo(SubmissionForm::class, 'submission_form_id');
+        return $this->belongsTo(SubmissionForm::class, 'id_form_pengajuan');
     }
 }

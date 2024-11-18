@@ -12,14 +12,15 @@ class HistoryAssign extends Model
     protected $guarded = [];
     protected $primaryKey = null;
     public $incrementing = false;
+    protected $table = 'riwayat_penugasan';
 
     public function assignTo()
     {
-        return $this->belongsTo(User::class, 'assign_to');
+        return $this->belongsTo(User::class, 'ditugaskan_ke');
     }
 
     public function returnBy()
     {
-        return $this->belongsTo(User::class, 'return_by');
+        return $this->belongsTo(User::class, 'dikembalikan_oleh');
     }
 }

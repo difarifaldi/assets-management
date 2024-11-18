@@ -47,13 +47,13 @@ class AuthController extends Controller
                 } else {
                     return redirect()
                         ->back()
-                        ->withErrors(['username' => 'These credentials do not match our records.'])
+                        ->withErrors(['username' => 'Data tidak terdaftar pada sistem.'])
                         ->withInput();
                 }
             } else {
                 return redirect()
                     ->back()
-                    ->withErrors(['username' => 'These credentials do not match our records.'])
+                    ->withErrors(['username' => 'Data tidak terdaftar pada sistem.'])
                     ->withInput();
             }
         } catch (\Throwable $th) {
@@ -76,7 +76,7 @@ class AuthController extends Controller
             } else {
                 return redirect()
                     ->back()
-                    ->withErrors(['email' => 'Account not registered.'])
+                    ->withErrors(['email' => 'Akun Tidak Terdaftar.'])
                     ->withInput();
             }
         } catch (\Throwable $th) {
@@ -95,7 +95,7 @@ class AuthController extends Controller
             if ($request->password != $request->re_password) {
                 return redirect()
                     ->route('forgot.index')
-                    ->with(['failed' => 'Password Not Match']);
+                    ->with(['failed' => 'Password Tidak Sama']);
             }
 
             /**
@@ -117,7 +117,7 @@ class AuthController extends Controller
                 DB::commit();
                 return redirect()
                     ->route('login')
-                    ->with(['success' => 'Successfully Change Password']);
+                    ->with(['success' => 'Successfully Ubah Password']);
             } else {
                 /**
                  * Failed Store Record
@@ -125,7 +125,7 @@ class AuthController extends Controller
                 DB::rollBack();
                 return redirect()
                     ->route('forgot.index')
-                    ->with(['failed' => 'Failed Change Password']);
+                    ->with(['failed' => 'Failed Ubah Password']);
             }
         } catch (\Throwable $th) {
             throw $th;

@@ -10,9 +10,11 @@ class CategoryAssets extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    
+    protected $table = 'kategori_aset';
 
-    public function asset()
+    public function aset()
     {
-        return $this->hasMany(Asset::class, 'category_asset_id');
+        return $this->hasMany(Asset::class, 'id_kategori_aset');
     }
 }

@@ -12,6 +12,7 @@ class SubmissionForm extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $table = 'form_pengajuan';
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -19,31 +20,31 @@ class SubmissionForm extends Model
 
     public function approvedBy()
     {
-        return $this->belongsTo(User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'diterima_oleh');
     }
 
     public function rejectedBy()
     {
-        return $this->belongsTo(User::class, 'rejected_by');
+        return $this->belongsTo(User::class, 'ditolak_oleh');
     }
 
     public function submissionFormItemAsset()
     {
-        return $this->hasMany(SubmissionFormItemAsset::class, 'submission_form_id');
+        return $this->hasMany(SubmissionFormItemAsset::class, 'id_form_pengajuan');
     }
 
     public function submissionFormsCheckoutDate()
     {
-        return $this->hasOne(SubmissionFormsCheckoutDate::class, 'submission_form_id');
+        return $this->hasOne(SubmissionFormsCheckoutDate::class, 'id_form_pengajuan');
     }
 
     public function historyAssign()
     {
-        return $this->hasMany(HistoryAssign::class, 'submission_form_id');
+        return $this->hasMany(HistoryAssign::class, 'id_form_pengajuan');
     }
 
     public function historyCheckOut()
     {
-        return $this->hasMany(HistoryCheckInOut::class, 'submission_form_id');
+        return $this->hasMany(HistoryCheckInOut::class, 'id_form_pengajuan');
     }
 }

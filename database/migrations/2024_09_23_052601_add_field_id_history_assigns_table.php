@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('history_assigns', function (Blueprint $table) {
-            $table->integer('submission_form_id')->nullable();
+        Schema::table('riwayat_penugasan', function (Blueprint $table) {
+            $table->integer('id_form_pengajuan')->nullable();
 
-            $table->foreign('submission_form_id')->references('id')->on('submission_forms');
+            $table->foreign('id_form_pengajuan')->references('id')->on('form_pengajuan');
         });
     }
 

@@ -7,7 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex  align-items-center">
-                                <h3 class="card-title font-weight-bold">License Asset</h3>
+                                <h3 class="card-title font-weight-bold">Aset Lisensi</h3>
                             </div>
                         </div>
                         <div class="card-body p-3">
@@ -15,7 +15,7 @@
                                 @role('admin')
                                     <div>
                                         <a href="{{ route('asset.license.create') }}" class="btn btn-sm btn-primary">
-                                            Add License Asset
+                                            Tambah Aset Lisensi
                                         </a>
                                     </div>
                                 @endrole
@@ -29,19 +29,19 @@
                                                 #
                                             </th>
                                             <th>
-                                                Name
+                                                Nama
                                             </th>
                                             <th>
                                                 Brand
                                             </th>
                                             <th>
-                                                Category
+                                                Kategori
                                             </th>
                                             <th>
                                                 Status
                                             </th>
                                             <th>
-                                                Action
+                                                Aksi
                                             </th>
                                         </tr>
                                     </thead>

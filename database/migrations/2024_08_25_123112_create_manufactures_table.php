@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('manufactures', function (Blueprint $table) {
+        Schema::create('manufaktur', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
-            $table->string('name');
-            $table->text('address')->nullable();
+            $table->string('nama');
+            $table->text('alamat')->nullable();
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();
             $table->integer('updated_by');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('manufactures');
+        Schema::dropIfExists('manufaktur');
     }
 };

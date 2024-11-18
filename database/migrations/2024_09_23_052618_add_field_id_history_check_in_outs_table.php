@@ -10,11 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('history_check_in_outs', function (Blueprint $table) {
+        Schema::table('riwayat_peminjaman', function (Blueprint $table) {
 
-            $table->integer('submission_form_id')->nullable();
+            $table->integer('id_form_pengajuan')->nullable();
 
-            $table->foreign('submission_form_id')->references('id')->on('submission_forms');
+            $table->foreign('id_form_pengajuan')->references('id')->on('form_pengajuan');
         });
     }
 

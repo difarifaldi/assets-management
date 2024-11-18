@@ -46,8 +46,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="manufacture_id">Manufacture <span class="text-danger">*</span></label>
-                                    <select class="form-control select2bs4" id="manufacture_id" name="manufacture_id">
+                                    <label for="id_manufaktur">Manufaktur <span class="text-danger">*</span></label>
+                                    <select class="form-control select2bs4" id="id_manufaktur" name="id_manufaktur">
                                         @foreach ($manufactures as $manufacture)
                                             @if (!is_null($physical->manufacture) && $physical->manufacture->id == $manufacture->id)
                                                 <option value="{{ $manufacture->id }}" selected>{{ $manufacture->name }}
@@ -65,30 +65,33 @@
                                         placeholder="Barcode" value="{{ $physical->barcode_code }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Name" value="{{ $physical->name }}">
+                                    <label for="nama">Nama <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nama" name="nama"
+                                        placeholder="Nama" value="{{ $physical->name }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="status" name="status" required>
-                                        <option disabled hidden selected>Choose Status</option>
+                                        <option disabled hidden selected>Pilih Status</option>
                                         <option value="1" {{ $physical->status == 1 ? 'selected' : '' }}>
-                                            Good Condition</option>
-                                        <option value="2" {{ $physical->status == 2 ? 'selected' : '' }}>Minor Damage
+                                            Kondisi Bagus</option>
+                                        <option value="2" {{ $physical->status == 2 ? 'selected' : '' }}>Kerusakan
+                                            Sedikit
                                         </option>
-                                        <option value="3" {{ $physical->status == 3 ? 'selected' : '' }}>Major Damage
+                                        <option value="3" {{ $physical->status == 3 ? 'selected' : '' }}>Kerusakan
+                                            Banyak
                                         </option>
-                                        <option value="4" {{ $physical->status == 4 ? 'selected' : '' }}>On Maintence
+                                        <option value="4" {{ $physical->status == 4 ? 'selected' : '' }}>Dalam
+                                            Perbaikan
                                         </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="value">Value</label>
+                                    <label for="nilai">Harga</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="value" name="value"
-                                            placeholder="Value" value="{{ $physical->value }}">
+                                        <input type="text" class="form-control" id="nilai" name="nilai"
+                                            placeholder="Harga" value="{{ $physical->value }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text">Rp</span>
                                         </div>
@@ -102,25 +105,26 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="purchase_date">Purchase Date</label>
-                                    <input type="date" class="form-control" id="purchase_date" name="purchase_date"
-                                        placeholder="Purchase Date" value="{{ $physical->purchase_date }}">
+                                    <label for="tanggal_pengambilan">Tanggal Pengambilan</label>
+                                    <input type="date" class="form-control" id="tanggal_pengambilan"
+                                        name="tanggal_pengambilan" placeholder="Tanggal Pengambilan"
+                                        value="{{ $physical->tanggal_pengambilan }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="warranty_end_date">Warranty End Date</label>
-                                    <input type="date" class="form-control" id="warranty_end_date"
-                                        name="warranty_end_date" placeholder="Expired"
-                                        value="{{ $physical->warranty_end_date }}">
+                                    <label for="tanggal_akhir_garansi">Tanggal Akhir Garansi</label>
+                                    <input type="date" class="form-control" id="tanggal_akhir_garansi"
+                                        name="tanggal_akhir_garansi" placeholder="Expired"
+                                        value="{{ $physical->tanggal_akhir_garansi }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="warranty_duration">Warranty Duration <span
+                                    <label for="durasi_garansi">Warranty Duration <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="warranty_duration"
-                                            name="warranty_duration" placeholder="Warranty Duration"
-                                            value="{{ $physical->warranty_duration }}">
+                                        <input type="text" class="form-control" id="durasi_garansi"
+                                            name="durasi_garansi" placeholder="Warranty Duration"
+                                            value="{{ $physical->durasi_garansi }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text">Month</span>
                                         </div>
@@ -129,14 +133,14 @@
 
 
                                 <div class="form-group">
-                                    <label for="description">Description</label>
+                                    <label for="description">Deskripsi</label>
                                     <textarea class="form-control" name="description" id="description" cols="10" rows="3"
-                                        placeholder="Description">{{ $physical->description }}</textarea>
+                                        placeholder="Deskripsi">{{ $physical->description }}</textarea>
                                 </div>
 
                                 <div class="pt-3 d-flex">
                                     <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">
-                                        Back</a>
+                                        Kembali</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>

@@ -12,8 +12,9 @@ class Brand extends Model
 
     protected $guarded = [];
 
-    public function asset()
+    protected $table = 'brand';
+    public function aset()
     {
-        return $this->hasMany(Asset::class, 'brand_id');
+        return $this->hasMany(Asset::class, 'id_brand');
     }
 }

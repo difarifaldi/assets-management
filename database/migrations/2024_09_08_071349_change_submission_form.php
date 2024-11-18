@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('submission_forms', function (Blueprint $table) {
-            $table->integer('approved_by')->nullable()->change();
-            $table->timestamp('approved_at')->nullable()->change();
-            $table->timestamp('rejected_at')->nullable()->change();
+        Schema::table('form_pengajuan', function (Blueprint $table) {
+            $table->integer('diterima_oleh')->nullable()->change();
+            $table->timestamp('diterima_pada')->nullable()->change();
+            $table->timestamp('ditolak_pada')->nullable()->change();
             $table->integer('created_by')->nullable()->change();
             $table->integer('updated_by')->nullable()->change();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submission_forms');
+        Schema::dropIfExists('form_pengajuan');
     }
 };

@@ -39,26 +39,26 @@ class CategoryAssetsController extends Controller
          */
         $dataTable = DataTables::of($category)
             ->addIndexColumn()
-            ->addColumn('type', function ($data) {
-                return $data->type == 1 ? 'Physical Asset' : ($data->type == 2 ? 'License Asset' : '-');
+            ->addColumn('tipe', function ($data) {
+                return $data->tipe == 1 ? 'Aset Fisik' : ($data->tipe == 2 ? 'Aset Lisensi' : '-');
             })
-            ->addColumn('action', function ($data) {
+            ->addColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
 
                 /**
-                 * Validation Role Has Access Edit and Delete
+                 * Validation Role Has Access Edit and Hapus
                  */
 
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
 
                     $btn_action .= '<a href="' . route('master.category.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
-                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
+                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Hapus">Hapus</button>';
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'type', 'action'])
-            ->rawColumns(['action'])
+            ->only(['nama', 'tipe', 'aksi'])
+            ->rawColumns(['aksi'])
             ->make(true);
 
         return $dataTable;
@@ -82,8 +82,8 @@ class CategoryAssetsController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
-                'type' => 'required',
+                'nama' => 'required|string',
+                'tipe' => 'required',
             ]);
 
             DB::beginTransaction();
@@ -92,8 +92,8 @@ class CategoryAssetsController extends Controller
              * Create CategoryAssets Record
              */
             $category = CategoryAssets::lockforUpdate()->create([
-                'name' => $request->name,
-                'type' => $request->type,
+                'nama' => $request->nama,
+                'tipe' => $request->tipe,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,
             ]);
@@ -105,15 +105,15 @@ class CategoryAssetsController extends Controller
                 DB::commit();
                 return redirect()
                     ->route('master.category.index')
-                    ->with(['success' => 'Successfully Add Category Asset']);
+                    ->with(['success' => 'Berhasil Menambahkan Kategori Aset']);
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add Category Asset'])
+                    ->with(['failed' => 'Gagal Menambahkan Kategori Aset'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -161,7 +161,7 @@ class CategoryAssetsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Ubah the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
@@ -170,8 +170,8 @@ class CategoryAssetsController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
-                'type' => 'required',
+                'nama' => 'required|string',
+                'tipe' => 'required',
 
             ]);
 
@@ -184,30 +184,30 @@ class CategoryAssetsController extends Controller
                 DB::beginTransaction();
 
                 /**
-                 * Update CategoryAssets Record
+                 * Ubah CategoryAssets Record
                  */
                 $category_update = CategoryAssets::where('id', $id)->update([
-                    'name' => $request->name,
-                    'type' => $request->type,
+                    'nama' => $request->nama,
+                    'tipe' => $request->tipe,
                     'updated_by' => Auth::user()->id,
                 ]);
 
                 /**
-                 * Validation Update CategoryAssets Record
+                 * Validation Ubah CategoryAssets Record
                  */
                 if ($category_update) {
                     DB::commit();
                     return redirect()
                         ->route('master.category.index')
-                        ->with(['success' => 'Successfully Update Category Asset']);
+                        ->with(['success' => 'Berhasil Ubah Kategori Aset']);
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update Category Asset'])
+                        ->with(['failed' => 'Gagal Ubah Kategori Aset'])
                         ->withInput();
                 }
             } else {
@@ -234,7 +234,7 @@ class CategoryAssetsController extends Controller
             DB::beginTransaction();
 
             /**
-             * Update CategoryAssets Record
+             * Ubah CategoryAssets Record
              */
             $category_destroy = CategoryAssets::where('id', $id)->update([
                 'deleted_by' => Auth::user()->id,
@@ -242,17 +242,17 @@ class CategoryAssetsController extends Controller
             ]);
 
             /**
-             * Validation Update CategoryAssets Record
+             * Validation Ubah CategoryAssets Record
              */
             if ($category_destroy) {
                 DB::commit();
-                session()->flash('success', 'Category Asset Successfully Deleted');
+                session()->flash('success', 'Category Asset Berhasil Dihapus');
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete Category Asset');
+                session()->flash('failed', 'Gagal Hapus Kategori Aset');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

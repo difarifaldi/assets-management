@@ -32,36 +32,36 @@ class LicenseAssetController extends Controller
         /**
          * Get All Asset
          */
-        $asset = Asset::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 2)->get();
+        $asset = Asset::whereNull('deleted_by')->whereNull('deleted_at')->where('tipe', 2)->get();
 
         /**
          * Datatable Configuration
          */
         $dataTable = DataTables::of($asset)
             ->addIndexColumn()
-            ->addColumn('category', function ($data) {
-                return $data->category ? $data->category->name : '-';
+            ->addColumn('kategori', function ($data) {
+                return $data->kategori ? $data->kategori->nama : '-';
             })
             ->addColumn('brand', function ($data) {
-                return $data->brand ? $data->brand->name : '-';
+                return $data->brand ? $data->brand->nama : '-';
             })
 
             ->addColumn('status', function ($data) {
-                if (!is_null($data->assign_to)) {
+                if (!is_null($data->ditugaskan_ke)) {
                     if (User::find(Auth::user()->id)->hasRole('admin')) {
-                        return '<span class="badge badge-danger">Assign To ' . $data->assignTo->name . '</span>';
+                        return '<span class="badge badge-danger">Ditugaskan Ke ' . $data->assignTo->nama . '</span>';
                     } else {
-                        return '<span class="badge badge-danger">Assigned</span>';
+                        return '<span class="badge badge-danger">Sudah Ditugaskan</span>';
                     }
                 } elseif ($data->status == 3) {
-                    return '<span class="badge badge-danger">Major Damage</span>';
+                    return '<span class="badge badge-danger">Kerusakan Berat</span>';
                 } elseif ($data->status == 5) {
-                    return '<span class="badge badge-danger">License Expired</span>';
+                    return '<span class="badge badge-danger">Lisensi Expired</span>';
                 } else {
-                    return '<span class="badge badge-success">Available</span>';
+                    return '<span class="badge badge-success">Tersedia</span>';
                 }
             })
-            ->addColumn('action', function ($data) {
+            ->addColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
 
                 /**
@@ -73,17 +73,17 @@ class LicenseAssetController extends Controller
 
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
                     $btn_action .= '<a href="' . route('asset.license.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
-                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
+                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Hapus">Hapus</button>';
                 } elseif (User::find(Auth::user()->id)->hasRole('staff')) {
-                    if (is_null($data->assign_to) && is_null($data->assign_at) && $data->status != 5) {
-                        $btn_action .= '<a href="' . route('submission.create', ['type' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger ml-2" title="Assign To Me">Assign To Me</a>';
+                    if (is_null($data->ditugaskan_ke) && is_null($data->ditugaskan_pada) && $data->status != 5) {
+                        $btn_action .= '<a href="' . route('submission.create', ['tipe' => 'assign', 'asset' => $data->id]) . '" class="btn btn-sm btn-danger ml-2" title="Ditugaskan Ke Saya">Ditugaskan Ke Saya</a>';
                     }
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'brand', 'category', 'status', 'action'])
-            ->rawColumns(['action', 'status'])
+            ->only(['nama', 'brand', 'kategori', 'status', 'aksi'])
+            ->rawColumns(['aksi', 'status'])
             ->make(true);
 
         return $dataTable;
@@ -94,7 +94,7 @@ class LicenseAssetController extends Controller
      */
     public function create()
     {
-        $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 2)->get();
+        $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('tipe', 2)->get();
         $brands = Brand::whereNull('deleted_by')->whereNull('deleted_at')->get();
         $manufactures = Manufacture::whereNull('deleted_by')->whereNull('deleted_at')->get();
         $users = User::whereNull('deleted_at')->role('staff')->get();
@@ -108,19 +108,19 @@ class LicenseAssetController extends Controller
     {
         try {
             $request->validate([
-                'category_asset_id' => 'nullable|integer|exists:category_assets,id',
+                'id_kategori_aset' => 'nullable|integer|exists:category_assets,id',
                 'barcode_code' => 'required|string',
-                'name' => 'required|string',
+                'nama' => 'required|string',
                 'status' => 'required|integer',
-                'value' => 'nullable|integer|min:0',
-                'expired_at' => 'nullable|date',
-                'description' => 'nullable|string',
-                'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-                'brand_id' => 'required|integer|exists:brands,id',
-                'manufacture_id' => 'required|integer|exists:manufactures,id',
-                'purchase_date' => 'nullable|date',
-                'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
-                'warranty_duration' => 'nullable|integer|min:0',
+                'nilai' => 'nullable|integer|min:0',
+                'expired_pada' => 'nullable|date',
+                'deskripsi' => 'nullable|string',
+                'lampiran.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+                'id_brand' => 'required|integer|exists:brands,id',
+                'id_manufaktur' => 'required|integer|exists:manufactures,id',
+                'tanggal_pengambilan' => 'nullable|date',
+                'tanggal_akhir_garansi' => 'nullable|date|after_or_equal:tanggal_pengambilan',
+                'durasi_garansi' => 'nullable|integer|min:0',
             ]);
 
             $barcode_check = Asset::whereNull('deleted_by')
@@ -132,19 +132,19 @@ class LicenseAssetController extends Controller
                 DB::beginTransaction();
 
                 $asset = Asset::lockForUpdate()->create([
-                    'name' => $request->name,
-                    'category_asset_id' => $request->category_asset_id,
-                    'type' => 2,
+                    'nama' => $request->nama,
+                    'id_kategori_aset' => $request->id_kategori_aset,
+                    'tipe' => 2,
                     'barcode_code' => $request->barcode_code,
                     'status' => $request->status,
-                    'value' => $request->value,
-                    'expired_at' => $request->expired_at,
-                    'description' => $request->description,
-                    'brand_id' => $request->brand_id,
-                    'manufacture_id' => $request->manufacture_id,
-                    'purchase_date' => $request->purchase_date,
-                    'warranty_end_date' => $request->warranty_end_date,
-                    'warranty_duration' => $request->warranty_duration,
+                    'nilai' => $request->value,
+                    'expired_pada' => $request->expired_pada,
+                    'deskripsi' => $request->deskripsi,
+                    'id_brand' => $request->id_brand,
+                    'id_manufaktur' => $request->id_manufaktur,
+                    'tanggal_pengambilan' => $request->tanggal_pengambilan,
+                    'tanggal_akhir_garansi' => $request->tanggal_akhir_garansi,
+                    'durasi_garansi' => $request->durasi_garansi,
                     'created_by' => Auth::user()->id,
                     'updated_by' => Auth::user()->id,
                 ]);
@@ -159,8 +159,8 @@ class LicenseAssetController extends Controller
 
                     $attachments = [];
 
-                    if ($request->hasFile('attachment')) {
-                        foreach ($request->file('attachment') as $file) {
+                    if ($request->hasFile('lampiran')) {
+                        foreach ($request->file('lampiran') as $file) {
                             // Menggunakan nama file asli dengan uniqid untuk menghindari duplikasi nama
                             $file_name = $asset->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
                             $file->storePubliclyAs($path, $file_name);
@@ -169,24 +169,24 @@ class LicenseAssetController extends Controller
                     }
 
                     $asset->update([
-                        'attachment' => json_encode($attachments),
+                        'lampiran' => json_encode($attachments),
                     ]);
 
                     DB::commit();
                     return redirect()
                         ->route('asset.license.index')
-                        ->with(['success' => 'Successfully Add License Asset']);
+                        ->with(['success' => 'Berhasil Tambah Aset Lisensi']);
                 } else {
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Add License Asset'])
+                        ->with(['failed' => 'Gagal Tambah Aset Lisensi'])
                         ->withInput();
                 }
             } else {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Barcode Already Exist'])
+                    ->with(['failed' => 'Barcode Sudah Tersedia'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -242,7 +242,7 @@ class LicenseAssetController extends Controller
             $license = Asset::find($id);
 
             if (!is_null($license)) {
-                $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('type', 2)->get();
+                $categories = CategoryAssets::whereNull('deleted_by')->whereNull('deleted_at')->where('tipe', 2)->get();
                 $brands = Brand::whereNull('deleted_by')->whereNull('deleted_at')->get();
                 $manufactures = Manufacture::whereNull('deleted_by')->whereNull('deleted_at')->get();
                 $users = User::whereNull('deleted_at')->role('staff')->get();
@@ -267,21 +267,21 @@ class LicenseAssetController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'category_asset_id' => 'nullable|integer|exists:category_assets,id',
+                'id_kategori_aset' => 'nullable|integer|exists:category_assets,id',
                 'barcode_code' => 'required|string',
-                'name' => 'required|string',
+                'nama' => 'required|string',
                 'status' => 'required|integer',
-                'value' => 'nullable|integer|min:0',
-                'expired_at' => 'nullable|date',
-                'description' => 'nullable|string',
-                'attachment.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-                'assign_to' => 'nullable',
-                'assign_at' => 'nullable',
-                'brand_id' => 'required|integer|exists:brands,id',
-                'manufacture_id' => 'required|integer|exists:manufactures,id',
-                'purchase_date' => 'nullable|date',
-                'warranty_end_date' => 'nullable|date|after_or_equal:purchase_date',
-                'warranty_duration' => 'nullable|integer|min:0',
+                'nilai' => 'nullable|integer|min:0',
+                'expired_pada' => 'nullable|date',
+                'deskripsi' => 'nullable|string',
+                'lampiran.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+                'ditugaskan_ke' => 'nullable',
+                'ditugaskan_pada' => 'nullable',
+                'id_brand' => 'required|integer|exists:brands,id',
+                'id_manufaktur' => 'required|integer|exists:manufactures,id',
+                'tanggal_pengambilan' => 'nullable|date',
+                'tanggal_akhir_garansi' => 'nullable|date|after_or_equal:tanggal_pengambilan',
+                'durasi_garansi' => 'nullable|integer|min:0',
             ]);
 
             $barcode_check = Asset::whereNull('deleted_by')
@@ -302,21 +302,21 @@ class LicenseAssetController extends Controller
                      * Update asset Record
                      */
                     $asset_update = Asset::where('id', $id)->update([
-                        'name' => $request->name,
-                        'category_asset_id' => $request->category_asset_id,
-                        'type' => 2,
+                        'nama' => $request->nama,
+                        'id_kategori_aset' => $request->id_kategori_aset,
+                        'tipe' => 2,
                         'barcode_code' => $request->barcode_code,
                         'status' => $request->status,
-                        'value' => $request->value,
-                        'expired_at' => $request->expired_at,
-                        'description' => $request->description,
-                        'assign_to' => $request->assign_to,
-                        'assign_at' => $request->assign_at,
-                        'brand_id' => $request->brand_id,
-                        'manufacture_id' => $request->manufacture_id,
-                        'purchase_date' => $request->purchase_date,
-                        'warranty_end_date' => $request->warranty_end_date,
-                        'warranty_duration' => $request->warranty_duration,
+                        'nilai' => $request->value,
+                        'expired_pada' => $request->expired_pada,
+                        'deskripsi' => $request->deskripsi,
+                        'ditugaskan_ke' => $request->ditugaskan_ke,
+                        'ditugaskan_pada' => $request->ditugaskan_pada,
+                        'id_brand' => $request->id_brand,
+                        'id_manufaktur' => $request->id_manufaktur,
+                        'tanggal_pengambilan' => $request->tanggal_pengambilan,
+                        'tanggal_akhir_garansi' => $request->tanggal_akhir_garansi,
+                        'durasi_garansi' => $request->durasi_garansi,
                         'created_by' => Auth::user()->id,
                         'updated_by' => Auth::user()->id,
                     ]);
@@ -328,7 +328,7 @@ class LicenseAssetController extends Controller
                         DB::commit();
                         return redirect()
                             ->route('asset.license.index')
-                            ->with(['success' => 'Successfully Update asset']);
+                            ->with(['success' => 'Berhasil Mengubah aset']);
                     } else {
                         /**
                          * Failed Store Record
@@ -336,7 +336,7 @@ class LicenseAssetController extends Controller
                         DB::rollBack();
                         return redirect()
                             ->back()
-                            ->with(['failed' => 'Failed Update asset'])
+                            ->with(['failed' => 'Gagal Mengubah aset'])
                             ->withInput();
                     }
                 } else {
@@ -347,7 +347,7 @@ class LicenseAssetController extends Controller
             } else {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Barcode Already Exist'])
+                    ->with(['failed' => 'Barcode Suadh Tersedia'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -366,7 +366,7 @@ class LicenseAssetController extends Controller
         try {
             // Request Validation
             $request->validate([
-                'attachment' => 'required',
+                'lampiran' => 'required',
             ]);
 
             DB::beginTransaction();
@@ -377,10 +377,10 @@ class LicenseAssetController extends Controller
             $path = 'public/asset/license';
             $path_store = 'storage/asset/license';
 
-            if (!is_null($asset->attachment)) {
-                $attachment_collection = json_decode($asset->attachment);
+            if (!is_null($asset->lampiran)) {
+                $attachment_collection = json_decode($asset->lampiran);
 
-                foreach ($request->file('attachment') as $file) {
+                foreach ($request->file('lampiran') as $file) {
                     // File Upload Configuration
                     $file_name = $asset->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
@@ -395,7 +395,7 @@ class LicenseAssetController extends Controller
                         DB::rollBack();
                         return redirect()
                             ->back()
-                            ->with(['failed' => 'Failed Upload Attachment'])
+                            ->with(['failed' => 'Gagal Upload Lampiran'])
                             ->withInput();
                     }
                 }
@@ -408,7 +408,7 @@ class LicenseAssetController extends Controller
 
                 $attachment_collection = [];
 
-                foreach ($request->file('attachment') as $file) {
+                foreach ($request->file('lampiran') as $file) {
                     // File Upload Configuration
                     $file_name = $asset->id . '-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
@@ -423,29 +423,29 @@ class LicenseAssetController extends Controller
                         DB::rollBack();
                         return redirect()
                             ->back()
-                            ->with(['failed' => 'Failed Upload Attachment'])
+                            ->with(['failed' => 'Gagal Upload Lampiran'])
                             ->withInput();
                     }
                 }
             }
 
-            // Update Record for Attachment
+            // Update Record for Lampiran
             $asset_attachment = $asset->update([
-                'attachment' => json_encode($attachment_collection),
+                'lampiran' => json_encode($attachment_collection),
             ]);
 
-            // Validation Update Attachment Asset Record
+            // Validation Update Lampiran Asset Record
             if ($asset_attachment) {
                 DB::commit();
                 return redirect()
                     ->back()
-                    ->with(['success' => 'Successfully Add Attachment']);
+                    ->with(['success' => 'Berhasil Tambah Lampiran']);
             } else {
                 // Failed and Rollback
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add Attachment'], 400);
+                    ->with(['failed' => 'Gagal Tambah Lampiran'], 400);
             }
         } catch (\Exception $e) {
             return redirect()
@@ -474,43 +474,43 @@ class LicenseAssetController extends Controller
             $path = 'public/asset/license';
             $path_store = 'storage/asset/license';
 
-            $attachment_collection = json_decode($asset->attachment);
+            $attachment_collection = json_decode($asset->lampiran);
 
             $new_attachment_collection = [];
 
-            foreach ($attachment_collection as $attachment) {
-                if ($request->file_name != $attachment) {
-                    array_push($new_attachment_collection, $attachment);
+            foreach ($attachment_collection as $lampiran) {
+                if ($request->file_name != $lampiran) {
+                    array_push($new_attachment_collection, $lampiran);
                 } else {
-                    $file_name = explode($path_store . '/', $attachment)[count(explode($path_store . '/', $attachment)) - 1];
+                    $file_name = explode($path_store . '/', $lampiran)[count(explode($path_store . '/', $lampiran)) - 1];
                     Storage::delete($path . '/' . $file_name);
 
                     if (Storage::exists($path . '/' . $file_name)) {
-                        return response()->json(['failed' => 'Failed Remove File'], 400);
+                        return response()->json(['failed' => 'Gagal Hapus File'], 400);
                     }
                 }
             }
 
             if (empty($new_attachment_collection)) {
-                // Update Record for Attachment
+                // Update Record for Lampiran
                 $asset_attachment = $asset->update([
-                    'attachment' => null,
+                    'lampiran' => null,
                 ]);
             } else {
-                // Update Record for Attachment
+                // Update Record for Lampiran
                 $asset_attachment = $asset->update([
-                    'attachment' => json_encode($new_attachment_collection),
+                    'lampiran' => json_encode($new_attachment_collection),
                 ]);
             }
 
-            // Validation Update Attachment Asset Record
+            // Validation Update Lampiran Asset Record
             if ($asset_attachment) {
                 DB::commit();
-                return response()->json(['success' => 'Successfully Updated Attachment'], 200);
+                return response()->json(['success' => 'Berhasil Ubah Lampiran'], 200);
             } else {
                 // Failed and Rollback
                 DB::rollBack();
-                return response()->json(['failed' => 'Failed Updated Attachment'], 400);
+                return response()->json(['failed' => 'Gagal Ubah Lampiran'], 400);
             }
         } catch (\Exception $e) {
             return response()->json(['failed' => $e->getMessage()], 400);
@@ -532,8 +532,8 @@ class LicenseAssetController extends Controller
                  * Update Asset Record
                  */
                 $add_assign = $license->update([
-                    'assign_to' => $request->assign_to,
-                    'assign_at' => now(),
+                    'ditugaskan_ke' => $request->ditugaskan_ke,
+                    'ditugaskan_pada' => now(),
                 ]);
 
                 /**
@@ -551,7 +551,7 @@ class LicenseAssetController extends Controller
 
                     $proof_assign_attachment = [];
 
-                    foreach ($request->file('attachment') as $file) {
+                    foreach ($request->file('lampiran') as $file) {
                         // File Upload Configuration
                         $file_name = $license->id . '-proof-assign-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
@@ -560,54 +560,54 @@ class LicenseAssetController extends Controller
 
                         // Check Upload Success
                         if (Storage::exists($path . '/' . $file_name)) {
-                            $proof_assign_attachment['proof_assign'][] = $path_store . '/' . $file_name;
+                            $proof_assign_attachment['bukti_penugasan'][] = $path_store . '/' . $file_name;
                         } else {
                             // Failed and Rollback
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->with(['failed' => 'Gagal Upload Lampiran'])
                                 ->withInput();
                         }
                     }
 
                     if (empty($proof_assign_attachment)) {
-                        // Update Record for Attachment
+                        // Update Record for Lampiran
                         $proof_assign_attachment = null;
                     } else {
-                        // Update Record for Attachment
+                        // Update Record for Lampiran
                         $proof_assign_attachment = json_encode($proof_assign_attachment);
                     }
 
                     $history_assign = HistoryAssign::create([
-                        'assets_id' => $id,
-                        'assign_to' => $request->assign_to,
-                        'assign_at' => now(),
+                        'id_aset' => $id,
+                        'ditugaskan_ke' => $request->ditugaskan_ke,
+                        'ditugaskan_pada' => now(),
                         'latest' => true,
-                        'attachment' => $proof_assign_attachment,
+                        'lampiran' => $proof_assign_attachment,
                         'created_by' => Auth::user()->id,
                         'updated_by' => Auth::user()->id,
                     ]);
 
                     /**
-                     * Validation Add history Record
+                     * Validation Tambah history Record
                      */
                     if ($history_assign) {
                         DB::commit();
-                        return redirect()->back()->with('success', 'Assign Successfully Add');
+                        return redirect()->back()->with('success', 'Penugasan Berhasil Ditambahkan');
                     } else {
                         /**
                          * Failed Store Record
                          */
                         DB::rollBack();
-                        return redirect()->back()->with('failed', 'Failed Add Assign');
+                        return redirect()->back()->with('failed', 'Gagal Tambah Penugasan');
                     }
                 } else {
                     /**
                      * Failed Store Record
                      */
                     DB::rollBack();
-                    return redirect()->back()->with('failed', 'Failed Add Assign');
+                    return redirect()->back()->with('failed', 'Gagal Tambah Penugasan');
                 }
             } else {
                 /**
@@ -627,7 +627,7 @@ class LicenseAssetController extends Controller
             $license = Asset::find($id);
 
             if (!is_null($license)) {
-                $last_assign = HistoryAssign::where('assets_id', $id)->whereNull('deleted_by')->whereNull('return_by')->whereNull('return_at')->whereNull('deleted_by')->whereNotNull('latest')->first();
+                $last_assign = HistoryAssign::where('id_aset', $id)->whereNull('deleted_by')->whereNull('dikembalikan_oleh')->whereNull('dikembalikan_pada')->whereNull('deleted_by')->whereNotNull('latest')->first();
                 /**
                  * Begin Transaction
                  */
@@ -637,8 +637,8 @@ class LicenseAssetController extends Controller
                  * Update Asset Record
                  */
                 $remove_assign = $license->update([
-                    'assign_to' => null,
-                    'assign_at' => null,
+                    'ditugaskan_ke' => null,
+                    'ditugaskan_pada' => null,
                 ]);
 
                 /**
@@ -654,9 +654,9 @@ class LicenseAssetController extends Controller
                         Storage::makeDirectory($path);
                     }
 
-                    $proof_return_assign_attachment['proof_assign'] = json_decode($last_assign->attachment)->proof_assign;
+                    $proof_return_assign_attachment['bukti_penugasan'] = json_decode($last_assign->lampiran)->proof_assign;
 
-                    foreach ($request->file('attachment') as $file) {
+                    foreach ($request->file('lampiran') as $file) {
                         // File Upload Configuration
                         $file_name = $license->id . '-proof-return-assign-' . uniqid() . '-' . strtotime(date('Y-m-d H:i:s')) . '.' . $file->getClientOriginalExtension();
 
@@ -671,46 +671,46 @@ class LicenseAssetController extends Controller
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Upload Attachment'])
+                                ->with(['failed' => 'Gagal Upload Lampiran'])
                                 ->withInput();
                         }
                     }
 
                     $proof_return_assign_attachment = json_encode($proof_return_assign_attachment);
 
-                    $history_assign = HistoryAssign::where('assets_id', $id)
+                    $history_assign = HistoryAssign::where('id_aset', $id)
                         ->whereNull('deleted_by')
-                        ->whereNull('return_by')
-                        ->whereNull('return_at')
+                        ->whereNull('dikembalikan_oleh')
+                        ->whereNull('dikembalikan_pada')
                         ->whereNull('deleted_by')
                         ->whereNotNull('latest')
                         ->update([
-                            'return_by' => Auth::user()->id,
-                            'return_at' => now(),
+                            'dikembalikan_oleh' => Auth::user()->id,
+                            'dikembalikan_pada' => now(),
                             'latest' => null,
-                            'attachment' => $proof_return_assign_attachment,
+                            'lampiran' => $proof_return_assign_attachment,
                             'updated_by' => Auth::user()->id,
                         ]);
 
                     /**
-                     * Validation Add history Record
+                     * Validation Tambah history Record
                      */
                     if ($history_assign) {
                         DB::commit();
-                        return redirect()->back()->with('success', 'Return Asset Successfully Add');
+                        return redirect()->back()->with('success', 'Pengembalian Aset Berhasil Ditambahkan');
                     } else {
                         /**
                          * Failed Store Record
                          */
                         DB::rollBack();
-                        return redirect()->back()->with('failed', 'Failed Add Return Asset');
+                        return redirect()->back()->with('failed', 'Gagal Tambah Pengembalian Aset');
                     }
                 } else {
                     /**
                      * Failed Store Record
                      */
                     DB::rollBack();
-                    return redirect()->back()->with('failed', 'Failed Add Return Asset');
+                    return redirect()->back()->with('failed', 'Gagal Tambah Pengembalian Aset');
                 }
             } else {
                 /**
@@ -744,13 +744,13 @@ class LicenseAssetController extends Controller
              */
             if ($asset_destroy) {
                 DB::commit();
-                session()->flash('success', 'Asset Successfully Deleted');
+                session()->flash('success', 'Aset Berhasil Dihapus');
             } else {
                 /**
                  * Failed Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete Asset');
+                session()->flash('failed', 'Gagal Menghapus Aset');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

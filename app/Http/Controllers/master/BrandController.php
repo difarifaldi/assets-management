@@ -38,23 +38,23 @@ class BrandController extends Controller
          */
         $dataTable = DataTables::of($brand)
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
+            ->addColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
 
                 /**
-                 * Validation Role Has Access Edit and Delete
+                 * Validation Role Has Access Edit and Hapus
                  */
 
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
 
                     $btn_action .= '<a href="' . route('master.brand.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
-                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
+                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Hapus">Hapus</button>';
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'address', 'action'])
-            ->rawColumns(['action'])
+            ->only(['nama', 'alamat', 'aksi'])
+            ->rawColumns(['aksi'])
             ->make(true);
 
         return $dataTable;
@@ -78,7 +78,7 @@ class BrandController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
+                'nama' => 'required|string',
             ]);
 
             DB::beginTransaction();
@@ -87,7 +87,7 @@ class BrandController extends Controller
              * Create brand Record
              */
             $brand = Brand::lockforUpdate()->create([
-                'name' => $request->name,
+                'nama' => $request->nama,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,
             ]);
@@ -99,7 +99,7 @@ class BrandController extends Controller
                 DB::commit();
                 return redirect()
                     ->route('master.brand.index')
-                    ->with(['success' => 'Successfully Add brand']);
+                    ->with(['success' => 'Berhasil Tambah brand']);
             } else {
                 /**
                  * Failed Store Record
@@ -107,7 +107,7 @@ class BrandController extends Controller
                 DB::rollBack();
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Failed Add brand'])
+                    ->with(['failed' => 'Failed Tambah brand'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -164,7 +164,7 @@ class BrandController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
+                'nama' => 'required|string',
 
             ]);
 
@@ -180,7 +180,7 @@ class BrandController extends Controller
                  * Update brand Record
                  */
                 $brand_update = Brand::where('id', $id)->update([
-                    'name' => $request->name,
+                    'nama' => $request->nama,
                     'updated_by' => Auth::user()->id,
                 ]);
 
@@ -191,7 +191,7 @@ class BrandController extends Controller
                     DB::commit();
                     return redirect()
                         ->route('master.brand.index')
-                        ->with(['success' => 'Successfully Update brand']);
+                        ->with(['success' => 'Berhasil Ubah brand']);
                 } else {
                     /**
                      * Failed Store Record
@@ -199,7 +199,7 @@ class BrandController extends Controller
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Update brand'])
+                        ->with(['failed' => 'Failed Ubah brand'])
                         ->withInput();
                 }
             } else {
@@ -226,7 +226,7 @@ class BrandController extends Controller
             DB::beginTransaction();
 
             /**
-             * Update brand Record
+             * Ubah brand Record
              */
             $brand_destroy = Brand::where('id', $id)->update([
                 'deleted_by' => Auth::user()->id,
@@ -238,13 +238,13 @@ class BrandController extends Controller
              */
             if ($brand_destroy) {
                 DB::commit();
-                session()->flash('success', 'brand Successfully Deleted');
+                session()->flash('success', 'brand Berhasil Dihapus');
             } else {
                 /**
                  * Failed Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete brand');
+                session()->flash('failed', 'Failed Hapus brand');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

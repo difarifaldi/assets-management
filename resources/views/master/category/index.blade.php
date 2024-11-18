@@ -13,7 +13,7 @@
                                 @if ($can_create)
                                     <div>
                                         <a href="{{ route('master.category.create') }}" class="btn btn-sm btn-primary">
-                                            Add Category
+                                            Tambah Kategori
                                         </a>
                                     </div>
                                 @endif
@@ -27,13 +27,13 @@
                                                 #
                                             </th>
                                             <th>
-                                                Name
+                                                Nama
                                             </th>
                                             <th>
-                                                Type
+                                                TIpe
                                             </th>
                                             <th>
-                                                Action
+                                                Aksi
                                             </th>
                                         </tr>
                                     </thead>

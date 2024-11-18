@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('submission_form_item_assets', function (Blueprint $table) {
+        Schema::create('form_pengajuan_aset', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('submission_form_id');
-            $table->integer('assets_id');
+            $table->integer('id_form_pengajuan');
+            $table->integer('id_aset');
 
-            $table->foreign('submission_form_id')->references('id')->on('submission_forms');
-            $table->foreign('assets_id')->references('id')->on('assets');
+            $table->foreign('id_form_pengajuan')->references('id')->on('form_pengajuan');
+            $table->foreign('id_aset')->references('id')->on('aset');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submission_form_item_assets');
+        Schema::dropIfExists('form_pengajuan_aset');
     }
 };

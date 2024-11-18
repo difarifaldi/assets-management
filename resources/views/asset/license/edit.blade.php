@@ -6,7 +6,7 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Edit License Asset - {{ $license->name }}</h3>
+                            <h3 class="card-title font-weight-bold">Edit Aset Lisensi - {{ $license->nama }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -18,28 +18,28 @@
                             <div class="card-body">
 
                                 <div class="form-group">
-                                    <label for="categories">Category </label>
-                                    <select class="form-control select2bs4" id="category_asset_id" name="category_asset_id">
+                                    <label for="categories">Kategori </label>
+                                    <select class="form-control select2bs4" id="id_kategori_aset" name="id_kategori_aset">
                                         @foreach ($categories as $category)
                                             @if ($license->category->id == $category->id)
-                                                <option value="{{ $category->id }}" selected>{{ $category->name }}
+                                                <option value="{{ $category->id }}" selected>{{ $category->nama }}
                                                 </option>
                                             @else
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}">{{ $category->nama }}</option>
                                             @endif
                                         @endforeach
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="brand_id">Brand <span class="text-danger">*</span></label>
-                                    <select class="form-control select2bs4" id="brand_id" name="brand_id">
+                                    <label for="id_brand">Brand <span class="text-danger">*</span></label>
+                                    <select class="form-control select2bs4" id="id_brand" name="id_brand">
                                         @foreach ($brands as $brand)
                                             @if ($license->brand->id == $brand->id)
-                                                <option value="{{ $brand->id }}" selected>{{ $brand->name }}
+                                                <option value="{{ $brand->id }}" selected>{{ $brand->nama }}
                                                 </option>
                                             @else
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}">{{ $brand->nama }}</option>
                                             @endif
                                         @endforeach
 
@@ -47,14 +47,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="manufacture_id">Manufacture <span class="text-danger">*</span></label>
-                                    <select class="form-control select2bs4" id="manufacture_id" name="manufacture_id">
+                                    <label for="id_manufaktur">Manufaktur <span class="text-danger">*</span></label>
+                                    <select class="form-control select2bs4" id="id_manufaktur" name="id_manufaktur">
                                         @foreach ($manufactures as $manufacture)
                                             @if (!is_null($license->manufacture) && $license->manufacture->id == $manufacture->id)
-                                                <option value="{{ $manufacture->id }}" selected>{{ $manufacture->name }}
+                                                <option value="{{ $manufacture->id }}" selected>{{ $manufacture->nama }}
                                                 </option>
                                             @else
-                                                <option value="{{ $manufacture->id }}">{{ $manufacture->name }}</option>
+                                                <option value="{{ $manufacture->id }}">{{ $manufacture->nama }}</option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -66,9 +66,9 @@
                                         placeholder="Barcode" value="{{ $license->barcode_code }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Name" value="{{ $license->name }}">
+                                    <label for="nama">Nama <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nama" name="nama"
+                                        placeholder="Nama" value="{{ $license->nama }}">
                                 </div>
 
                                 <div class="form-group">
@@ -76,21 +76,23 @@
                                     <select class="form-control select2bs4" id="status" name="status" required>
                                         <option disabled hidden selected>Choose Status</option>
                                         <option value="1" {{ $license->status == 1 ? 'selected' : '' }}>
-                                            Good Condition</option>
-                                        <option value="2" {{ $license->status == 2 ? 'selected' : '' }}>Minor Damage
+                                            Kondisi Bagus</option>
+                                        <option value="2" {{ $license->status == 2 ? 'selected' : '' }}>Kerusakan
+                                            Sedikit
                                         </option>
-                                        <option value="3" {{ $license->status == 3 ? 'selected' : '' }}>Major Damage
+                                        <option value="3" {{ $license->status == 3 ? 'selected' : '' }}>Kerusakan
+                                            Banyak
                                         </option>
-                                        <option value="5" {{ $license->status == 5 ? 'selected' : '' }}>License
+                                        <option value="5" {{ $license->status == 5 ? 'selected' : '' }}>Lisensi
                                             Expired
                                         </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="value">Value</label>
+                                    <label for="nilai">Nilai</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="value" name="value"
-                                            placeholder="Value" value="{{ $license->value }}">
+                                        <input type="text" class="form-control" id="nilai" name="nilai"
+                                            placeholder="Nilai" value="{{ $license->nilai }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text">Rp</span>
                                         </div>
@@ -98,42 +100,42 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="expired_at">Expired</label>
-                                    <input type="date" class="form-control" id="expired_at" name="expired_at"
-                                        placeholder="Expired" value="{{ $license->expired_at }}">
+                                    <label for="expired_pada">Expired</label>
+                                    <input type="date" class="form-control" id="expired_pada" name="expired_pada"
+                                        placeholder="Expired" value="{{ $license->expired_pada }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="purchase_date">Purchase Date</label>
-                                    <input type="date" class="form-control" id="purchase_date" name="purchase_date"
-                                        placeholder="Purchase Date" value="{{ $license->purchase_date }}">
+                                    <label for="tanggal_pengambilan">Tanggal Pengambilan</label>
+                                    <input type="date" class="form-control" id="tanggal_pengambilan"
+                                        name="tanggal_pengambilan" placeholder="Tanggal Pengambilan"
+                                        value="{{ $license->tanggal_pengambilan }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="warranty_end_date">Warranty End Date</label>
-                                    <input type="date" class="form-control" id="warranty_end_date"
-                                        name="warranty_end_date" placeholder="Expired"
-                                        value="{{ $license->warranty_end_date }}">
+                                    <label for="tanggal_akhir_garansi">Tanggal Terakhir Garansi</label>
+                                    <input type="date" class="form-control" id="tanggal_akhir_garansi"
+                                        name="tanggal_akhir_garansi" placeholder="Tanggal Terakhir Garansi"
+                                        value="{{ $license->tanggal_akhir_garansi }}">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="warranty_duration">Warranty Duration <span
-                                            class="text-danger">*</span></label>
+                                    <label for="durasi_garansi">Durasi Garansi <span class="text-danger">*</span></label>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="warranty_duration"
-                                            name="warranty_duration" placeholder="Warranty Duration"
-                                            value="{{ $license->warranty_duration }}">
+                                        <input type="text" class="form-control" id="durasi_garansi"
+                                            name="durasi_garansi" placeholder="Durasi Garansi"
+                                            value="{{ $license->durasi_garansi }}">
                                         <div class="input-group-append">
-                                            <span class="input-group-text">Month</span>
+                                            <span class="input-group-text">Bulan</span>
                                         </div>
                                     </div>
                                 </div>
 
 
                                 <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" name="description" id="description" cols="10" rows="3"
-                                        placeholder="Description">{{ $license->description }}</textarea>
+                                    <label for="deskripsi">Deskripsi</label>
+                                    <textarea class="form-control" name="deskripsi" id="deskripsi" cols="10" rows="3"
+                                        placeholder="Deskripsi">{{ $license->deskripsi }}</textarea>
                                 </div>
 
                                 <div class="pt-3 d-flex">

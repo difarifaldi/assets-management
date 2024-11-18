@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('history_check_in_outs', function (Blueprint $table) {
+        Schema::create('riwayat_peminjaman', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
-            $table->integer('assets_id');
-            $table->integer('check_in_by')->nullable();
-            $table->timestamp('check_in_at')->nullable();
-            $table->integer('check_out_by')->nullable();
-            $table->timestamp('check_out_at')->nullable();
-            $table->json('attachment');
+            $table->integer('id_aset');
+            $table->integer('pengembalian_oleh')->nullable();
+            $table->timestamp('pengembalian_pada')->nullable();
+            $table->integer('dipinjam_oleh')->nullable();
+            $table->timestamp('dipinjam_pada')->nullable();
+            $table->json('lampiran');
             $table->tinyInteger('latest')->nullable();
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();
@@ -28,12 +28,12 @@ return new class extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
 
-            $table->foreign('assets_id')->references('id')->on('assets');
-            $table->foreign('check_in_by')->references('id')->on('users');
-            $table->foreign('check_out_by')->references('id')->on('users');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
-            $table->foreign('deleted_by')->references('id')->on('users');
+            $table->foreign('id_aset')->references('id')->on('aset');
+            $table->foreign('pengembalian_oleh')->references('id')->on('pengguna');
+            $table->foreign('dipinjam_oleh')->references('id')->on('pengguna');
+            $table->foreign('created_by')->references('id')->on('pengguna');
+            $table->foreign('updated_by')->references('id')->on('pengguna');
+            $table->foreign('deleted_by')->references('id')->on('pengguna');
         });
     }
 
@@ -42,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('history_check_in_outs');
+        Schema::dropIfExists('riwayat_peminjaman');
     }
 };

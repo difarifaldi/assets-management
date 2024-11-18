@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('pengguna', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
             $table->string('username');
             $table->string('nik');
-            $table->integer('division_id')->nullable();
-            $table->string('name');
+            $table->integer('id_divisi')->nullable();
+            $table->string('nama');
             $table->string('email');
-            $table->char('phone', 13);
-            $table->text('address');
+            $table->char('noHP', 13);
+            $table->text('alamat');
             $table->string('password');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->timestamp('deleted_at')->nullable();
 
-            $table->foreign('division_id')->references('id')->on('divisions');
+            $table->foreign('id_divisi')->references('id')->on('divisi');
         });
     }
 
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('pengguna');
     }
 };

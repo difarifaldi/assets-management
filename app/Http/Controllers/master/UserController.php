@@ -35,8 +35,8 @@ class UserController extends Controller
          * Datatable Configuration
          */
         $dataTable = DataTables::of($users)
-            ->addIndexColumn()
-            ->addColumn('role', function ($data) {
+            ->MenambahkanIndexColumn()
+            ->MenambahkanColumn('role', function ($data) {
                 /**
                  * User Role Configuration
                  */
@@ -44,10 +44,10 @@ class UserController extends Controller
                 $user_role = ucwords(implode(' ', $exploded_raw_role));
                 return $user_role;
             })
-            ->addColumn('division', function ($data) {
-                return $data->division ? $data->division->name : '-';
+            ->MenambahkanColumn('divisi', function ($data) {
+                return $data->divisi ? $data->divisi->nama : '-';
             })
-            ->addColumn('action', function ($data) {
+            ->MenambahkanColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
                 $btn_action .= '<a href="' . route('master.user.show', ['id' => $data->id]) . '" class="btn btn-sm btn-primary" title="Detail">Detail</a>';
                 $btn_action .= '<a href="' . route('master.user.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
@@ -56,13 +56,13 @@ class UserController extends Controller
                  * Validation User Logged In Equals with User Record id
                  */
                 if (Auth::user()->id != $data->id) {
-                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Delete">Delete</button>';
+                    $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Hapus">Hapus</button>';
                 }
                 $btn_action .= '</div>';
                 return $btn_action;
             })
-            ->only(['name', 'email', 'role', 'division', 'action'])
-            ->rawColumns(['action'])
+            ->only(['nama', 'email', 'role', 'divisi', 'aksi'])
+            ->rawColumns(['aksi'])
             ->make(true);
 
         return $dataTable;
@@ -71,8 +71,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        $division = Division::whereNull('deleted_at')->get();
-        return view('master.user.create', compact('roles', 'division'));
+        $divisi = Division::whereNull('deleted_at')->get();
+        return view('master.user.create', compact('roles', 'divisi'));
     }
 
     public function store(Request $request)
@@ -84,11 +84,11 @@ class UserController extends Controller
             $request->validate([
                 'username' => 'required',
                 'nik' => 'numeric',
-                'division_id' => 'required',
-                'name' => 'required|string',
+                'id_divisi' => 'required',
+                'nama' => 'required|string',
                 'email' => 'required|email',
-                'phone' => 'required',
-                'address' => 'nullable',
+                'noHP' => 'required',
+                'alamat' => 'nullable',
                 'roles' => 'required',
                 'password' => 'required',
                 're_password' => 'required|same:password',
@@ -119,11 +119,11 @@ class UserController extends Controller
                 $user = User::lockforUpdate()->create([
                     'username' => $request->username,
                     'nik' => $request->nik,
-                    'division_id' => $request->division_id,
-                    'name' => $request->name,
+                    'id_divisi' => $request->id_divisi,
+                    'nama' => $request->nama,
                     'email' => $request->email,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
+                    'noHP' => $request->noHP,
+                    'alamat' => $request->alamat,
                     'password' => bcrypt($request->password),
                 ]);
 
@@ -139,21 +139,21 @@ class UserController extends Controller
                     DB::commit();
                     return redirect()
                         ->route('master.user.index')
-                        ->with(['success' => 'Successfully Add User']);
+                        ->with(['success' => 'Berhasil Menambahkan Pengguna']);
                 } else {
                     /**
-                     * Failed Store Record
+                     * Gagal Store Record
                      */
                     DB::rollBack();
                     return redirect()
                         ->back()
-                        ->with(['failed' => 'Failed Add User'])
+                        ->with(['failed' => 'Gagal Menambahkan Pengguna'])
                         ->withInput();
                 }
             } else {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Email or Username Already Exist'])
+                    ->with(['failed' => 'Email Atau Password Sudah Tersedia'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -186,7 +186,7 @@ class UserController extends Controller
                     /**
                      * Get Asset Assigning and Check Out by User
                      */
-                    $assets = Asset::where('assign_to', $user->id)->orWhere('check_out_by', $user->id)->get();
+                    $assets = Asset::where('ditugaskan_ke', $user->id)->orWhere('dipinjam_oleh', $user->id)->get();
 
                     return view('master.user.detail', compact('user', 'user_role', 'assets'));
                 } else {
@@ -210,7 +210,7 @@ class UserController extends Controller
                 /**
                  * Get Asset Assigning and Check Out by User
                  */
-                $assets = Asset::where('assign_to', $user->id)->orWhere('check_out_by', $user->id)->get();
+                $assets = Asset::where('ditugaskan_ke', $user->id)->orWhere('dipinjam_oleh', $user->id)->get();
 
                 return view('master.user.detail', compact('user', 'user_role', 'assets'));
             }
@@ -238,14 +238,14 @@ class UserController extends Controller
                      * Get All Role
                      */
                     $roles = Role::all();
-                    $division = Division::whereNull('deleted_at')->get();
+                    $divisi = Division::whereNull('deleted_at')->get();
 
                     /**
                      * Disabled Edit Role with Same User Logged in
                      */
                     $role_disabled = $id == Auth::user()->id ? 'disabled' : '';
 
-                    return view('master.user.edit', compact('user', 'roles', 'division', 'role_disabled'));
+                    return view('master.user.edit', compact('user', 'roles', 'divisi', 'role_disabled'));
                 } else {
                     return redirect()
                         ->back()
@@ -261,14 +261,14 @@ class UserController extends Controller
                  * Get All Role
                  */
                 $roles = Role::all();
-                $division = Division::whereNull('deleted_at')->get();
+                $divisi = Division::whereNull('deleted_at')->get();
 
                 /**
                  * Disabled Edit Role with Same User Logged in
                  */
                 $role_disabled = $id == Auth::user()->id ? 'disabled' : '';
 
-                return view('master.user.edit', compact('user', 'roles', 'division', 'role_disabled'));
+                return view('master.user.edit', compact('user', 'roles', 'divisi', 'role_disabled'));
             }
         } catch (Exception $e) {
             return redirect()
@@ -284,14 +284,14 @@ class UserController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'name' => 'required|string',
+                'nama' => 'required|string',
                 'email' => 'required|email',
                 'username' => 'required',
                 'roles' => 'required',
                 'nik' => 'numeric',
-                'division_id' => 'required',
-                'phone' => 'required',
-                'address' => 'nullable',
+                'id_divisi' => 'required',
+                'noHP' => 'required',
+                'alamat' => 'nullable',
             ]);
 
             /**
@@ -327,7 +327,7 @@ class UserController extends Controller
                         if ($request->password != $request->re_password) {
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Password Not Match'])
+                                ->with(['failed' => 'Password Tidak Sesuai'])
                                 ->withInput();
                         }
 
@@ -342,11 +342,11 @@ class UserController extends Controller
                         $user_update = User::where('id', $id)->update([
                             'username' => $request->username,
                             'nik' => $request->nik,
-                            'division_id' => $request->division_id,
-                            'name' => $request->name,
+                            'id_divisi' => $request->id_divisi,
+                            'nama' => $request->nama,
                             'email' => $request->email,
-                            'phone' => $request->phone,
-                            'address' => $request->address,
+                            'noHP' => $request->noHP,
+                            'alamat' => $request->alamat,
                             'password' => bcrypt($request->password),
                         ]);
                     } else {
@@ -361,11 +361,11 @@ class UserController extends Controller
                         $user_update = User::where('id', $id)->update([
                             'username' => $request->username,
                             'nik' => $request->nik,
-                            'division_id' => $request->division_id,
-                            'name' => $request->name,
+                            'id_divisi' => $request->id_divisi,
+                            'nama' => $request->nama,
                             'email' => $request->email,
-                            'phone' => $request->phone,
-                            'address' => $request->address,
+                            'noHP' => $request->noHP,
+                            'alamat' => $request->alamat,
                         ]);
                     }
 
@@ -390,15 +390,15 @@ class UserController extends Controller
                             DB::commit();
                             return redirect()
                                 ->route('master.user.index')
-                                ->with(['success' => 'Successfully Update User']);
+                                ->with(['success' => 'Berhasil Mengubah Data Pengguna']);
                         } else {
                             /**
-                             * Failed Store Record
+                             * Gagal Store Record
                              */
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Update User'])
+                                ->with(['failed' => 'Gagal Mengubah Data Pengguna'])
                                 ->withInput();
                         }
                     } else {
@@ -410,20 +410,20 @@ class UserController extends Controller
                             if (User::find(Auth::user()->id)->hasRole('admin')) {
                                 return redirect()
                                     ->route('master.user.index')
-                                    ->with(['success' => 'Successfully Update User']);
+                                    ->with(['success' => 'Berhasil Mengubah Data Pengguna']);
                             } else {
                                 return redirect()
                                     ->route('my-account.show')
-                                    ->with(['success' => 'Successfully Update Account']);
+                                    ->with(['success' => 'Berhasil Data Pengguna']);
                             }
                         } else {
                             /**
-                             * Failed Store Record
+                             * Gagal Store Record
                              */
                             DB::rollBack();
                             return redirect()
                                 ->back()
-                                ->with(['failed' => 'Failed Update User'])
+                                ->with(['failed' => 'Gagal Mengubah Data Pengguna'])
                                 ->withInput();
                         }
                     }
@@ -435,7 +435,7 @@ class UserController extends Controller
             } else {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Email or Username Already Exist'])
+                    ->with(['failed' => 'Email Atau Password Sudah Tersedia'])
                     ->withInput();
             }
         } catch (Exception $e) {
@@ -468,13 +468,13 @@ class UserController extends Controller
              */
             if ($user_destroy) {
                 DB::commit();
-                session()->flash('success', 'User Successfully Deleted');
+                session()->flash('success', 'User Berhasil Dihapus');
             } else {
                 /**
-                 * Failed Store Record
+                 * Gagal Store Record
                  */
                 DB::rollBack();
-                session()->flash('failed', 'Failed Delete User');
+                session()->flash('failed', 'Gagal Hapus Pengguna');
             }
         } catch (Exception $e) {
             session()->flash('failed', $e->getMessage());

@@ -7,7 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail License Asset - {{ $asset->name }}
+                                <h3 class="card-title font-weight-bold">Detail Aset Lisensi - {{ $asset->nama }}
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -20,8 +20,8 @@
                                         aria-selected="true">Detail</button>
                                     @role('admin')
                                         <button class="nav-link" data-toggle="tab" data-target="#nav-assign" type="button"
-                                            role="tab" aria-controls="nav-assign" aria-selected="false">History
-                                            Assign</button>
+                                            role="tab" aria-controls="nav-assign" aria-selected="false">Riwayat
+                                            Penugasan</button>
                                     @endrole
                                 </div>
                             </nav>
@@ -32,7 +32,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Category</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->category ? $asset->category->name : '-' }}
+                                            {{ $asset->kategori ? $asset->kategori->nama : '-' }}
                                         </div>
                                     </div>
 
@@ -40,15 +40,15 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Brand</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->brand ? $asset->brand->name : '-' }}
+                                            {{ $asset->brand ? $asset->brand->nama : '-' }}
                                         </div>
                                     </div>
 
-                                    <!-- Manufacture -->
+                                    <!-- Manufaktur -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Manufacture</label>
+                                        <label class="col-sm-3 col-form-label">Manufaktur</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->manufacture ? $asset->manufacture->name : '-' }}
+                                            {{ $asset->manufaktur ? $asset->manufaktur->nama : '-' }}
                                         </div>
                                     </div>
 
@@ -62,9 +62,9 @@
 
                                     <!-- Name -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Name</label>
+                                        <label class="col-sm-3 col-form-label">Nama</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->name ?? '-' }}
+                                            {{ $asset->nama ?? '-' }}
                                         </div>
                                     </div>
 
@@ -73,9 +73,9 @@
                                         <label class="col-sm-3 col-form-label">Status</label>
                                         <div class="col-sm-9 col-form-label">
                                             @if ($asset->status == 1)
-                                                <span class="badge badge-success">Good Condition</span>
+                                                <span class="badge badge-success">Kondisi Bagus</span>
                                             @elseif($asset->status == 5)
-                                                <span class="badge badge-danger">License Expired</span>
+                                                <span class="badge badge-danger">Lisensi Expired</span>
                                             @endif
                                         </div>
                                     </div>
@@ -83,26 +83,26 @@
                                     @if (in_array($asset->status, [1, 2]))
                                         <!-- Check Status -->
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Availability Status</label>
+                                            <label class="col-sm-3 col-form-label">Ketersediaan Status</label>
                                             <div class="col-sm-9 col-form-label">
-                                                @if (!is_null($asset->assign_to))
-                                                    <span class="badge badge-danger">Assign To
-                                                        {{ $asset->assignTo->name }}</span>
-                                                @elseif(!is_null($asset->check_out_by))
-                                                    <span class="badge badge-danger">Check Out By
-                                                        {{ $asset->checkOutBy->name }}</span>
+                                                @if (!is_null($asset->ditugaskan_ke))
+                                                    <span class="badge badge-danger">Ditugaskan Ke
+                                                        {{ $asset->assignTo->nama }}</span>
+                                                @elseif(!is_null($asset->dipinjam_oleh))
+                                                    <span class="badge badge-danger">Dipinjam Oleh
+                                                        {{ $asset->checkOutBy->nama }}</span>
                                                 @else
-                                                    <span class="badge badge-success">Available</span>
+                                                    <span class="badge badge-success">Tersedia</span>
                                                 @endif
                                             </div>
                                         </div>
                                     @endif
 
-                                    <!-- Value -->
+                                    <!-- Nilai -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Value</label>
+                                        <label class="col-sm-3 col-form-label">Nilai</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ 'Rp.' . number_format($asset->value, 0, ',', '.') . ',00' }}
+                                            {{ 'Rp.' . number_format($asset->nilai, 0, ',', '.') . ',00' }}
                                         </div>
                                     </div>
 
@@ -110,45 +110,45 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Expired</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ !is_null($asset->expired_at) ? date('d F Y', strtotime($asset->expired_at)) : '-' }}
+                                            {{ !is_null($asset->expired_pada) ? date('d F Y', strtotime($asset->expired_pada)) : '-' }}
                                         </div>
                                     </div>
 
                                     <!-- Purchase Date -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Purchase Date</label>
+                                        <label class="col-sm-3 col-form-label">Tanggal Pengambilan</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ !is_null($asset->purchase_date) ? date('d F Y', strtotime($asset->purchase_date)) : '-' }}
+                                            {{ !is_null($asset->tanggal_pengambilan) ? date('d F Y', strtotime($asset->tanggal_pengambilan)) : '-' }}
                                         </div>
                                     </div>
 
                                     <!-- Warranty End Date -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Warranty End Date</label>
+                                        <label class="col-sm-3 col-form-label">Tanggal Akhir Garansi</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ !is_null($asset->warranty_end_date) ? date('d F Y', strtotime($asset->warranty_end_date)) : '-' }}
+                                            {{ !is_null($asset->tanggal_akhir_garansi) ? date('d F Y', strtotime($asset->tanggal_akhir_garansi)) : '-' }}
                                         </div>
                                     </div>
 
-                                    <!-- Warranty Duration -->
+                                    <!-- Durasi Garansi -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Warranty Duration</label>
+                                        <label class="col-sm-3 col-form-label">Durasi Garansi</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ !is_null($asset->warranty_duration) ? $asset->warranty_duration . ' Month' : '-' }}
+                                            {{ !is_null($asset->durasi_garansi) ? $asset->durasi_garansi . ' Bulan' : '-' }}
                                         </div>
                                     </div>
 
                                     <!-- Description -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Description</label>
+                                        <label class="col-sm-3 col-form-label">Deskripsi</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->description ?? '-' }}
+                                            {{ $asset->deskripsi ?? '-' }}
                                         </div>
                                     </div>
 
-                                    <!-- Attachment -->
+                                    <!-- Lampiran -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Attachment</label>
+                                        <label class="col-sm-3 col-form-label">Lampiran</label>
                                         @if (!is_null($asset->attachmentArray))
                                             @role('admin')
                                                 <div class="col-md-9">
@@ -156,21 +156,21 @@
                                                         <button class="input-group-append btn btn-sm btn-primary"
                                                             data-toggle="modal" data-target="#addAttachment">
                                                             <i class="fas fa-plus mr-2 my-auto"></i>
-                                                            Add Attachment
+                                                            Tambah Lampiran
                                                         </button>
                                                     </div>
                                                 </div>
                                             @endrole
                                             <div class="col-md-12 pt-3">
                                                 <div class="row justify-content-start mt-3">
-                                                    @foreach ($asset->attachmentArray as $index => $attachment)
+                                                    @foreach ($asset->attachmentArray as $index => $lampiran)
                                                         <div class="col-md-3" id="attachment_{{ $index }}">
                                                             <div class="card shadow">
                                                                 <input type="hidden" id="file_name_{{ $index }}"
-                                                                    value="{{ $attachment }}">
+                                                                    value="{{ $lampiran }}">
                                                                 <div style="width:100%;overflow:hidden">
-                                                                    <a href="{{ asset($attachment) }}" class="text-black">
-                                                                        <img src="{{ asset($attachment) }}"
+                                                                    <a href="{{ asset($lampiran) }}" class="text-black">
+                                                                        <img src="{{ asset($lampiran) }}"
                                                                             onerror="this.onerror=null;this.src='{{ asset('img/image-not-found.jpg') }}'"
                                                                             width="100%"
                                                                             style="height:350px;object-fit: cover;" />
@@ -185,7 +185,7 @@
                                                                         <div class="dropdown-menu"
                                                                             aria-labelledby="dropdownMenuLink">
                                                                             <a class="dropdown-item"
-                                                                                href="{{ asset($attachment) }}"
+                                                                                href="{{ asset($lampiran) }}"
                                                                                 download>Download</a>
                                                                             @role('admin')
                                                                                 <a class="dropdown-item"
@@ -202,7 +202,7 @@
                                         @else
                                             <div class="col-md-9">
                                                 <div class="input-group">
-                                                    <span class="mr-3">No Attachment</span>
+                                                    <span class="mr-3">Tidak Ada Lampiran</span>
                                                     @role('admin')
                                                         <button class="input-group-append btn btn-sm btn-primary"
                                                             data-toggle="modal" data-target="#addAttachment">
@@ -223,16 +223,16 @@
                                                         #
                                                     </th>
                                                     <th>
-                                                        Assigned At
+                                                        Ditugaskan Pada
                                                     </th>
                                                     <th>
-                                                        Assigned To
+                                                        Ditugaskan Ke
                                                     </th>
                                                     <th>
-                                                        Returned At
+                                                        Dikembalikan Pada
                                                     </th>
                                                     <th>
-                                                        Action
+                                                        Aksi
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -243,13 +243,13 @@
                                                             {{ $index + 1 }}
                                                         </td>
                                                         <td>
-                                                            {{ date('d F Y H:i:s', strtotime($history_assign->assign_at)) }}
+                                                            {{ date('d F Y H:i:s', strtotime($history_assign->ditugaskan_pada)) }}
                                                         </td>
                                                         <td>
-                                                            {{ $history_assign->assignTo->name }}
+                                                            {{ $history_assign->assignTo->nama }}
                                                         </td>
                                                         <td>
-                                                            {{ !is_null($history_assign->return_at) ? date('d F Y H:i:s', strtotime($history_assign->return_at)) : '-' }}
+                                                            {{ !is_null($history_assign->dikembalikan_pada) ? date('d F Y H:i:s', strtotime($history_assign->dikembalikan_pada)) : '-' }}
                                                         </td>
                                                         <td align="center">
                                                             <a href="{{ route('history.assign.show', ['id' => $history_assign->id]) }}"
@@ -265,18 +265,18 @@
                             <div class="d-flex pt-3 gap-2">
                                 <a href="{{ route('asset.license.index') }}" class="btn btn-danger mr-2">Back</a>
                                 @role('admin')
-                                    @if (is_null($asset->assign_to) &&
-                                            is_null($asset->assign_at) &&
-                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)) &&
+                                    @if (is_null($asset->ditugaskan_ke) &&
+                                            is_null($asset->ditugaskan_pada) &&
+                                            (is_null($asset->dipinjam_oleh) && is_null($asset->dipinjam_pada)) &&
                                             in_array($asset->status, [1, 2]))
-                                        <button data-toggle="modal" data-target="#assignTo" class="btn btn-primary">Assign
-                                            To</button>
+                                        <button data-toggle="modal" data-target="#assignTo"
+                                            class="btn btn-primary">Ditugaskan Ke</button>
                                     @elseif(
-                                        !is_null($asset->assign_to) &&
-                                            !is_null($asset->assign_at) &&
-                                            (is_null($asset->check_out_by) && is_null($asset->check_out_at)))
-                                        <button data-toggle="modal" data-target="#returnAsset" class="btn btn-primary">Return
-                                            Asset</button>
+                                        !is_null($asset->ditugaskan_ke) &&
+                                            !is_null($asset->ditugaskan_pada) &&
+                                            (is_null($asset->dipinjam_oleh) && is_null($asset->dipinjam_pada)))
+                                        <button data-toggle="modal" data-target="#returnAsset"
+                                            class="btn btn-primary">Kembalikan Aset</button>
                                     @endif
                                 @endrole
                             </div>
@@ -288,22 +288,22 @@
         </div>
     </div>
 
-    {{-- Add Attachment Asset --}}
+    {{-- Tambah Lampiran Asset --}}
     <div class="modal fade" id="addAttachment">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="post" id="add-attachment"
+                <form method="post" id="add-lampiran"
                     action="{{ route('asset.license.uploadImage', ['id' => $asset->id]) }}" class="forms-upload"
                     enctype="multipart/form-data">
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Add Attachment</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Tambah Lampiran</h4>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="date">Attachment <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                            <label for="date">Lampiran <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
@@ -328,21 +328,21 @@
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Add Assign and Proof Assign</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Tambah Penugasan Dan Bukti Penugasan</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="assign_to">Assign To <span class="text-danger">*</span></label>
-                            <select class="form-control select2bs4" id="assign_to" name="assign_to">
-                                <option hidden disabled selected>Choose Staff</option>
+                            <label for="ditugaskan_ke">Ditugaskan Pada <span class="text-danger">*</span></label>
+                            <select class="form-control select2bs4" id="ditugaskan_ke" name="ditugaskan_ke">
+                                <option hidden disabled selected>Pilih Staff</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="attachment">Proof Assign <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                            <label for="lampiran">Bukti Penugasan <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>
@@ -367,12 +367,12 @@
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Return and Proof Asset</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Kembalikan Dan Bukti Aset</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="attachment">Proof Return <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                            <label for="lampiran">Bukti Return <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
                         </div>

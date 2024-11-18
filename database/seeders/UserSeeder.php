@@ -17,10 +17,10 @@ class UserSeeder extends Seeder
         $user_admin = User::create([
             'username' => 'admin123',
             'nik' => '3274030904010001',
-            'name' => 'admin',
+            'nama' => 'admin',
             'email' => 'admin@gmail.com',
-            'phone' => '081312287133',
-            'address' => 'Depok 2 Tengah',
+            'noHP' => '081312287133',
+            'alamat' => 'Depok 2 Tengah',
             'password' => Hash::make('password123')
         ]);
         $user_admin->assignRole('admin');
