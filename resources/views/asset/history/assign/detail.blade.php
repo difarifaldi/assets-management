@@ -7,14 +7,14 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail History Assign Asset
+                                <h3 class="card-title font-weight-bold">Detail Riwayat Peugasan Aset
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Assign At</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ date('d F Y H:i:s', strtotime($historyAssign->assign_at)) }}
+                                    {{ date('d F Y H:i:s', strtotime($historyAssign->ditugaskan_pada)) }}
                                 </div>
                             </div>
 

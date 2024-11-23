@@ -30,7 +30,7 @@
                                     <input type="hidden" id="asset" value="{{ $asset->id }}">
                                     <!-- Category -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Category</label>
+                                        <label class="col-sm-3 col-form-label">Kategori</label>
                                         <div class="col-sm-9 col-form-label">
                                             {{ $asset->kategori ? $asset->kategori->nama : '-' }}
                                         </div>

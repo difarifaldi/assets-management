@@ -146,13 +146,13 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Deskripsi</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $asset->description ?? '-' }}
+                                            {{ $asset->deskripsi ?? '-' }}
                                         </div>
                                     </div>
 
-                                    <!-- Attachment -->
+                                    <!-- Lampiran -->
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Attachment</label>
+                                        <label class="col-sm-3 col-form-label">Lampiran</label>
                                         @if (!is_null($asset->attachmentArray))
                                             @role('admin')
                                                 <div class="col-md-9">
@@ -160,7 +160,7 @@
                                                         <button class="input-group-append btn btn-sm btn-primary"
                                                             data-toggle="modal" data-target="#addAttachment">
                                                             <i class="fas fa-plus mr-2 my-auto"></i>
-                                                            Add Attachment
+                                                            Add Lampiran
                                                         </button>
                                                     </div>
                                                 </div>
@@ -206,7 +206,7 @@
                                         @else
                                             <div class="col-md-9">
                                                 <div class="input-group">
-                                                    <span class="mr-3">No Attachment</span>
+                                                    <span class="mr-3">No Lampiran</span>
                                                     @role('admin')
                                                         <button class="input-group-append btn btn-sm btn-primary"
                                                             data-toggle="modal" data-target="#addAttachment">
@@ -227,7 +227,7 @@
                                                         #
                                                     </th>
                                                     <th>
-                                                        Date
+                                                        Tanggal
                                                     </th>
                                                     <th>
                                                         Deskripsi
@@ -236,7 +236,7 @@
                                                         Status
                                                     </th>
                                                     <th>
-                                                        Action
+                                                        Aksi
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -247,18 +247,18 @@
                                                             {{ $index + 1 }}
                                                         </td>
                                                         <td>
-                                                            {{ date('d F Y ', strtotime($history_maintence->date)) }}
+                                                            {{ date('d F Y ', strtotime($history_maintence->tanggal)) }}
                                                         </td>
                                                         <td>
-                                                            {{ $history_maintence->description }}
+                                                            {{ $history_maintence->deskripsi }}
                                                         </td>
                                                         <td>
                                                             @if ($history_maintence->status == 1)
                                                                 <span class="badge badge-success">Kondisi Bagus</span>
                                                             @elseif($history_maintence->status == 2)
-                                                                <span class="badge badge-warning">Kerusakan</span>
+                                                                <span class="badge badge-warning">Kerusakan Ringan</span>
                                                             @elseif($history_maintence->status == 3)
-                                                                <span class="badge badge-danger">Kerusakan</span>
+                                                                <span class="badge badge-danger">Kerusakan Berat</span>
                                                             @endif
                                                         </td>
 
@@ -282,16 +282,16 @@
                                                         #
                                                     </th>
                                                     <th>
-                                                        Assigned At
+                                                        Ditugaskan Ke
                                                     </th>
                                                     <th>
-                                                        Assigned To
+                                                        Ditugaskan Pada
                                                     </th>
                                                     <th>
-                                                        Returned At
+                                                        Dikembalikan Pada
                                                     </th>
                                                     <th>
-                                                        Action
+                                                        Aksi
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -302,13 +302,13 @@
                                                             {{ $index + 1 }}
                                                         </td>
                                                         <td>
-                                                            {{ date('d F Y H:i:s', strtotime($history_assign->assign_at)) }}
+                                                            {{ date('d F Y H:i:s', strtotime($history_assign->ditugaskan_pada)) }}
                                                         </td>
                                                         <td>
                                                             {{ $history_assign->assignTo->nama }}
                                                         </td>
                                                         <td>
-                                                            {{ !is_null($history_assign->return_at) ? date('d F Y H:i:s', strtotime($history_assign->return_at)) : '-' }}
+                                                            {{ !is_null($history_assign->dikembalikan_pada) ? date('d F Y H:i:s', strtotime($history_assign->dikembalikan_pada)) : '-' }}
                                                         </td>
                                                         <td align="center">
                                                             <a href="{{ route('history.assign.show', ['id' => $history_assign->id]) }}"
@@ -330,20 +330,20 @@
                                                         #
                                                     </th>
                                                     <th>
-                                                        Check Out At
+                                                        Dipinjam Pada
                                                     </th>
                                                     <th>
-                                                        Check Out By
+                                                        Dipinjam Oleh
                                                     </th>
                                                     <th>
-                                                        Check In At
+                                                        Pengembalian Pada
                                                     </th>
 
                                                     <th>
-                                                        Check In By
+                                                        Pengembalian Oleh
                                                     </th>
                                                     <th>
-                                                        Action
+                                                        Aksi
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -360,7 +360,7 @@
                                                             {{ $history_check->checkOut->nama }}
                                                         </td>
                                                         <td>
-                                                            {{ !is_null($history_check->check_in_at) ? date('d F Y H:i:s', strtotime($history_check->check_in_at)) : '-' }}
+                                                            {{ !is_null($history_check->pengembalian_pada) ? date('d F Y H:i:s', strtotime($history_check->pengembalian_pada)) : '-' }}
                                                         </td>
                                                         <td>
                                                             {{ !is_null($history_check->checkIn) ? $history_check->checkIn->nama : '-' }}
@@ -381,22 +381,20 @@
                                 @role('admin')
                                     @if ($asset->status != 4)
                                         @if (is_null($asset->ditugaskan_ke) &&
-                                                is_null($asset->assign_at) &&
+                                                is_null($asset->ditugaskan_pada) &&
                                                 (is_null($asset->dipinjam_oleh) && is_null($asset->dipinjam_pada)))
                                             <button class="btn btn-warning mr-2" data-toggle="modal"
                                                 data-target="#maintence">Maintence</button>
                                             @if (in_array($asset->status, [1, 2]))
                                                 <button data-toggle="modal" data-target="#assignTo"
-                                                    class="btn btn-primary">Assign
-                                                    To</button>
+                                                    class="btn btn-primary">Ditugaskan Ke</button>
                                             @endif
                                         @elseif(
                                             !is_null($asset->ditugaskan_ke) &&
-                                                !is_null($asset->assign_at) &&
+                                                !is_null($asset->ditugaskan_pada) &&
                                                 (is_null($asset->dipinjam_oleh) && is_null($asset->dipinjam_pada)))
                                             <button data-toggle="modal" data-target="#returnAsset"
-                                                class="btn btn-primary">Return
-                                                Asset</button>
+                                                class="btn btn-primary">Kembalikan Aset</button>
                                         @endif
                                     @endif
                                 @endrole
@@ -409,7 +407,7 @@
         </div>
     </div>
 
-    {{-- Add Attachment Asset --}}
+    {{-- Add Lampiran Asset --}}
     <div class="modal fade" id="addAttachment">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -419,11 +417,11 @@
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Add Attachment</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Tambah Lampiran</h4>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="date">Attachment <span class="text-danger">*</span></label>
+                            <label for="date">Lampiran <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
@@ -449,20 +447,20 @@
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">ambah Penugasan dan Bukti Penugasan</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Tambah Penugasan dan Bukti Penugasan</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="ditugaskan_ke">Assign To <span class="text-danger">*</span></label>
+                            <label for="ditugaskan_ke">Ditugaskan Ke <span class="text-danger">*</span></label>
                             <select class="form-control select2bs4" id="ditugaskan_ke" name="ditugaskan_ke">
-                                <option hidden disabled selected>Choose Staff</option>
+                                <option hidden disabled selected>Pilih Staff</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="lampiran">Proof Assign <span class="text-danger">*</span></label>
+                            <label for="lampiran">Bukti Penugasan<span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
@@ -488,11 +486,11 @@
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Return and Proof Asset</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">Kembalikan dan Bukti Aset</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="lampiran">Proof Return <span class="text-danger">*</span></label>
+                            <label for="lampiran">Bukti Pengembalian <span class="text-danger">*</span></label>
                             <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                 accept="image/*;capture=camera" multiple="true" required>
                             <p class="text-danger py-1">* .png .jpg .jpeg</p>
@@ -523,7 +521,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="deskripsi">Tanggal <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="date" name="date"
+                            <input type="date" class="form-control" id="tanggal" name="tanggal"
                                 min="{{ date('Y-m-d') }}">
                         </div>
 
@@ -533,16 +531,16 @@
                                 <option disabled hidden selected>Pilih Status</option>
                                 <option value="1">
                                     Kondisi Bagus</option>
-                                <option value="2"> Sedikit
+                                <option value="2">Kerusakan Ringan
                                 </option>
-                                <option value="3"> Banyak
+                                <option value="3">Kerusakan Berat
                                 </option>
 
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="description">Deskripsi <span class="text-danger">*</span></label>
-                            <textarea cols="10" rows="3" name="description" id="description" class="form-control"></textarea>
+                            <label for="deskripsi">Deskripsi <span class="text-danger">*</span></label>
+                            <textarea cols="10" rows="3" name="deskripsi" id="deskripsi" class="form-control"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="lampiran">Bukti Perbaikan <span class="text-danger">*</span></label>

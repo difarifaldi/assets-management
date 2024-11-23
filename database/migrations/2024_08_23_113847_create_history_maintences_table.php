@@ -15,10 +15,10 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
             $table->integer('id_aset');
-            $table->date('date');
+            $table->date('tanggal');
             $table->integer('status');
-            $table->text('description')->nullable();
-            $table->json('attachment');
+            $table->text('deskripsi')->nullable();
+            $table->json('lampiran');
             $table->tinyInteger('latest')->nullable();
             $table->integer('created_by');
             $table->timestamp('created_at')->useCurrent();
