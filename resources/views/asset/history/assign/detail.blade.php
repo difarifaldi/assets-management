@@ -12,31 +12,31 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Assign At</label>
+                                <label class="col-sm-3 col-form-label">Ditugaskan Pada</label>
                                 <div class="col-sm-9 col-form-label">
                                     {{ date('d F Y H:i:s', strtotime($historyAssign->ditugaskan_pada)) }}
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Assign To</label>
+                                <label class="col-sm-3 col-form-label">Ditugaskan Ke</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ $historyAssign->assignTo->name }}
+                                    {{ $historyAssign->assignTo->nama }}
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Attachment</label>
-                                @if (!is_null($historyAssign->attachment))
+                                <label class="col-sm-3 col-form-label">Lampiran</label>
+                                @if (!is_null($historyAssign->lampiran))
                                     <div class="col-md-12 pt-3">
                                         <div class="row justify-content-start mt-3">
-                                            @foreach (json_decode($historyAssign->attachment)->proof_assign as $index => $attachment)
-                                                <div class="col-md-3" id="attachment_{{ $index }}">
+                                            @foreach (json_decode($historyAssign->lampiran)->bukti_penugasan as $index => $lampiran)
+                                                <div class="col-md-3" id="lampiran_{{ $index }}">
                                                     <div class="card shadow">
                                                         <input type="hidden" id="file_name_{{ $index }}"
-                                                            value="{{ $attachment }}">
+                                                            value="{{ $lampiran }}">
                                                         <div style="width:100%;overflow:hidden">
-                                                            <a href="{{ asset($attachment) }}" class="text-black">
-                                                                <img src="{{ asset($attachment) }}"
+                                                            <a href="{{ asset($lampiran) }}" class="text-black">
+                                                                <img src="{{ asset($lampiran) }}"
                                                                     onerror="this.onerror=null;this.src='{{ asset('img/image-not-found.jpg') }}'"
                                                                     width="100%"
                                                                     style="height:350px;object-fit: cover;" />
@@ -50,7 +50,7 @@
                                                                 </a>
                                                                 <div class="dropdown-menu"
                                                                     aria-labelledby="dropdownMenuLink">
-                                                                    <a class="dropdown-item" href="{{ asset($attachment) }}"
+                                                                    <a class="dropdown-item" href="{{ asset($lampiran) }}"
                                                                         download>Download</a>
                                                                 </div>
                                                             </div>
@@ -63,7 +63,7 @@
                                 @else
                                     <div class="col-md-9">
                                         <div class="input-group">
-                                            <span class="mr-3">No Attachment</span>
+                                            <span class="mr-3">Tidak Ada Lampiran</span>
                                             @role('admin')
                                                 <button class="input-group-append btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#addAttachment">
@@ -75,29 +75,29 @@
                                 @endif
                             </div>
 
-                            @if (!is_null($historyAssign->return_at) && !is_null($historyAssign->return_by))
+                            @if (!is_null($historyAssign->dikembalikan_pada) && !is_null($historyAssign->dikembalikan_oleh))
                                 <hr>
 
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Return At</label>
+                                    <label class="col-sm-3 col-form-label">Dikembalikan Pada</label>
                                     <div class="col-sm-9 col-form-label">
-                                        {{ !is_null($historyAssign->return_at) ? date('d F Y H:i:s', strtotime($historyAssign->return_at)) : '-' }}
+                                        {{ !is_null($historyAssign->dikembalikan_pada) ? date('d F Y H:i:s', strtotime($historyAssign->dikembalikan_pada)) : '-' }}
                                     </div>
                                 </div>
-                                <!-- Attachment -->
+                                <!-- Lampiran -->
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Attachment</label>
-                                    @if (!is_null($historyAssign->attachment))
+                                    <label class="col-sm-3 col-form-label">Lampiran</label>
+                                    @if (!is_null($historyAssign->lampiran))
                                         <div class="col-md-12 pt-3">
                                             <div class="row justify-content-start mt-3">
-                                                @foreach (json_decode($historyAssign->attachment)->proof_return_assign as $index => $attachment)
-                                                    <div class="col-md-3" id="attachment_{{ $index }}">
+                                                @foreach (json_decode($historyAssign->lampiran)->proof_return_assign as $index => $lampiran)
+                                                    <div class="col-md-3" id="lampiran_{{ $index }}">
                                                         <div class="card shadow">
                                                             <input type="hidden" id="file_name_{{ $index }}"
-                                                                value="{{ $attachment }}">
+                                                                value="{{ $lampiran }}">
                                                             <div style="width:100%;overflow:hidden">
-                                                                <a href="{{ asset($attachment) }}" class="text-black">
-                                                                    <img src="{{ asset($attachment) }}"
+                                                                <a href="{{ asset($lampiran) }}" class="text-black">
+                                                                    <img src="{{ asset($lampiran) }}"
                                                                         onerror="this.onerror=null;this.src='{{ asset('img/image-not-found.jpg') }}'"
                                                                         width="100%"
                                                                         style="height:350px;object-fit: cover;" />
@@ -112,7 +112,7 @@
                                                                     <div class="dropdown-menu"
                                                                         aria-labelledby="dropdownMenuLink">
                                                                         <a class="dropdown-item"
-                                                                            href="{{ asset($attachment) }}"
+                                                                            href="{{ asset($lampiran) }}"
                                                                             download>Download</a>
                                                                     </div>
                                                                 </div>
@@ -125,7 +125,7 @@
                                     @else
                                         <div class="col-md-9">
                                             <div class="input-group">
-                                                <span class="mr-3">No Attachment</span>
+                                                <span class="mr-3">Tidak Ada Lampiran</span>
                                                 @role('admin')
                                                     <button class="input-group-append btn btn-sm btn-primary"
                                                         data-toggle="modal" data-target="#addAttachment">
@@ -140,7 +140,7 @@
 
 
                             <div class="d-flex pt-3 gap-2">
-                                <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
+                                <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Kembali</a>
 
                             </div>
                         </div>

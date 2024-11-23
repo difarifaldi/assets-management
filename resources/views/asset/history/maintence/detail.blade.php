@@ -7,14 +7,14 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail History Maintence Asset
+                                <h3 class="card-title font-weight-bold">Detail Riwayat Maintence Aset
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Date</label>
+                                <label class="col-sm-3 col-form-label">Tanggal</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ date('d F Y H:i:s', strtotime($historyMaintence->date)) }}
+                                    {{ date('d F Y H:i:s', strtotime($historyMaintence->tanggal)) }}
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -32,24 +32,24 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Description</label>
+                                <label class="col-sm-3 col-form-label">Deskripsi</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ $historyMaintence->description }}
+                                    {{ $historyMaintence->deskripsi }}
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Attachment</label>
-                                @if (!is_null($historyMaintence->attachment))
+                                <label class="col-sm-3 col-form-label">Lampiran</label>
+                                @if (!is_null($historyMaintence->lampiran))
                                     <div class="col-md-12 pt-3">
                                         <div class="row justify-content-start mt-3">
-                                            @foreach (json_decode($historyMaintence->attachment)->proof_maintence as $index => $attachment)
+                                            @foreach (json_decode($historyMaintence->lampiran)->bukti_pemeliharaan as $index => $lampiran)
                                                 <div class="col-md-3" id="attachment_{{ $index }}">
                                                     <div class="card shadow">
                                                         <input type="hidden" id="file_name_{{ $index }}"
-                                                            value="{{ $attachment }}">
+                                                            value="{{ $lampiran }}">
                                                         <div style="width:100%;overflow:hidden">
-                                                            <a href="{{ asset($attachment) }}" class="text-black">
-                                                                <img src="{{ asset($attachment) }}"
+                                                            <a href="{{ asset($lampiran) }}" class="text-black">
+                                                                <img src="{{ asset($lampiran) }}"
                                                                     onerror="this.onerror=null;this.src='{{ asset('img/image-not-found.jpg') }}'"
                                                                     width="100%"
                                                                     style="height:350px;object-fit: cover;" />
@@ -63,7 +63,7 @@
                                                                 </a>
                                                                 <div class="dropdown-menu"
                                                                     aria-labelledby="dropdownMenuLink">
-                                                                    <a class="dropdown-item" href="{{ asset($attachment) }}"
+                                                                    <a class="dropdown-item" href="{{ asset($lampiran) }}"
                                                                         download>Download</a>
                                                                 </div>
                                                             </div>
@@ -76,7 +76,7 @@
                                 @else
                                     <div class="col-md-9">
                                         <div class="input-group">
-                                            <span class="mr-3">No Attachment</span>
+                                            <span class="mr-3">Tidak Ada Lampiran</span>
                                             @role('admin')
                                                 <button class="input-group-append btn btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#addAttachment">
@@ -88,7 +88,7 @@
                                 @endif
                             </div>
                             <div class="d-flex pt-3 gap-2">
-                                <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Back</a>
+                                <a href="{{ route('asset.physical.index') }}" class="btn btn-danger mr-2">Kembali</a>
                             </div>
                         </div>
                     </div>
