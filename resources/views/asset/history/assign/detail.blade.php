@@ -7,7 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail Riwayat Peugasan Aset
+                                <h3 class="card-title font-weight-bold">Detail Riwayat Penugasan Aset
                             </div>
                         </div>
                         <div class="card-body">

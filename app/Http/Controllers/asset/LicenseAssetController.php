@@ -654,7 +654,7 @@ class LicenseAssetController extends Controller
                         Storage::makeDirectory($path);
                     }
 
-                    $proof_return_assign_attachment['bukti_penugasan'] = json_decode($last_assign->lampiran)->proof_assign;
+                    $proof_return_assign_attachment['bukti_penugasan'] = json_decode($last_assign->lampiran)->bukti_penugasan;
 
                     foreach ($request->file('lampiran') as $file) {
                         // File Upload Configuration

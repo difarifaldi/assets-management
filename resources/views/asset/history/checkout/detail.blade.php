@@ -92,7 +92,7 @@
                             </div>
 
                             {{-- Check In --}}
-                            @if (!is_null($historyCheckInOut->pengembalian_pada) && !is_null($historyCheckInOut->check_in_by))
+                            @if (!is_null($historyCheckInOut->pengembalian_pada) && !is_null($historyCheckInOut->pengembalian_oleh))
                                 <hr>
 
                                 <div class="form-group row">
@@ -114,7 +114,7 @@
                                     @if (!is_null($historyCheckInOut->lampiran))
                                         <div class="col-md-12 pt-3">
                                             <div class="row justify-content-start mt-3">
-                                                @foreach (json_decode($historyCheckInOut->lampiran)->proof_check_in as $index => $lampiran)
+                                                @foreach (json_decode($historyCheckInOut->lampiran)->bukti_pengembalian as $index => $lampiran)
                                                     <div class="col-md-3" id="lampiran_{{ $index }}">
                                                         <div class="card shadow">
                                                             <input type="hidden" id="file_name_{{ $index }}"
