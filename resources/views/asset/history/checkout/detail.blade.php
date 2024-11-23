@@ -30,7 +30,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Check Out At</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ date('d F Y H:i:s', strtotime($historyCheckInOut->check_out_at)) }}
+                                    {{ date('d F Y H:i:s', strtotime($historyCheckInOut->dipinjam_pada)) }}
                                 </div>
                             </div>
 

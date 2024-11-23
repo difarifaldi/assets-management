@@ -277,7 +277,7 @@
         let token = $('meta[name="csrf-token"]').attr('content');
 
         Swal.fire({
-            title: 'Are You Sure Want To Delete Record?',
+            title: 'Apakah Anda Yakin Menghapus Data Ini?',
             icon: 'question',
             showCancelButton: true,
             allowOutsideClick: false,
@@ -313,7 +313,7 @@
         let token = $('meta[name="csrf-token"]').attr('content');
 
         Swal.fire({
-            title: 'Are You Sure Want To Approve Record?',
+            title: 'Apakah Anda Yakin Menerima Data Ini?',
             icon: 'question',
             showCancelButton: true,
             allowOutsideClick: false,
@@ -351,10 +351,10 @@
 
         Swal.fire({
             input: "textarea",
-            inputLabel: "Reason",
-            inputPlaceholder: "Type your reason here...",
+            inputLabel: "Alasan",
+            inputPlaceholder: "Tulisan Alasan Anda disini...",
             inputAttributes: {
-                "aria-label": "Type your reason here"
+                "aria-label": "Tulisan Alasan Anda disini"
             },
             customClass: {
                 confirmButton: 'btn btn-primary mr-2 mb-3',
@@ -365,17 +365,17 @@
             confirmButtonText: 'Yes',
             cancelButtonText: 'Cancel',
             preConfirm: () => {
-                const reason = Swal.getInput().value;
-                if (!reason) {
-                    Swal.showValidationMessage(`Please Enter Reason`)
+                const alasan = Swal.getInput().value;
+                if (!alasan) {
+                    Swal.showValidationMessage(`Masukan Alasan`)
                 }
                 return {
-                    reason: reason
+                    alasan: alasan
                 }
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                const reason = result.value.reason;
+                const alasan = result.value.alasan;
                 sweetAlertProcess();
                 $.ajax({
                     url: '{{ route('submission.reject') }}',
@@ -384,7 +384,7 @@
                     data: {
                         _token: token,
                         id: id,
-                        reason: reason
+                        alasan: alasan
                     },
                     success: function(data) {
                         location.reload();

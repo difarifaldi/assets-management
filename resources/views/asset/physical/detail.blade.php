@@ -354,7 +354,7 @@
                                                             {{ $index + 1 }}
                                                         </td>
                                                         <td>
-                                                            {{ date('d F Y H:i:s', strtotime($history_check->check_out_at)) }}
+                                                            {{ date('d F Y H:i:s', strtotime($history_check->dipinjam_pada)) }}
                                                         </td>
                                                         <td>
                                                             {{ $history_check->checkOut->nama }}
@@ -382,7 +382,7 @@
                                     @if ($asset->status != 4)
                                         @if (is_null($asset->ditugaskan_ke) &&
                                                 is_null($asset->assign_at) &&
-                                                (is_null($asset->dipinjam_oleh) && is_null($asset->check_out_at)))
+                                                (is_null($asset->dipinjam_oleh) && is_null($asset->dipinjam_pada)))
                                             <button class="btn btn-warning mr-2" data-toggle="modal"
                                                 data-target="#maintence">Maintence</button>
                                             @if (in_array($asset->status, [1, 2]))
@@ -393,7 +393,7 @@
                                         @elseif(
                                             !is_null($asset->ditugaskan_ke) &&
                                                 !is_null($asset->assign_at) &&
-                                                (is_null($asset->dipinjam_oleh) && is_null($asset->check_out_at)))
+                                                (is_null($asset->dipinjam_oleh) && is_null($asset->dipinjam_pada)))
                                             <button data-toggle="modal" data-target="#returnAsset"
                                                 class="btn btn-primary">Return
                                                 Asset</button>
@@ -449,7 +449,7 @@
                     @csrf
                     @method('patch')
                     <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalLongTitle">Add Assign and Proof Assign</h4>
+                        <h4 class="modal-title" id="exampleModalLongTitle">ambah Penugasan dan Bukti Penugasan</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">

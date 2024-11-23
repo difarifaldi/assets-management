@@ -88,19 +88,19 @@
                                                         Asset
                                                     </th>
                                                     <th>
-                                                        Assign At / Check Out At
+                                                        Ditugaskan Pada / Dipinjam Pada
                                                     </th>
                                                     <th>
                                                         Barcode
                                                     </th>
                                                     <th>
-                                                        Category
+                                                        Kategori
                                                     </th>
                                                     <th>
                                                         Status
                                                     </th>
                                                     <th>
-                                                        Value
+                                                        Nilai
                                                     </th>
                                                     @role('staff')
                                                         <th>
@@ -122,15 +122,15 @@
                                                             {{ $asset->nama }}
                                                         </td>
                                                         <td>
-                                                            {{ !is_null($asset->assign_at) ? 'Assign At' : 'Check Out At' }}
+                                                            {{ !is_null($asset->ditugaskan_pada) ? 'Ditugaskan Pada' : 'Dipinjam Pada' }}
                                                             <br>
-                                                            {{ !is_null($asset->assign_at) ? date('d F Y H:i:s', strtotime($asset->assign_at)) : date('d F Y H:i:s', strtotime($asset->check_out_at)) }}
+                                                            {{ !is_null($asset->ditugaskan_pada) ? date('d F Y H:i:s', strtotime($asset->ditugaskan_pada)) : date('d F Y H:i:s', strtotime($asset->dipinjam_pada)) }}
                                                         </td>
                                                         <td>
                                                             {{ $asset->barcode_code }}
                                                         </td>
                                                         <td>
-                                                            {{ $asset->category->nama }}
+                                                            {{ $asset->kategori->nama }}
                                                         </td>
                                                         <td>
                                                             @if ($asset->status == 1)
@@ -143,9 +143,9 @@
                                                         </td>
                                                         <td align="right">
                                                             @php
-                                                                $total_value += intval($asset->value);
+                                                                $total_value += intval($asset->nilai);
                                                             @endphp
-                                                            {{ 'Rp.' . number_format($asset->value, 0, ',', '.') . ',00' }}
+                                                            {{ 'Rp.' . number_format($asset->nilai, 0, ',', '.') . ',00' }}
                                                         </td>
                                                         @role('staff')
                                                             <td>

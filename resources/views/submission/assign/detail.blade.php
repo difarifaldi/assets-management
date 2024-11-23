@@ -47,10 +47,10 @@
                                     <label class="col-sm-3 col-form-label">Approval Status</label>
                                     <div class="col-sm-9 col-form-label">
                                         @if (!is_null($submission->diterima_oleh) && !is_null($submission->diterima_pada))
-                                            <span class="badge badge-success">Approved By
+                                            <span class="badge badge-success">Diterima Oleh
                                                 {{ $submission->approvedBy->nama }}</span>
                                         @elseif(!is_null($submission->ditolak_oleh) && !is_null($submission->ditolak_pada))
-                                            <span class="badge badge-danger">Rejected By
+                                            <span class="badge badge-danger">Ditolak Oleh
                                                 {{ $submission->rejectedBy->nama }}</span>
                                         @else
                                             <span class="badge badge-warning">Process</span>
@@ -130,17 +130,17 @@
                                                                 @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)
                                                                     @if (is_null($item_asset->asset->ditugaskan_ke) &&
                                                                             is_null($item_asset->asset->ditugaskan_pada) &&
-                                                                            (is_null($item_asset->asset->dipinjam_oleh) && is_null($item_asset->asset->check_out_at)))
+                                                                            (is_null($item_asset->asset->dipinjam_oleh) && is_null($item_asset->asset->dipinjam_pada)))
                                                                         <button class="btn btn-sm btn-primary"
                                                                             data-toggle="modal"
-                                                                            data-target="#assign_to_{{ $item_asset->asset->id }}">Assigning</button>
+                                                                            data-target="#assign_to_{{ $item_asset->asset->id }}">Menugaskan</button>
                                                                     @else
-                                                                        <span class="badge badge-danger">Unavailable</span>
+                                                                        <span class="badge badge-danger">Tidak Tersedia</span>
                                                                     @endif
                                                                 @elseif($item_asset->asset->status == 4)
-                                                                    <span class="badge badge-danger">On Maintence</span>
+                                                                    <span class="badge badge-danger">Dalam Perbaikan</span>
                                                                 @elseif($item_asset->asset->status == 5)
-                                                                    <span class="badge badge-danger">License Expired</span>
+                                                                    <span class="badge badge-danger">Lisensi Expired</span>
                                                                 @endif
                                                             </td>
                                                         @elseif (!is_null($submission->historyAssign->where('id_aset', $item_asset->asset->id)->first()))
@@ -163,10 +163,10 @@
                                                 is_null($submission->ditolak_pada))
                                             <button class="btn btn-sm btn-danger ml-2"
                                                 onclick="rejectedRecord({{ $submission->id }})"
-                                                title="Rejected">Rejected</button>
+                                                title="Ditolak">Ditolak</button>
                                             <button class="btn btn-sm btn-success ml-2"
                                                 onclick="approvedRecord({{ $submission->id }})"
-                                                title="Approve">Approve</button>
+                                                title="Diterima">Diterima</button>
                                         @endif
                                     </div>
                                 @endrole
@@ -190,12 +190,12 @@
                         @method('patch')
                         <input type="hidden" name="id_aset" value="{{ $item_asset->asset->id }}">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="exampleModalLongTitle">Add Assign and Proof Assign</h4>
+                            <h4 class="modal-title" id="exampleModalLongTitle">Tambah Penugasan dan Bukti Penugasan</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="attachment">Proof Assign <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                <label for="lampiran">Bukti Penugasan <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                     accept="image/*;capture=camera" multiple="true" required>
                                 <p class="text-danger py-1">* .png .jpg .jpeg</p>
                             </div>

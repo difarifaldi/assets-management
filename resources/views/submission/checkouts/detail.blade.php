@@ -7,7 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail Submission Checkout Asset -
+                                <h3 class="card-title font-weight-bold">Detail Pengajuan Peminjaman Asset -
                                     #{{ $submission->id }}
                             </div>
                         </div>
@@ -58,18 +58,18 @@
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Approval Status</label>
                                     <div class="col-sm-9 col-form-label">
-                                        @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
-                                            <span class="badge badge-success">Approved By
+                                        @if (!is_null($submission->diterima_oleh) && !is_null($submission->diterima_pada))
+                                            <span class="badge badge-success">Diterima Oleh
                                                 {{ $submission->approvedBy->nama }}</span>
-                                        @elseif(!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
-                                            <span class="badge badge-danger">Rejected By
+                                        @elseif(!is_null($submission->ditolak_oleh) && !is_null($submission->ditolak_pada))
+                                            <span class="badge badge-danger">Ditolak Oleh
                                                 {{ $submission->rejectedBy->nama }}</span>
                                         @else
                                             <span class="badge badge-warning">Process</span>
                                         @endif
                                     </div>
                                 </div>
-                                @if (!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
+                                @if (!is_null($submission->ditolak_oleh) && !is_null($submission->ditolak_pada))
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Alasan Penolakan</label>
                                         <div class="col-sm-9 col-form-label">
@@ -94,12 +94,12 @@
                                                     Status Asset
                                                 </th>
                                                 <th width='15%'>
-                                                    Status Checked
+                                                    Status pengecekan
                                                 </th>
                                                 @role('staff')
-                                                    @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                    @if (!is_null($submission->diterima_oleh) && !is_null($submission->diterima_pada))
                                                         <th width='15%'>
-                                                            Action
+                                                            Aksi
                                                         </th>
                                                     @endif
                                                 @endrole
@@ -109,13 +109,13 @@
                                             @foreach ($submission->submissionFormItemAsset as $item_asset)
                                                 <tr>
                                                     <td>
-                                                        {{ $item_asset->asset->name }}
+                                                        {{ $item_asset->asset->nama }}
                                                     </td>
                                                     <td>
                                                         {{ $item_asset->asset->barcode_code }}
                                                     </td>
                                                     <td>
-                                                        {{ $item_asset->asset->category->name }}
+                                                        {{ $item_asset->asset->kategori->nama }}
                                                     </td>
                                                     <td>
                                                         @if ($item_asset->asset->status == 1)
@@ -129,21 +129,21 @@
                                                     <td>
                                                         @if (
                                                             !is_null(
-                                                                $submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->whereNull('check_in_by')->first()))
-                                                            <span class="badge badge-success">Check Out</span>
+                                                                $submission->historyCheckOut->where('id_aset', $item_asset->asset->id)->whereNull('pengembalian_oleh')->first()))
+                                                            <span class="badge badge-success">Pinjam</span>
                                                         @elseif (
                                                             !is_null(
-                                                                $submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->where('check_in_by')->first()))
-                                                            <span class="badge badge-info">Check In</span>
+                                                                $submission->historyCheckOut->where('id_aset', $item_asset->asset->id)->where('pengembalian_oleh')->first()))
+                                                            <span class="badge badge-info">Kembalikan</span>
                                                         @else
                                                             -
                                                         @endif
                                                     </td>
                                                     @role('staff')
                                                         @if (
-                                                            !is_null($submission->approved_by) &&
-                                                                !is_null($submission->approved_at) &&
-                                                                is_null($submission->historyCheckOut->where('assets_id', $item_asset->asset->id)->first()))
+                                                            !is_null($submission->diterima_oleh) &&
+                                                                !is_null($submission->diterima_pada) &&
+                                                                is_null($submission->historyCheckOut->where('id_aset', $item_asset->asset->id)->first()))
                                                             <td>
                                                                 @php
                                                                     $currentDate = \Carbon\Carbon::now()->toDateString();
@@ -164,27 +164,28 @@
                                                                     @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)
                                                                         @if (is_null($item_asset->asset->assign_to) &&
                                                                                 is_null($item_asset->asset->assign_at) &&
-                                                                                (is_null($item_asset->asset->dipinjam_oleh) && is_null($item_asset->asset->check_out_at)))
+                                                                                (is_null($item_asset->asset->dipinjam_oleh) && is_null($item_asset->asset->dipinjam_pada)))
                                                                             <button class="btn btn-sm btn-primary"
                                                                                 data-toggle="modal"
                                                                                 data-target="#check_out{{ $item_asset->asset->id }}">
-                                                                                Check Out
+                                                                                Pinjam
                                                                             </button>
                                                                         @else
-                                                                            <span class="badge badge-danger">Unavailable</span>
+                                                                            <span class="badge badge-danger">Tidak
+                                                                                Tersedia</span>
                                                                         @endif
                                                                     @elseif ($item_asset->asset->status == 4)
-                                                                        <span class="badge badge-danger">On Maintenance</span>
+                                                                        <span class="badge badge-danger">Dalam Perbaikan</span>
                                                                     @elseif ($item_asset->asset->status == 5)
-                                                                        <span class="badge badge-danger">License Expired</span>
+                                                                        <span class="badge badge-danger">Lisensi Expired</span>
                                                                     @endif
                                                                 @endif
                                                             </td>
-                                                        @elseif (isset($item_asset->asset->dipinjam_oleh) && isset($item_asset->asset->check_out_at))
+                                                        @elseif (isset($item_asset->asset->dipinjam_oleh) && isset($item_asset->asset->dipinjam_pada))
                                                             <td>
                                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                                     data-target="#check_in{{ $item_asset->asset->id }}">
-                                                                    Check In
+                                                                    Kembalikan
                                                                 </button>
                                                             </td>
                                                         @else
@@ -201,16 +202,14 @@
                                 <a href="{{ route('submission.index') }}" class="btn btn-danger">Back</a>
                                 @role('admin')
                                     <div class="d-flex">
-                                        @if (is_null($submission->approved_by) &&
-                                                is_null($submission->approved_at) &&
-                                                is_null($submission->rejected_by) &&
-                                                is_null($submission->rejected_at))
+                                        @if (is_null($submission->diterima_oleh) &&
+                                                is_null($submission->diterima_pada) &&
+                                                is_null($submission->ditolak_oleh) &&
+                                                is_null($submission->ditolak_pada))
                                             <button class="btn btn-sm btn-danger ml-2"
-                                                onclick="rejectedRecord({{ $submission->id }})"
-                                                title="Rejected">Rejected</button>
+                                                onclick="rejectedRecord({{ $submission->id }})" title="Tolak">Tolak</button>
                                             <button class="btn btn-sm btn-success ml-2"
-                                                onclick="approvedRecord({{ $submission->id }})"
-                                                title="Approve">Approve</button>
+                                                onclick="approvedRecord({{ $submission->id }})" title="Terima">Terima</button>
                                         @endif
                                     </div>
                                 @endrole
@@ -223,7 +222,7 @@
         </div>
     </div>
     @foreach ($submission->submissionFormItemAsset as $item_asset)
-        {{-- Check Out --}}
+        {{-- Pinjam --}}
         <div class="modal fade" id="check_out{{ $item_asset->asset->id }}">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -232,14 +231,14 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('patch')
-                        <input type="hidden" name="assets_id" value="{{ $item_asset->asset->id }}">
+                        <input type="hidden" name="id_aset" value="{{ $item_asset->asset->id }}">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="exampleModalLongTitle">Add Checkout and Proof Checkout</h4>
+                            <h4 class="modal-title" id="exampleModalLongTitle">Tambah Peminjaman dan Bukti Peminjaman</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="attachment">Proof Checkout <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                <label for="lampiran">Bukti Peminjaman <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                     accept="image/*;capture=camera" multiple="true" required>
                                 <p class="text-danger py-1">* .png .jpg .jpeg</p>
                             </div>
@@ -253,7 +252,7 @@
                 </div>
             </div>
         </div>
-        {{-- Check In --}}
+        {{-- Kembalikan --}}
         <div class="modal fade" id="check_in{{ $item_asset->asset->id }}">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -262,14 +261,15 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('patch')
-                        <input type="hidden" name="assets_id" value="{{ $item_asset->asset->id }}">
+                        <input type="hidden" name="id_aset" value="{{ $item_asset->asset->id }}">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="exampleModalLongTitle">Add CheckIn and Proof CheckIn</h4>
+                            <h4 class="modal-title" id="exampleModalLongTitle">Tambah Pengembalian dan Bukti Pengembalian
+                            </h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="attachment">Proof CheckIn <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" name="attachment[]" id="documentInput"
+                                <label for="lampiran">Bukti Pengembalian <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="lampiran[]" id="documentInput"
                                     accept="image/*;capture=camera" multiple="true" required>
                                 <p class="text-danger py-1">* .png .jpg .jpeg</p>
                             </div>

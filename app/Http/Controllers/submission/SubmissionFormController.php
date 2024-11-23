@@ -869,7 +869,7 @@ class SubmissionFormController extends Controller
                         Storage::makeDirectory($path);
                     }
 
-                    $proof_check_in_attachment['proof_peminjaman'] = json_decode($last_check_out->attachment)->proof_checkout;
+                    $proof_check_in_attachment['proof_peminjaman'] = json_decode($last_check_out->lampiran)->proof_peminjaman;
 
 
 
