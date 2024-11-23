@@ -21,7 +21,7 @@
                                     <label for="categories">Kategori </label>
                                     <select class="form-control select2bs4" id="id_kategori_aset" name="id_kategori_aset">
                                         @foreach ($categories as $category)
-                                            @if ($license->category->id == $category->id)
+                                            @if ($license->kategori->id == $category->id)
                                                 <option value="{{ $category->id }}" selected>{{ $category->nama }}
                                                 </option>
                                             @else
@@ -74,7 +74,7 @@
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
                                     <select class="form-control select2bs4" id="status" name="status" required>
-                                        <option disabled hidden selected>Choose Status</option>
+                                        <option disabled hidden selected>Pilih Status</option>
                                         <option value="1" {{ $license->status == 1 ? 'selected' : '' }}>
                                             Kondisi Bagus</option>
                                         <option value="2" {{ $license->status == 2 ? 'selected' : '' }}>Kerusakan

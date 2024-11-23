@@ -168,7 +168,7 @@
                                             <div class="col-md-12 pt-3">
                                                 <div class="row justify-content-start mt-3">
                                                     @foreach ($asset->attachmentArray as $index => $lampiran)
-                                                        <div class="col-md-3" id="attachment_{{ $index }}">
+                                                        <div class="col-md-3" id="lampiran_{{ $index }}">
                                                             <div class="card shadow">
                                                                 <input type="hidden" id="file_name_{{ $index }}"
                                                                     value="{{ $lampiran }}">

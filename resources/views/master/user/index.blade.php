@@ -6,14 +6,14 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold"> User</h3>
+                            <h3 class="card-title font-weight-bold"> Pengguna</h3>
                         </div>
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
 
                                 <div>
                                     <a href="{{ route('master.user.create') }}" class="btn btn-sm btn-primary">
-                                        Add User
+                                        Tambah Pengguna
                                     </a>
                                 </div>
 

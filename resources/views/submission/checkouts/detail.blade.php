@@ -16,38 +16,38 @@
                             <div class="col-md-12">
                                 <!-- Date and Time -->
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Submission Date and Time</label>
+                                    <label class="col-sm-3 col-form-label">Pengajuan Tanggal dan Waktu</label>
                                     <div class="col-sm-9 col-form-label">
                                         {{ date('d F Y H:i:s', strtotime($submission->created_at)) }}
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Loan Application Asset Date</label>
+                                    <label class="col-sm-3 col-form-label">Tanggal Pengajuan Peminjaman Aset</label>
                                     <div class="col-sm-9 col-form-label">
-                                        {{ date('d F Y', strtotime($submission->submissionFormsCheckoutDate->loan_application_asset_date)) }}
+                                        {{ date('d F Y', strtotime($submission->submissionFormsCheckoutDate->tanggal_pengajuan_peminjaman_aset)) }}
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Return Asset Date</label>
+                                    <label class="col-sm-3 col-form-label">Tanggal Pengembalian Aset</label>
                                     <div class="col-sm-9 col-form-label">
-                                        {{ date('d F Y', strtotime($submission->submissionFormsCheckoutDate->return_asset_date)) }}
+                                        {{ date('d F Y', strtotime($submission->submissionFormsCheckoutDate->tanggal_pengembalian_aset)) }}
                                     </div>
                                 </div>
                                 <!-- Description -->
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Description</label>
+                                    <label class="col-sm-3 col-form-label">Deskripsi</label>
                                     <div class="col-sm-9 col-form-label">
-                                        {{ $submission->description ?? '-' }}
+                                        {{ $submission->deskripsi ?? '-' }}
                                     </div>
                                 </div>
                                 <!-- Attachment -->
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Attachment</label>
+                                    <label class="col-sm-3 col-form-label">Lampiran</label>
                                     <div class="col-sm-9 col-form-label">
-                                        @if (!is_null($submission->attachment))
-                                            <a href="{{ asset($submission->attachment) }}" target="_blank">
+                                        @if (!is_null($submission->lampiran))
+                                            <a href="{{ asset($submission->lampiran) }}" target="_blank">
                                                 <i class="fas fa-download mr-1"></i>
-                                                Attachment Document
+                                                Lampiran Dokumen
                                             </a>
                                         @else
                                             -
@@ -60,10 +60,10 @@
                                     <div class="col-sm-9 col-form-label">
                                         @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
                                             <span class="badge badge-success">Approved By
-                                                {{ $submission->approvedBy->name }}</span>
+                                                {{ $submission->approvedBy->nama }}</span>
                                         @elseif(!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
                                             <span class="badge badge-danger">Rejected By
-                                                {{ $submission->rejectedBy->name }}</span>
+                                                {{ $submission->rejectedBy->nama }}</span>
                                         @else
                                             <span class="badge badge-warning">Process</span>
                                         @endif
@@ -71,9 +71,9 @@
                                 </div>
                                 @if (!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Reason Rejection</label>
+                                        <label class="col-sm-3 col-form-label">Alasan Penolakan</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $submission->reason ?? '-' }}
+                                            {{ $submission->alasan ?? '-' }}
                                         </div>
                                     </div>
                                 @endif
@@ -88,7 +88,7 @@
                                                     Barcode
                                                 </th>
                                                 <th>
-                                                    Category
+                                                    Kategori
                                                 </th>
                                                 <th width='10%'>
                                                     Status Asset
@@ -119,11 +119,11 @@
                                                     </td>
                                                     <td>
                                                         @if ($item_asset->asset->status == 1)
-                                                            <span class="badge badge-success">Good Condition</span>
+                                                            <span class="badge badge-success">Kondisi Bagus</span>
                                                         @elseif($item_asset->asset->status == 2)
-                                                            <span class="badge badge-warning">Minor Damage</span>
+                                                            <span class="badge badge-warning">Kerusakan Ringan</span>
                                                         @elseif($item_asset->asset->status == 3)
-                                                            <span class="badge badge-danger">Major Damage</span>
+                                                            <span class="badge badge-danger">Kerusakan Berat</span>
                                                         @endif
                                                     </td>
                                                     <td>
@@ -149,11 +149,11 @@
                                                                     $currentDate = \Carbon\Carbon::now()->toDateString();
                                                                     $loanDate = \Carbon\Carbon::parse(
                                                                         $submission->submissionFormsCheckoutDate
-                                                                            ->loan_application_asset_date,
+                                                                            ->tanggal_pengajuan_peminjaman_aset,
                                                                     )->toDateString();
                                                                     $returnDate = \Carbon\Carbon::parse(
                                                                         $submission->submissionFormsCheckoutDate
-                                                                            ->return_asset_date,
+                                                                            ->tanggal_pengembalian_aset,
                                                                     )->toDateString();
                                                                 @endphp
                                                                 @if ($currentDate < $loanDate)
@@ -164,7 +164,7 @@
                                                                     @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)
                                                                         @if (is_null($item_asset->asset->assign_to) &&
                                                                                 is_null($item_asset->asset->assign_at) &&
-                                                                                (is_null($item_asset->asset->check_out_by) && is_null($item_asset->asset->check_out_at)))
+                                                                                (is_null($item_asset->asset->dipinjam_oleh) && is_null($item_asset->asset->check_out_at)))
                                                                             <button class="btn btn-sm btn-primary"
                                                                                 data-toggle="modal"
                                                                                 data-target="#check_out{{ $item_asset->asset->id }}">
@@ -180,7 +180,7 @@
                                                                     @endif
                                                                 @endif
                                                             </td>
-                                                        @elseif (isset($item_asset->asset->check_out_by) && isset($item_asset->asset->check_out_at))
+                                                        @elseif (isset($item_asset->asset->dipinjam_oleh) && isset($item_asset->asset->check_out_at))
                                                             <td>
                                                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                                     data-target="#check_in{{ $item_asset->asset->id }}">

@@ -10,7 +10,7 @@
                         <h5>
                             <sup style="font-size: 10px">Rp </sup>{{ number_format($totalValue, 0, ',', '.') }}
                         </h5>
-                        <p><b>Total Value</b></p>
+                        <p><b>Total Nilai</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-cash"></i>
@@ -24,7 +24,7 @@
                     <div class="inner">
                         <h5>{{ $allAsset }}
                         </h5>
-                        <p><b>All Asset</b></p>
+                        <p><b>Jumlah Semua Aset</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-archive"></i>
@@ -37,7 +37,7 @@
                 <div class="small-box bg-warning py-2">
                     <div class="inner">
                         <h5>{{ $physical }}</h5>
-                        <p><b>Physical Asset</b></p>
+                        <p><b>Aset Fisik</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-cube"></i>
@@ -50,7 +50,7 @@
                 <div class="small-box bg-danger py-2">
                     <div class="inner">
                         <h5>{{ $license }}</h5>
-                        <p><b>License Asset</b></p>
+                        <p><b>Aset Lisensi</b></p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-document"></i>

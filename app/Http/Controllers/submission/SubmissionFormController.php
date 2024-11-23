@@ -55,7 +55,7 @@ class SubmissionFormController extends Controller
                 return date('d F Y H:i:s', strtotime($data->created_at));
             })
             ->addColumn('tipe', function ($data) {
-                return $data->tipe == 1 ? 'Penugasan' : ($data->tipe == 2 ? 'Peminjaman ' : '-');
+                return $data->tipe == 1 ? 'penugasan' : ($data->tipe == 2 ? 'peminjaman ' : '-');
             })
             ->addColumn('status', function ($data) {
                 if ($data->diterima_oleh != null && $data->diterima_pada != null) {
@@ -82,7 +82,7 @@ class SubmissionFormController extends Controller
                         if ($data->tipe == 1) {
                             $btn_action .= '<a href="' . route('submission.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                         } else {
-                            $btn_action .= '<a href="' . route('submission.edit', ['tipe' => 'Peminjaman', 'id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
+                            $btn_action .= '<a href="' . route('submission.edit', ['tipe' => 'peminjaman', 'id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
                         }
 
                         $btn_action .= '<button class="btn btn-sm btn-danger ml-2" onclick="destroyRecord(' . $data->id . ')" title="Hapus">Hapus</button>';
@@ -109,7 +109,7 @@ class SubmissionFormController extends Controller
     public function create(Request $request, string $type)
     {
         try {
-            if (in_array($type, ['Penugasan', 'Peminjaman'])) {
+            if (in_array($type, ['assign', 'checkouts'])) {
                 if (isset($request->asset)) {
                     $asset = Asset::find($request->asset);
 
@@ -121,7 +121,7 @@ class SubmissionFormController extends Controller
                             ->with(['failed' => 'Invalid Request!']);
                     }
                 } else {
-                    if ($type == 'Penugasan') {
+                    if ($type == 'assign') {
                         $assets = Asset::whereNull('deleted_by')
                             ->whereNull('deleted_at')
                             ->whereNull('ditugaskan_ke')
@@ -348,6 +348,7 @@ class SubmissionFormController extends Controller
                     ->withInput();
             }
         } catch (Exception $e) {
+            dd($e->getLine(), $e->getFile());
             return redirect()
                 ->back()
                 ->with(['failed' => $e->getMessage()])
@@ -470,7 +471,7 @@ class SubmissionFormController extends Controller
             if (!is_null($submission)) {
                 $submissionAssetIds = $submissionItems->pluck('id_aset')->toArray();
                 if ($submission->tipe == 1) {
-                    $type = 'Penugasan';
+                    $type = 'assign';
                     $assets = Asset::whereNull('deleted_by')
                         ->whereNull('deleted_at')
                         ->whereNull('ditugaskan_ke')
@@ -481,7 +482,7 @@ class SubmissionFormController extends Controller
                         ->whereNotIn('id', $submissionAssetIds)
                         ->get();
                 } else {
-                    $type = 'Peminjaman';
+                    $type = 'checkouts';
                     $assets = Asset::whereNull('deleted_by')
                         ->whereNull('deleted_at')
                         ->whereNull('ditugaskan_ke')
@@ -632,7 +633,7 @@ class SubmissionFormController extends Controller
         }
     }
 
-    public function PenugasanTo(Request $request, string $id)
+    public function assignTo(Request $request, string $id)
     {
         try {
             $submission = SubmissionForm::find($id);
@@ -757,8 +758,8 @@ class SubmissionFormController extends Controller
                  * Validation Update Asset Record
                  */
                 if ($add_check_out) {
-                    $path = 'public/asset/physical/proof_Peminjaman';
-                    $path_store = 'storage/asset/physical/proof_Peminjaman';
+                    $path = 'public/asset/physical/proof_peminjaman';
+                    $path_store = 'storage/asset/physical/proof_peminjaman';
 
                     // Check Exsisting Path
                     if (!Storage::exists($path)) {
@@ -777,7 +778,7 @@ class SubmissionFormController extends Controller
 
                         // Check Upload Success
                         if (Storage::exists($path . '/' . $file_name)) {
-                            $proof_check_out_attachment['proof_Peminjaman'][] = $path_store . '/' . $file_name;
+                            $proof_check_out_attachment['proof_peminjaman'][] = $path_store . '/' . $file_name;
                         } else {
                             // Gagal and Rollback
                             DB::rollBack();
@@ -868,7 +869,7 @@ class SubmissionFormController extends Controller
                         Storage::makeDirectory($path);
                     }
 
-                    $proof_check_in_attachment['proof_Peminjaman'] = json_decode($last_check_out->attachment)->proof_checkout;
+                    $proof_check_in_attachment['proof_peminjaman'] = json_decode($last_check_out->attachment)->proof_checkout;
 
 
 

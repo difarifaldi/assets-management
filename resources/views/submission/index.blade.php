@@ -6,14 +6,14 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold"> Submission Form</h3>
+                            <h3 class="card-title font-weight-bold"> Form Pengajuan</h3>
                         </div>
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between">
                                 @role('staff')
                                     <div>
                                         <a type="button" onclick="openOptions()" class="btn btn-sm btn-primary">
-                                            Add Submission
+                                            Tambah Pengajuan
                                         </a>
                                     </div>
                                 @endrole
@@ -27,10 +27,10 @@
                                                 #
                                             </th>
                                             <th>
-                                                Created At
+                                                Dibuat Pada
                                             </th>
                                             <th>
-                                                Type
+                                                Tipe
                                             </th>
                                             <th>
                                                 Deskripsi
@@ -40,11 +40,11 @@
                                             </th>
                                             @role('admin')
                                                 <th>
-                                                    Request By
+                                                    Diminta Oleh
                                                 </th>
                                             @endrole
                                             <th>
-                                                Action
+                                                Aksi
                                             </th>
                                         </tr>
                                     </thead>
@@ -68,13 +68,13 @@
 
                 function openOptions() {
                     Swal.fire({
-                        title: "Choose Submission",
+                        title: "Pilih Pengajuan",
                         icon: "question",
                         showConfirmButton: false,
                         showCancelButton: false,
                         html: `<div class="d-flex justify-content-center my-2">
-                <a href='{{ route('submission.create', ['type' => 'assign']) }}' class="btn btn-primary mr-2">Assign To Me</a>
-                <a href='{{ route('submission.create', ['type' => 'checkouts']) }}' class="btn btn-primary mr-2">Checkout</a>
+                <a href='{{ route('submission.create', ['tipe' => 'assign']) }}' class="btn btn-primary mr-2">Assign To Me</a>
+                <a href='{{ route('submission.create', ['tipe' => 'checkouts']) }}' class="btn btn-primary mr-2">Checkout</a>
                 </div>
             `
                     });

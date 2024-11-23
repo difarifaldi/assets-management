@@ -20,8 +20,8 @@
                                         placeholder="Nama" value="{{ $category->nama }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="type">Tipe <span class="text-danger">*</span></label>
-                                    <select class="form-control " id="type_edit" name="type" required>
+                                    <label for="tipe">Tipe <span class="text-danger">*</span></label>
+                                    <select class="form-control " id="tipe_edit" name="tipe" required>
 
                                         <option value="1" {{ $category->type == 1 ? 'selected' : '' }}>
                                             Aset Fisik</option>

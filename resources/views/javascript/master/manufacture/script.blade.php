@@ -2,7 +2,7 @@
     $("form").submit(function(e) {
         e.preventDefault();
         Swal.fire({
-            title: 'Are You Sure Want To Save Record?',
+            title: 'Apakah Anda Yakin Ingin Menyimpan Data Ini?',
             icon: 'question',
             showCancelButton: true,
             allowOutsideClick: false,
@@ -11,8 +11,8 @@
                 cancelButton: 'btn btn-danger mb-3',
             },
             buttonsStyling: false,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel'
+            confirmButtonText: 'ya',
+            cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
                 sweetAlertProcess();
@@ -40,15 +40,15 @@
                     searchable: false
                 },
                 {
-                    data: 'name',
+                    data: 'nama',
                     defaultContent: '-',
                 },
                 {
-                    data: 'address',
+                    data: 'alamat',
                     defaultContent: '-',
                 },
                 {
-                    data: 'action',
+                    data: 'aksi',
                     width: '20%',
                     defaultContent: '-',
                     orderable: false,
@@ -63,7 +63,7 @@
         let token = $('meta[name="csrf-token"]').attr('content');
 
         Swal.fire({
-            title: 'Are You Sure Want To Delete Record?',
+            title: 'Apakah anda yakin ingin menghapus data ini?',
             icon: 'question',
             showCancelButton: true,
             allowOutsideClick: false,
@@ -72,8 +72,8 @@
                 cancelButton: 'btn btn-danger mb-3',
             },
             buttonsStyling: false,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel'
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
                 sweetAlertProcess();

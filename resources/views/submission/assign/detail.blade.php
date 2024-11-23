@@ -7,7 +7,7 @@
                     <div class="card card-info">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title font-weight-bold">Detail Submission Assign Asset -
+                                <h3 class="card-title font-weight-bold">Detail Pengajuan Penugasan Aset -
                                     #{{ $submission->id }}
                             </div>
                         </div>
@@ -16,26 +16,26 @@
                             <div class="col-md-12">
                                 <!-- Date and Time -->
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Submission Date and Time</label>
+                                    <label class="col-sm-3 col-form-label">Pengajuan Tanggal dan Waktu</label>
                                     <div class="col-sm-9 col-form-label">
                                         {{ date('d F Y H:i:s', strtotime($submission->created_at)) }}
                                     </div>
                                 </div>
                                 <!-- Description -->
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Description</label>
+                                    <label class="col-sm-3 col-form-label">Deskripsi</label>
                                     <div class="col-sm-9 col-form-label">
-                                        {{ $submission->description ?? '-' }}
+                                        {{ $submission->deskripsi ?? '-' }}
                                     </div>
                                 </div>
                                 <!-- Attachment -->
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Attachment</label>
+                                    <label class="col-sm-3 col-form-label">Lampiran</label>
                                     <div class="col-sm-9 col-form-label">
-                                        @if (!is_null($submission->attachment))
-                                            <a href="{{ asset($submission->attachment) }}" target="_blank">
+                                        @if (!is_null($submission->lampiran))
+                                            <a href="{{ asset($submission->lampiran) }}" target="_blank">
                                                 <i class="fas fa-download mr-1"></i>
-                                                Attachment Document
+                                                Lampiran Dokumen
                                             </a>
                                         @else
                                             -
@@ -46,22 +46,22 @@
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Approval Status</label>
                                     <div class="col-sm-9 col-form-label">
-                                        @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                        @if (!is_null($submission->diterima_oleh) && !is_null($submission->diterima_pada))
                                             <span class="badge badge-success">Approved By
-                                                {{ $submission->approvedBy->name }}</span>
-                                        @elseif(!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
+                                                {{ $submission->approvedBy->nama }}</span>
+                                        @elseif(!is_null($submission->ditolak_oleh) && !is_null($submission->ditolak_pada))
                                             <span class="badge badge-danger">Rejected By
-                                                {{ $submission->rejectedBy->name }}</span>
+                                                {{ $submission->rejectedBy->nama }}</span>
                                         @else
                                             <span class="badge badge-warning">Process</span>
                                         @endif
                                     </div>
                                 </div>
-                                @if (!is_null($submission->rejected_by) && !is_null($submission->rejected_at))
+                                @if (!is_null($submission->ditolak_oleh) && !is_null($submission->ditolak_pada))
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Reason Rejection</label>
+                                        <label class="col-sm-3 col-form-label">Alasan Penolakan</label>
                                         <div class="col-sm-9 col-form-label">
-                                            {{ $submission->reason ?? '-' }}
+                                            {{ $submission->alasan ?? '-' }}
                                         </div>
                                     </div>
                                 @endif
@@ -70,24 +70,24 @@
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    Asset
+                                                    Aset
                                                 </th>
                                                 <th>
                                                     Barcode
                                                 </th>
                                                 <th>
-                                                    Category
+                                                    Kategori
                                                 </th>
                                                 <th>
-                                                    Status Asset
+                                                    Status Aset
                                                 </th>
                                                 <th>
-                                                    Status Assign
+                                                    Status Penugasan
                                                 </th>
                                                 @role('admin')
-                                                    @if (!is_null($submission->approved_by) && !is_null($submission->approved_at))
+                                                    @if (!is_null($submission->diterima_oleh) && !is_null($submission->diterima_pada))
                                                         <th width="10%">
-                                                            Action
+                                                            Aksi
                                                         </th>
                                                     @endif
                                                 @endrole
@@ -97,40 +97,40 @@
                                             @foreach ($submission->submissionFormItemAsset as $item_asset)
                                                 <tr>
                                                     <td>
-                                                        {{ $item_asset->asset->name }}
+                                                        {{ $item_asset->asset->nama }}
                                                     </td>
                                                     <td>
                                                         {{ $item_asset->asset->barcode_code }}
                                                     </td>
                                                     <td>
-                                                        {{ $item_asset->asset->category->name }}
+                                                        {{ $item_asset->asset->kategori->nama }}
                                                     </td>
                                                     <td>
                                                         @if ($item_asset->asset->status == 1)
-                                                            <span class="badge badge-success">Good Condition</span>
+                                                            <span class="badge badge-success">Kondisi Bagus</span>
                                                         @elseif($item_asset->asset->status == 2)
-                                                            <span class="badge badge-warning">Minor Damage</span>
+                                                            <span class="badge badge-warning">Kerusakan Ringan</span>
                                                         @elseif($item_asset->asset->status == 3)
-                                                            <span class="badge badge-danger">Major Damage</span>
+                                                            <span class="badge badge-danger">Kerusakan Berat</span>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if (!is_null($submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
-                                                            <span class="badge badge-success">Assigned</span>
+                                                        @if (!is_null($submission->historyAssign->where('id_aset', $item_asset->asset->id)->first()))
+                                                            <span class="badge badge-success">Ditugaskan</span>
                                                         @else
                                                             -
                                                         @endif
                                                     </td>
                                                     @role('admin')
                                                         @if (
-                                                            !is_null($submission->approved_by) &&
-                                                                !is_null($submission->approved_at) &&
-                                                                is_null($submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
+                                                            !is_null($submission->diterima_oleh) &&
+                                                                !is_null($submission->diterima_pada) &&
+                                                                is_null($submission->historyAssign->where('id_aset', $item_asset->asset->id)->first()))
                                                             <td>
                                                                 @if ($item_asset->asset->status != 4 && $item_asset->asset->status != 5)
-                                                                    @if (is_null($item_asset->asset->assign_to) &&
-                                                                            is_null($item_asset->asset->assign_at) &&
-                                                                            (is_null($item_asset->asset->check_out_by) && is_null($item_asset->asset->check_out_at)))
+                                                                    @if (is_null($item_asset->asset->ditugaskan_ke) &&
+                                                                            is_null($item_asset->asset->ditugaskan_pada) &&
+                                                                            (is_null($item_asset->asset->dipinjam_oleh) && is_null($item_asset->asset->check_out_at)))
                                                                         <button class="btn btn-sm btn-primary"
                                                                             data-toggle="modal"
                                                                             data-target="#assign_to_{{ $item_asset->asset->id }}">Assigning</button>
@@ -143,7 +143,7 @@
                                                                     <span class="badge badge-danger">License Expired</span>
                                                                 @endif
                                                             </td>
-                                                        @elseif (!is_null($submission->historyAssign->where('assets_id', $item_asset->asset->id)->first()))
+                                                        @elseif (!is_null($submission->historyAssign->where('id_aset', $item_asset->asset->id)->first()))
                                                             <td>-</td>
                                                         @endif
                                                     @endrole
@@ -157,10 +157,10 @@
                                 <a href="{{ route('submission.index') }}" class="btn btn-danger">Back</a>
                                 @role('admin')
                                     <div class="d-flex">
-                                        @if (is_null($submission->approved_by) &&
-                                                is_null($submission->approved_at) &&
-                                                is_null($submission->rejected_by) &&
-                                                is_null($submission->rejected_at))
+                                        @if (is_null($submission->diterima_oleh) &&
+                                                is_null($submission->diterima_pada) &&
+                                                is_null($submission->ditolak_oleh) &&
+                                                is_null($submission->ditolak_pada))
                                             <button class="btn btn-sm btn-danger ml-2"
                                                 onclick="rejectedRecord({{ $submission->id }})"
                                                 title="Rejected">Rejected</button>
@@ -188,7 +188,7 @@
                         enctype="multipart/form-data">
                         @csrf
                         @method('patch')
-                        <input type="hidden" name="assets_id" value="{{ $item_asset->asset->id }}">
+                        <input type="hidden" name="id_aset" value="{{ $item_asset->asset->id }}">
                         <div class="modal-header">
                             <h4 class="modal-title" id="exampleModalLongTitle">Add Assign and Proof Assign</h4>
                         </div>

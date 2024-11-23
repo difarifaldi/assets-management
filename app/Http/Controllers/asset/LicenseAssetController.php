@@ -108,7 +108,7 @@ class LicenseAssetController extends Controller
     {
         try {
             $request->validate([
-                'id_kategori_aset' => 'nullable|integer|exists:category_assets,id',
+                'id_kategori_aset' => 'nullable|integer|exists:kategori_aset,id',
                 'barcode_code' => 'required|string',
                 'nama' => 'required|string',
                 'status' => 'required|integer',
@@ -116,8 +116,8 @@ class LicenseAssetController extends Controller
                 'expired_pada' => 'nullable|date',
                 'deskripsi' => 'nullable|string',
                 'lampiran.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-                'id_brand' => 'required|integer|exists:brands,id',
-                'id_manufaktur' => 'required|integer|exists:manufactures,id',
+                'id_brand' => 'required|integer|exists:brand,id',
+                'id_manufaktur' => 'required|integer|exists:manufaktur,id',
                 'tanggal_pengambilan' => 'nullable|date',
                 'tanggal_akhir_garansi' => 'nullable|date|after_or_equal:tanggal_pengambilan',
                 'durasi_garansi' => 'nullable|integer|min:0',
@@ -267,7 +267,7 @@ class LicenseAssetController extends Controller
              * Validation Request Body Variables
              */
             $request->validate([
-                'id_kategori_aset' => 'nullable|integer|exists:category_assets,id',
+                'id_kategori_aset' => 'nullable|integer|exists:kategori_aset,id',
                 'barcode_code' => 'required|string',
                 'nama' => 'required|string',
                 'status' => 'required|integer',
@@ -277,8 +277,8 @@ class LicenseAssetController extends Controller
                 'lampiran.*' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'ditugaskan_ke' => 'nullable',
                 'ditugaskan_pada' => 'nullable',
-                'id_brand' => 'required|integer|exists:brands,id',
-                'id_manufaktur' => 'required|integer|exists:manufactures,id',
+                'id_brand' => 'required|integer|exists:brand,id',
+                'id_manufaktur' => 'required|integer|exists:manufaktur,id',
                 'tanggal_pengambilan' => 'nullable|date',
                 'tanggal_akhir_garansi' => 'nullable|date|after_or_equal:tanggal_pengambilan',
                 'durasi_garansi' => 'nullable|integer|min:0',

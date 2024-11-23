@@ -3,7 +3,7 @@
     <a href="{{ url('/') }}" class="brand-link">
         <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
-        <span class="brand-text font-weight-light">Asset Management</span>
+        <span class="brand-text font-weight-light">Manajemen Aset</span>
     </a>
 
     <!-- Sidebar -->
@@ -15,7 +15,7 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block text-truncate" style="max-width: 150px">{{ Auth::user()->name }}</a>
+                <a href="#" class="d-block text-truncate" style="max-width: 150px">{{ Auth::user()->nama }}</a>
             </div>
         </div>
 
@@ -34,11 +34,11 @@
                     </li>
                 @endrole
 
-                <li class="nav-header">Penugasan</li>
+                <li class="nav-header">Pengajuan</li>
                 <li class="nav-item">
                     <a href="{{ route('submission.index') }}" class="nav-link">
                         <i class="fas fa-file-alt nav-icon"></i>
-                        <p>Form Penugasan</p>
+                        <p>Form Pengajuan</p>
                     </a>
                 </li>
 
@@ -61,7 +61,7 @@
                     <li class="nav-item">
                         <a href="{{ route('my-account.show') }}" class="nav-link">
                             <i class="fas fa-user nav-icon"></i>
-                            <p>My Account</p>
+                            <p>Akun Saya</p>
                         </a>
                     </li>
                 @endrole
@@ -72,7 +72,7 @@
                         <a href="{{ route('master.manufacture.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-tools"></i>
                             <p>
-                                Manufacture
+                                Manufaktur
                             </p>
                         </a>
                     </li>

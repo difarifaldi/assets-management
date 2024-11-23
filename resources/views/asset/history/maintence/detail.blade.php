@@ -22,11 +22,11 @@
                                 <div class="col-sm-9 col-form-label">
                                     <td>
                                         @if ($historyMaintence->status == 1)
-                                            Good Condition
+                                            Kondisi Bagus
                                         @elseif($historyMaintence->status == 2)
-                                            Minor Damage
+                                            Kerusakan Ringan
                                         @elseif($historyMaintence->status == 3)
-                                            Major Damage
+                                            Kerusakan Berat
                                         @endif
                                     </td>
                                 </div>

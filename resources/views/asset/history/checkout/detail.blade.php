@@ -12,16 +12,16 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Loan Application Asset Date</label>
+                                <label class="col-sm-3 col-form-label">Tanggal Pengajuan Peminjaman Aset</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ date('d F Y', strtotime($historyCheckInOut->submission->submissionFormsCheckoutDate->loan_application_asset_date)) }}
+                                    {{ date('d F Y', strtotime($historyCheckInOut->submission->submissionFormsCheckoutDate->tanggal_pengajuan_peminjaman_aset)) }}
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Return Asset Date</label>
+                                <label class="col-sm-3 col-form-label">Tanggal Pengembalian Aset</label>
                                 <div class="col-sm-9 col-form-label">
-                                    {{ date('d F Y', strtotime($historyCheckInOut->submission->submissionFormsCheckoutDate->return_asset_date)) }}
+                                    {{ date('d F Y', strtotime($historyCheckInOut->submission->submissionFormsCheckoutDate->tanggal_pengembalian_aset)) }}
                                 </div>
                             </div>
 

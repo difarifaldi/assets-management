@@ -6,7 +6,7 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Edit Submission Assign#{{ $submission->id }}</h3>
+                            <h3 class="card-title font-weight-bold">Edit Pengajuan Penugasan#{{ $submission->id }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -17,18 +17,18 @@
                             @method('patch')
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="description">Description <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" name="description" id="description" cols="10" rows="3"
-                                        placeholder="Description" required>{{ $submission->description }}</textarea>
+                                    <label for="deskripsi">Deskripsi <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="deskripsi" id="deskripsi" cols="10" rows="3" placeholder="Deskripsi"
+                                        required>{{ $submission->deskripsi }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="attachment">Attachment</label>
-                                    <input type="file" class="form-control" name="attachment" id="documentInput">
-                                    @if (!is_null($submission->attachment))
+                                    <label for="lampiran">Lampiran</label>
+                                    <input type="file" class="form-control" name="lampiran" id="documentInput">
+                                    @if (!is_null($submission->lampiran))
                                         <label class="m-2">
-                                            <a href="{{ asset($submission->attachment) }}" target="_blank">
+                                            <a href="{{ asset($submission->lampiran) }}" target="_blank">
                                                 <i class="fas fa-download mr-1"></i>
-                                                Attachment Document
+                                                Lampiran Dokumen
                                             </a>
                                         </label>
                                     @endif
@@ -44,13 +44,13 @@
                                                     Barcode
                                                 </th>
                                                 <th>
-                                                    Category
+                                                    Kategori
                                                 </th>
                                                 <th>
                                                     Status
                                                 </th>
-                                                <th width="5%">
-                                                    Action
+                                                <th>
+                                                    Aksi
                                                 </th>
                                             </tr>
                                         </thead>
@@ -58,10 +58,10 @@
                                             <tr id="form_asset">
                                                 <td>
                                                     <select class="form-control select2bs4" id="asset_id" name="asset_id">
-                                                        <option value="" disabled hidden selected>Choose Asset
+                                                        <option value="" disabled hidden selected>Pilih Aset
                                                         </option>
                                                         @foreach ($assets as $asset)
-                                                            <option value="{{ $asset->id }}">{{ $asset->name }}</option>
+                                                            <option value="{{ $asset->id }}">{{ $asset->nama }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
@@ -76,7 +76,7 @@
                                                 </td>
                                                 <td align="center">
                                                     <button type="button" class="btn btn-sm btn-primary"
-                                                        onclick="addPhysicalAsset()">Add</button>
+                                                        onclick="addPhysicalAsset()">Tambah</button>
                                                 </td>
                                             </tr>
                                             @foreach ($submission->submissionFormItemAsset as $item_asset)
@@ -90,7 +90,7 @@
                                                         <input type='text' class='form-control'
                                                             id='asset_name_{{ $item_asset->asset->id }}'
                                                             name='assets[{{ $item_asset->asset->id }}][name]'
-                                                            value='{{ $item_asset->asset->name }}' readonly>
+                                                            value='{{ $item_asset->asset->nama }}' readonly>
                                                     </td>
                                                     <td>
                                                         <input type='text' class='form-control'
@@ -100,18 +100,18 @@
                                                     <td>
                                                         <input type='text' class='form-control'
                                                             name='assets[{{ $item_asset->asset->id }}][category]'
-                                                            value='{{ $item_asset->asset->category->name }}' readonly>
+                                                            value='{{ $item_asset->asset->kategori->nama }}' readonly>
                                                     </td>
                                                     <td>
                                                         <input type='text' class='form-control'
                                                             name='assets[{{ $item_asset->asset->id }}][status]'
-                                                            value='{{ $item_asset->asset->status === 1 ? 'Good Condition' : ($item_asset->asset->status === 2 ? 'Minor Damage' : 'Major Damage') }}'
+                                                            value='{{ $item_asset->asset->status === 1 ? 'Kondisi Bagus' : ($item_asset->asset->status === 2 ? 'Kerusakan Ringan' : 'Kerusakan Berat') }}'
                                                             readonly>
                                                     </td>
                                                     <td align='center'>
                                                         <button type='button' class='btn btn-sm btn-danger'
                                                             onclick='deleteRow({{ $item_asset->asset->id }})'
-                                                            title='Delete'>Delete</button>
+                                                            title='Hapus'>Hapus</button>
                                                         <input type='hidden' class='form-control' name='asset_item_check[]'
                                                             value='{{ $item_asset->asset->id }}'>
                                                     </td>
@@ -121,7 +121,7 @@
                                     </table>
                                 </div>
                                 <div class="pt-3 d-flex">
-                                    <a href="{{ route('submission.index') }}" class="btn btn-danger mr-2"> Back</a>
+                                    <a href="{{ route('submission.index') }}" class="btn btn-danger mr-2"> Kembali</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>

@@ -13,7 +13,7 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form method="post"
-                            @if ($user->hasRole('admin')) action="{{ route('master.user.update', ['id' => $user->id]) }}" @else action="{{ route('my-account.update', ['id' => $user->id]) }}" @endif>
+                            @if (Auth::user()->hasRole('admin')) action="{{ route('master.user.update', ['id' => $user->id]) }}" @else action="{{ route('my-account.update', ['id' => $user->id]) }}" @endif>
                             @csrf
                             @method('patch')
                             <div class="card-body">

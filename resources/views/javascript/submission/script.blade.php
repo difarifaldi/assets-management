@@ -6,7 +6,7 @@
                 sweetAlertWarning('Please Complete The Record!');
             } else {
                 Swal.fire({
-                    title: 'Are You Sure Want To Save Record?',
+                    title: 'Apakah anda yakin ingin menyimpan data ini?',
                     icon: 'question',
                     showCancelButton: true,
                     allowOutsideClick: false,
@@ -26,7 +26,7 @@
             }
         } else {
             Swal.fire({
-                title: 'Are You Sure Want To Save Record?',
+                title: 'Apakah anda yakin ingin menyimpan data ini?',
                 icon: 'question',
                 showCancelButton: true,
                 allowOutsideClick: false,
@@ -69,11 +69,11 @@
                     defaultContent: '-',
                 },
                 {
-                    data: 'type',
+                    data: 'tipe',
                     defaultContent: '-',
                 },
                 {
-                    data: 'description',
+                    data: 'deskripsi',
                     defaultContent: '-',
                 },
                 {
@@ -85,7 +85,7 @@
                     defaultContent: '-',
                 },
                 {
-                    data: 'action',
+                    data: 'aksi',
                     width: '24%',
                     defaultContent: '-',
                     orderable: false,
@@ -118,12 +118,12 @@
                     defaultContent: '-',
                 },
                 {
-                    data: 'type',
+                    data: 'tipe',
                     defaultContent: '-',
                 },
 
                 {
-                    data: 'description',
+                    data: 'deskripsi',
                     defaultContent: '-',
                 },
                 {
@@ -131,7 +131,7 @@
                     defaultContent: '-',
                 },
                 {
-                    data: 'action',
+                    data: 'aksi',
                     width: '24%',
                     defaultContent: '-',
                     orderable: false,
@@ -241,15 +241,15 @@
                         if (response.success) {
                             var asset = response.data;
                             if (asset.status == 1) {
-                                status = 'Good Condition'
+                                status = 'Kondisi Bagus'
                             } else if (asset.status == 2) {
-                                status = 'Minor Damage'
+                                status = 'Kerusakan Ringan'
                             } else if (asset.status == 3) {
-                                status = 'Major Damage'
+                                status = 'Kerusakan Berat'
                             }
 
                             $('#category').val(asset
-                                .category.name
+                                .kategori.nama
                             );
                             $('#status').val(
                                 status);

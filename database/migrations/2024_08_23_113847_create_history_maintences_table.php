@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('riwayat_perawatan', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id')->autoIncrement();
-            $table->integer('assets_id');
+            $table->integer('id_aset');
             $table->date('date');
             $table->integer('status');
             $table->text('description')->nullable();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamp('deleted_at')->nullable();
 
 
-            $table->foreign('assets_id')->references('id')->on('aset');
+            $table->foreign('id_aset')->references('id')->on('aset');
             $table->foreign('created_by')->references('id')->on('pengguna');
             $table->foreign('updated_by')->references('id')->on('pengguna');
             $table->foreign('deleted_by')->references('id')->on('pengguna');

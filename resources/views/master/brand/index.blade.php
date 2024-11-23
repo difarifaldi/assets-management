@@ -13,7 +13,7 @@
                                 @if ($can_create)
                                     <div>
                                         <a href="{{ route('master.brand.create') }}" class="btn btn-sm btn-primary">
-                                            Add Brand
+                                            Tambah Brand
                                         </a>
                                     </div>
                                 @endif
@@ -27,10 +27,10 @@
                                                 #
                                             </th>
                                             <th>
-                                                Name
+                                                Nama
                                             </th>
                                             <th>
-                                                Action
+                                                Aksi
                                             </th>
                                         </tr>
                                     </thead>

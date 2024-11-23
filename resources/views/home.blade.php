@@ -6,14 +6,14 @@
                 <div class="col-md-12">
                     @php
                         $hour = date('H');
-                        $greetings = $hour >= 18 ? 'Good Night' : ($hour >= 12 ? 'Good Afternoon' : 'Good Morning');
+                        $greetings = $hour >= 18 ? 'Selamat Malam' : ($hour >= 12 ? 'Selamat Siang' : 'Selamat Pagi');
                     @endphp
                     <h2 class="font-weight-bold">
                         {{ $greetings }}, {{ Auth::user()->name }} !
                     </h2>
                     <h5 class="font-weight-normal mb-0">
-                        Nice to see you again!
-                        <span class="text-primary">Let's get started!</span>
+                        Senang melihat anda kembali!
+                        <span class="text-primary">Mari mulai!</span>
                     </h5>
                 </div>
             </div>

@@ -112,9 +112,9 @@ Route::group(['middleware' => ['role:admin']], function () {
 Route::group(['middleware' => ['role:staff']], function () {
     Route::group(['controller' => SubmissionFormController::class, 'prefix' => 'submission', 'as' => 'submission.'], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
-        Route::get('create/{type}', 'create')->name('create');
-        Route::post('store/{type}', 'store')->name('store');
-        Route::get('edit/{type}/{id}', 'edit')->name('edit');
+        Route::get('create/{tipe}', 'create')->name('create');
+        Route::post('store/{tipe}', 'store')->name('store');
+        Route::get('edit/{tipe}/{id}', 'edit')->name('edit');
         Route::match(['put', 'patch'], 'update/{id}', 'update')->name('update');
         Route::match(['put', 'patch'], 'check-out/{id}', 'checkOut')->name('checkOut');
         Route::match(['put', 'patch'], 'check-in/{id}', 'checkIn')->name('checkIn');

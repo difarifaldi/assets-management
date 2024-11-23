@@ -48,11 +48,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="manufacture_id">Manufaktur <span class="text-danger">*</span></label>
-                                    <select class="form-control select2bs4" id="manufacture_id" name="manufacture_id">
+                                    <label for="id_manufaktur">Manufaktur <span class="text-danger">*</span></label>
+                                    <select class="form-control select2bs4" id="id_manufaktur" name="id_manufaktur">
                                         <option disabled hidden selected>Pilih Manufaktur</option>
                                         @foreach ($manufactures as $manufacture)
-                                            @if (!is_null(old('manufacture_id')) && old('manufacture_id') == $manufacture->id)
+                                            @if (!is_null(old('id_manufaktur')) && old('id_manufaktur') == $manufacture->id)
                                                 <option value="{{ $manufacture->id }}" selected>{{ $manufacture->nama }}
                                                 </option>
                                             @else
@@ -71,7 +71,7 @@
                                 <div class="form-group">
                                     <label for="nama">Nama <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="nama" name="nama"
-                                        placeholder="Nama" value="{{ old('name') }}">
+                                        placeholder="Nama" value="{{ old('nama') }}">
                                 </div>
 
                                 <div class="form-group">
@@ -101,9 +101,10 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="purchase_date">Tanggal Pengambilan</label>
-                                    <input type="date" class="form-control" id="purchase_date" name="purchase_date"
-                                        placeholder="Tanggal Pengambilan" value="{{ old('purchase_date') }}">
+                                    <label for="tanggal_pengambilan">Tanggal Pengambilan</label>
+                                    <input type="date" class="form-control" id="tanggal_pengambilan"
+                                        name="tanggal_pengambilan" placeholder="Tanggal Pengambilan"
+                                        value="{{ old('tanggal_pengambilan') }}">
                                 </div>
 
                                 <div class="form-group">
@@ -119,7 +120,7 @@
                                         <input type="text" class="form-control" id="durasi_garansi" name="durasi_garansi"
                                             placeholder="Durasi Garansi" value="{{ old('durasi_garansi') }}">
                                         <div class="input-group-append">
-                                            <span class="input-group-text">Month</span>
+                                            <span class="input-group-text">Bulan</span>
                                         </div>
                                     </div>
                                 </div>

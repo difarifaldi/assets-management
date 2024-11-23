@@ -2,7 +2,7 @@
     $("form").submit(function(e) {
         e.preventDefault();
         Swal.fire({
-            title: 'Are You Sure Want To Save Record?',
+            title: 'Apakah Anda Yakin Ingin Menyimpan Data Ini?',
             icon: 'question',
             showCancelButton: true,
             allowOutsideClick: false,
@@ -40,15 +40,15 @@
                     searchable: false
                 },
                 {
-                    data: 'name',
+                    data: 'nama',
                     defaultContent: '-',
                 },
                 {
-                    data: 'type',
+                    data: 'tipe',
                     defaultContent: '-',
                 },
                 {
-                    data: 'action',
+                    data: 'aksi',
                     width: '20%',
                     defaultContent: '-',
                     orderable: false,
@@ -62,7 +62,7 @@
         let token = $('meta[name="csrf-token"]').attr('content');
 
         Swal.fire({
-            title: 'Are You Sure Want To Delete Record?',
+            title: 'Apakah anda yakin ingin menghapus data ini?',
             icon: 'question',
             showCancelButton: true,
             allowOutsideClick: false,

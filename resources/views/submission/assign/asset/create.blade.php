@@ -6,11 +6,11 @@
                 <div class="col-12">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Submission Assign Asset - {{ $asset->name }}</h3>
+                            <h3 class="card-title font-weight-bold">Pengajuan Penugasan Aset - {{ $asset->nama }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form method="post" id="form-create" action="{{ route('submission.store', ['type' => 1]) }}"
+                        <form method="post" id="form-create" action="{{ route('submission.store', ['tipe' => 1]) }}"
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="assets[{{ $asset->id }}][id]" value="{{ $asset->id }}">
@@ -24,34 +24,34 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="name">Name </label>
+                                    <label for="name">Nama </label>
                                     <div class="col-sm-9 col-form-label">
-                                        {{ $asset->name }}
+                                        {{ $asset->nama }}
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="status">Status </label>
                                     <div class="col-sm-9 col-form-label">
                                         @if ($asset->status == 1)
-                                            Good Condition
+                                            Kondisi Bagus
                                         @elseif($asset->status == 2)
-                                            Minor Damage
+                                            Kerusakan Ringan
                                         @elseif($asset->status == 3)
-                                            Major Damage
+                                            Kerusakan Berat
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="description">Description <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" name="description" id="description" cols="10" rows="3"
-                                        placeholder="Description" required>{{ old('description') }}</textarea>
+                                    <label for="deskripsi">Deskripsi <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="deskripsi" id="deskripsi" cols="10" rows="3" placeholder="Deskripsi"
+                                        required>{{ old('deskripsi') }}</textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="attachment">Attachment</label>
-                                    <input type="file" class="form-control" name="attachment" id="documentInput">
+                                    <label for="lampiran">Lampiran</label>
+                                    <input type="file" class="form-control" name="lampiran" id="documentInput">
                                 </div>
                                 <div class="pt-3 d-flex">
-                                    <a href="{{ route('submission.index') }}" class="btn btn-danger mr-2"> Back</a>
+                                    <a href="{{ route('submission.index') }}" class="btn btn-danger mr-2"> Kembali</a>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>

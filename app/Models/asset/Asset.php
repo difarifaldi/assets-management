@@ -46,17 +46,17 @@ class Asset extends Model
 
     public function historyAssign()
     {
-        return $this->hasMany(HistoryAssign::class, 'id_aset')->orderBy('history_assigns.created_at', 'desc')->orderBy('history_assigns.latest', 'desc');
+        return $this->hasMany(HistoryAssign::class, 'id_aset')->orderBy('riwayat_penugasan.created_at', 'desc')->orderBy('riwayat_penugasan.latest', 'desc');
     }
 
     public function historyCheck()
     {
-        return $this->hasMany(HistoryCheckInOut::class, 'id_aset')->orderBy('history_check_in_outs.created_at', 'desc')->orderBy('history_check_in_outs.latest', 'desc');
+        return $this->hasMany(HistoryCheckInOut::class, 'id_aset')->orderBy('riwayat_peminjaman.created_at', 'desc')->orderBy('riwayat_peminjaman.latest', 'desc');
     }
 
     public function historyMaintence()
     {
-        return $this->hasMany(HistoryMaintence::class, 'id_aset')->orderBy('history_maintences.created_at', 'desc')->orderBy('history_maintences.latest', 'desc');
+        return $this->hasMany(HistoryMaintence::class, 'id_aset')->orderBy('riwayat_perawatan.created_at', 'desc')->orderBy('riwayat_perawatan.latest', 'desc');
     }
 
     public function getAttachmentArrayAttribute()

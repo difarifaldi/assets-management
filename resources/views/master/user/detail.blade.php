@@ -134,11 +134,11 @@
                                                         </td>
                                                         <td>
                                                             @if ($asset->status == 1)
-                                                                <span class="badge badge-success">Good Condition</span>
+                                                                <span class="badge badge-success">Kondisi Bagus</span>
                                                             @elseif($asset->status == 2)
-                                                                <span class="badge badge-warning">Minor Damage</span>
+                                                                <span class="badge badge-warning">Kerusakan Ringan</span>
                                                             @elseif($asset->status == 3)
-                                                                <span class="badge badge-danger">Major Damage</span>
+                                                                <span class="badge badge-danger">Kerusakan Berat</span>
                                                             @endif
                                                         </td>
                                                         <td align="right">

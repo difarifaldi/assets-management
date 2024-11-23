@@ -31,10 +31,10 @@
                                         <option disabled hidden selected>Pilih Divisi</option>
                                         @foreach ($divisi as $dv)
                                             @if (!is_null(old('id_divisi')) && old('id_divisi') == $dv->id)
-                                                <option value="{{ $dv->id }}" selected>{{ $dv->name }}
+                                                <option value="{{ $dv->id }}" selected>{{ $dv->nama }}
                                                 </option>
                                             @else
-                                                <option value="{{ $dv->id }}">{{ $dv->name }}</option>
+                                                <option value="{{ $dv->id }}">{{ $dv->nama }}</option>
                                             @endif
                                         @endforeach
                                     </select>

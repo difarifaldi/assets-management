@@ -7,7 +7,7 @@
                     <div class="card card-info">
 
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Add Aset Lisensi</h3>
+                            <h3 class="card-title font-weight-bold">Tambah Aset Lisensi</h3>
                         </div>
 
                         <!-- /.card-header -->
@@ -19,10 +19,10 @@
 
                                 <div class="form-group">
                                     <label for="categories">Kategori </label>
-                                    <select class="form-control select2bs4" id="id_kategori_set" name="id_kategori_set">
+                                    <select class="form-control select2bs4" id="id_kategori_aset" name="id_kategori_aset">
                                         <option disabled hidden selected>Pilih Kategori</option>
                                         @foreach ($categories as $category)
-                                            @if (!is_null(old('id_kategori_set')) && old('id_kategori_set') == $category->id)
+                                            @if (!is_null(old('id_kategori_aset')) && old('id_kategori_aset') == $category->id)
                                                 <option value="{{ $category->id }}" selected>{{ $category->nama }}
                                                 </option>
                                             @else
@@ -33,11 +33,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="brand_id">Brand <span class="text-danger">*</span></label>
-                                    <select class="form-control select2bs4" id="brand_id" name="brand_id">
+                                    <label for="id_brand">Brand <span class="text-danger">*</span></label>
+                                    <select class="form-control select2bs4" id="id_brand" name="id_brand">
                                         <option disabled hidden selected>Pilih Brand</option>
                                         @foreach ($brands as $brand)
-                                            @if (!is_null(old('brand_id')) && old('brand_id') == $brand->id)
+                                            @if (!is_null(old('id_brand')) && old('id_brand') == $brand->id)
                                                 <option value="{{ $brand->id }}" selected>{{ $brand->nama }}
                                                 </option>
                                             @else

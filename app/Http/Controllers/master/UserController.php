@@ -35,8 +35,8 @@ class UserController extends Controller
          * Datatable Configuration
          */
         $dataTable = DataTables::of($users)
-            ->MenambahkanIndexColumn()
-            ->MenambahkanColumn('role', function ($data) {
+            ->addIndexColumn()
+            ->addColumn('role', function ($data) {
                 /**
                  * User Role Configuration
                  */
@@ -44,10 +44,10 @@ class UserController extends Controller
                 $user_role = ucwords(implode(' ', $exploded_raw_role));
                 return $user_role;
             })
-            ->MenambahkanColumn('divisi', function ($data) {
+            ->addColumn('divisi', function ($data) {
                 return $data->divisi ? $data->divisi->nama : '-';
             })
-            ->MenambahkanColumn('aksi', function ($data) {
+            ->addColumn('aksi', function ($data) {
                 $btn_action = '<div align="center">';
                 $btn_action .= '<a href="' . route('master.user.show', ['id' => $data->id]) . '" class="btn btn-sm btn-primary" title="Detail">Detail</a>';
                 $btn_action .= '<a href="' . route('master.user.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning ml-2" title="Edit">Edit</a>';
