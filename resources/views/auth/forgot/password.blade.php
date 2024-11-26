@@ -6,8 +6,8 @@
             <!-- /.login-logo -->
             <div class="card card-outline card-primary">
                 <div class="card-body">
-                    <label class="h5 pb-3"><i class="fas fa-list mr-2"></i>Asset Management System</label>
-                    <p>Setting Up New Password</p>
+                    <label class="h5 pb-3"><i class="fas fa-list mr-2"></i>Sistem Manajemen Aset</label>
+                    <p>Mengatur Password Baru</p>
                     <form action="{{ route('forgot.setPassword', ['id' => $user->id]) }}" method="post">
                         @csrf
                         @method('patch')
@@ -29,8 +29,8 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                <input type="password" name="re_password"
-                                    class="form-control" placeholder="Confirmation Password">
+                                <input type="password" name="re_password" class="form-control"
+                                    placeholder="Confirmation Password">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-lock"></span>
@@ -40,8 +40,7 @@
                         </div>
                         <div class="row pt-3 justify-content-end">
                             <div class="col-5">
-                                <button type="submit"
-                                    class="btn btn-primary btn-block font-weight-bold">Change</button>
+                                <button type="submit" class="btn btn-primary btn-block font-weight-bold">Ubah</button>
                             </div>
                         </div>
                     </form>
